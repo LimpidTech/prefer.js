@@ -1,0 +1,7 @@
+*.conf              # Configuration files.
+node_modules        # Modules in the module directory.
+
+.*                  # Any hidden file.
+!.gitignore         # Don't ignore this file.
+!.gitmodules        # Don't ignore the .gitmodules file.
+
