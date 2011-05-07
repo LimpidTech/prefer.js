@@ -1,5 +1,3 @@
 module.exports = {
-    'loaders': {
-        'json': 'prefer/loaders/jsonloader',
-    }
+    'json': 'prefer/loaders/jsonloader',
 }
