@@ -1,0 +1,19 @@
+{
+  "author": "Brandon R. Stoner <monokrome@limpidtech.com> (http://monokro.me/)",
+  "name": "prefer",
+  "description": "Configuration management for NodeJS",
+  "version": "0.0.1",
+  "homepage": "http://preferjs.limpidtech.com/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/LimpidTech/preferjs.git"
+  },
+  "engines": {
+    "node": "~v0.4.6"
+  },
+  "dependencies": {
+    'underscore': '>=1.1.6',
+    'step': '>=0.0.4'
+  },
+  "devDependencies": {}
+}
