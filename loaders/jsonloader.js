@@ -10,12 +10,8 @@ function JSONLoader (options) {
 sys.inherits(JSONLoader, FileLoader);
 
 JSONLoader.prototype.parse = (function parse_json (callback, data) {
-    JSON.parse(data, function post_json_parsed (err, object) {
-        if (err)
-            callback(err);
-        else
-            callback(err, object);
-    });
+    // TODO: Is this meant to be async?
+    callback(0, JSON.parse(data));
 });
 
 module.exports = JSONLoader;
