@@ -152,7 +152,7 @@ FileLoader.prototype.load = (function load_file (callback, filename) {
     this.find(function post_find_file (err, found_filename) {
         if (err)
         {
-            callback(err);
+            throw err;
             return;
         }
 
@@ -160,7 +160,7 @@ FileLoader.prototype.load = (function load_file (callback, filename) {
         fs.readFile(found_filename, 'UTF-8', function read_file (err, data) {
             if (err)
             {
-                callback(err);
+                throw err;
                 return;
             }
 
