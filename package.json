@@ -2,7 +2,7 @@
   "author": "Brandon R. Stoner <monokrome@limpidtech.com> (http://monokro.me/)",
   "name": "prefer",
   "description": "Configuration management for NodeJS",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "http://preferjs.limpidtech.com/",
   "repository": {
     "type": "git",
