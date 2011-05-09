@@ -23,8 +23,8 @@ function Configurator (options, context) {
 
 Configurator.prototype = {};
 
-Configurator.prototype.get = function get_setting (callback,
-                                                   setting_name, default_val)
+Configurator.prototype.get = function get_setting (setting_name, callback,
+                                                   default_val)
 {
     var setting_layers = setting_name.split('.'),
         current_node = this.context;
@@ -39,7 +39,10 @@ Configurator.prototype.get = function get_setting (callback,
         else
         {
             if (default_val)
-                return default_val;
+            {
+                current_node = default_val;
+                break;
+            }
 
             callback(responses.does_not_exist);
         }
