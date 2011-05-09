@@ -23,32 +23,41 @@ function Configurator (options, context) {
 
 Configurator.prototype = {};
 
-Configurator.prototype.get = function get_setting (setting_name, callback,
-                                                   default_val)
+Configurator.prototype.get = function get_setting (callback,
+                                                   setting_name, default_val)
 {
-    var setting_layers = setting_name.split('.'),
-        current_node = this.context;
+    var current_node, setting_layers;
 
-    while (setting_layers.length > 0)
+    if (typeof setting_name == 'undefined')
     {
-        var next_setting = setting_layers.shift(),
-            next_node = current_node[next_setting];
-
-        if (next_node)
-            current_node = next_node;
-        else
-        {
-            if (default_val)
-            {
-                current_node = default_val;
-                break;
-            }
-
-            callback(responses.does_not_exist);
-        }
+        callback(responses.success, this.context);
     }
+    else
+    {
+        current_node = this.context;
+        setting_layers = setting_name.split('.');
+    
+        while (setting_layers.length > 0)
+        {
+            var next_setting = setting_layers.shift(),
+                next_node = current_node[next_setting];
+    
+            if (next_node)
+                current_node = next_node;
+            else
+            {
+                if (default_val)
+                {
+                    current_node = default_val;
+                    break;
+                }
+    
+                callback(responses.does_not_exist);
+            }
+        }
 
-    callback(responses.success, current_node);
+        callback(responses.success, current_node);
+    }
 }
 
 //  TODO: Implement methods for writing back to the configuration.
