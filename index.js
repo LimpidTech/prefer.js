@@ -4,7 +4,7 @@ var path = require('path'),
     default_configurators = require('./configurators/defaults');
 
 module.exports = {
-    'load': function load_configuration(callback, identifier, _options)
+    'load': function load_configuration(identifier, _options, callback)
     {
         var options = _options || {},
             loader_string, loader;
