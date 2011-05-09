@@ -23,7 +23,9 @@ function Configurator (options, context) {
 
 Configurator.prototype = {};
 
-Configurator.prototype.get = function get_setting (setting_name, default_val) {
+Configurator.prototype.get = function get_setting (callback,
+                                                   setting_name, default_val)
+{
     var setting_layers = setting_name.split('.'),
         current_node = this.context;
 
@@ -39,11 +41,11 @@ Configurator.prototype.get = function get_setting (setting_name, default_val) {
             if (default_val)
                 return default_val;
 
-            throw responses.does_not_exist;
+            callback(responses.does_not_exist);
         }
     }
 
-    return current_node;
+    callback(responses.success, current_node);
 }
 
 //  TODO: Implement methods for writing back to the configuration.
