@@ -1,4 +1,4 @@
-var sys = require('sys'),
+var util = require('util'),
     fs = require('fs'),
 
     FileLoader = require('./fileloader');
@@ -7,7 +7,7 @@ function JSONLoader (options) {
     FileLoader.apply(this, arguments);
 }
 
-sys.inherits(JSONLoader, FileLoader);
+util.inherits(JSONLoader, FileLoader);
 
 JSONLoader.prototype.parse = (function parse_json (callback, data) {
     // TODO: Is this meant to be async?
