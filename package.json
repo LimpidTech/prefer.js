@@ -9,7 +9,7 @@
     "url": "git://github.com/LimpidTech/preferjs.git"
   },
   "engines": {
-    "node": ">=v0.4.6"
+    "node": "*"
   },
   "dependencies": {
     "underscore": ">=1.1.6",
