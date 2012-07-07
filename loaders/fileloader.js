@@ -141,7 +141,7 @@ FileLoader.prototype.find = function (callback, filename) {
             var path_string = loader.options.files.search_paths[index]
                 check_found = check_found;
 
-            path.exists(path_string + filename, check_found(path_string));
+            fs.exists(path_string + filename, check_found(path_string));
         }
     })();
 }
