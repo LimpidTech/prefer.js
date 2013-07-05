@@ -9,7 +9,7 @@ getDefaultPaths = ->
   # TODO: Use proper separators for OS
   
   searchPaths = [
-    './conf'
+    './etc'
     './'
   ]
 

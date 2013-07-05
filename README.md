@@ -41,7 +41,7 @@ You will notice that prefer only required 'settings.json'. It should always be
 given in this way, because prefer takes care of looking through the filesystem
 for configuration files. For instance, this specific case just looked in:
 
-- ./.conf/settings.json
+- ./etc/settings.json
 - ./settings.json
 - /home/username/.config/settings.json
 - /home/username/settings.json
