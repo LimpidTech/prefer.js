@@ -1,10 +1,10 @@
-PreferJS
-========
+Prefer
+======
 
 What is it?
 -----------
 
-Prefer is a Node.JS library for helping you manage application configurations.
+Prefer is a node library for helping you manage application configurations.
 
 It provides a set of interfaces which can be provide standard methods for
 reading arbitrary project configuration data. This can vary from simple cases
@@ -18,7 +18,7 @@ Firstly, you'll want to install the module. This can be done easily with `npm`.
 
     npm install prefer
 
-Prefer.JS is fairly simple to use. A basic use case might be that you have the
+Prefer is fairly simple to use. A basic use case might be that you have the
 following JSON configuration:
 
     {
