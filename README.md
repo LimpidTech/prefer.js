@@ -14,6 +14,10 @@ from a database.
 How do I use it?
 ----------------
 
+Firstly, you'll want to install the module. This can be done easily with `npm`.
+
+    npm install prefer
+
 Prefer.JS is fairly simple to use. A basic use case might be that you have the
 following JSON configuration:
 
