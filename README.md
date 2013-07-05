@@ -29,7 +29,7 @@ You can load these settings simply with the following code:
 
     var prefer = require('prefer');
 
-    // Get a Configurator object which we can use to retreive settings.
+    // Get a Configurator object which we can use to retrieve settings.
     prefer.load('settings.json', {}, function (err, configurator) {
       if (err !== null) { throw err; }
 
