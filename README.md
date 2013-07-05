@@ -3,7 +3,7 @@ What is it?
 
 Prefer is a node library for helping you manage application configurations.
 
-It provides a set of interfaces which can be provide standard methods for
+It provides a set of interfaces which provide standard methods for
 reading arbitrary project configuration data. This can vary from simple cases
 like JSON, to more complicated examples - such as retreiving configuration data
 from a database.
