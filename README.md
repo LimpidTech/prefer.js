@@ -11,10 +11,45 @@ reading arbitrary project configuration data. This can vary from simple cases
 like JSON, to more complicated examples - such as retreiving configuration data
 from a database.
 
-Prefer currently provides drivers for accessing settings from the following
-sources in a driver-based manner:
+How do I use it?
+----------------
 
-- JSON
+Prefer.JS is fairly simple to use. A basic use case might be that you have the
+following JSON configuration:
+
+    {
+      "auth": {
+        "username": "user",
+        "password": "pass"
+      }
+    }
+
+You can load these settings simply with the following code:
+
+    var prefer = require('prefer');
+
+    // Get a Configurator object which we can use to retreive settings.
+    prefer.load('settings.json', {}, function (err, configurator) {
+      if (err !== null) { throw err; }
+
+      configurator.get('auth.username', function (err, value) {
+        // value will be set to "user" at this point.
+      });
+    })
+
+You will notice that prefer only required 'settings.json'. It should always be
+given in this way, because prefer takes care of looking through the filesystem
+for configuration files. For instance, this specific case just looked in:
+
+- ./.conf/settings.json
+- ./settings.json
+- /home/username/.config/settings.json
+- /home/username/settings.json
+- /etc/settings.json
+
+Ordering matters, so having the same file in `./settings.json` and in
+`/etc/settings.json` is still reliable. The configuration in `./settings.json`
+will be used first.
 
 Why asyncronous?
 ----------------
