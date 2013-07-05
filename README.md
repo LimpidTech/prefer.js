@@ -48,7 +48,7 @@ for configuration files. For instance, this specific case just looked in:
 - /home/username/settings.json
 - /etc/settings.json
 
-Ordering matters, so having the same file in `./settings.json` and in
+Ordering matters, so having a file in `./settings.json` as well as another in
 `/etc/settings.json` is still reliable. The configuration in `./settings.json`
 will be used first.
 
