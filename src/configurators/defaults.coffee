@@ -1,3 +1,3 @@
 module.exports =
-  'prefer/loaders/json_loader': 'prefer/lib/prefer/configurators/simple'
+  'prefer/lib/prefer/loaders/json_loader': 'prefer/lib/prefer/configurators/simple'
 
