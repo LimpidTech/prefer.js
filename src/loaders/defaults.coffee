@@ -1,2 +1,2 @@
 module.exports =
-  '.json': 'prefer/loaders/json_loader'
+  '.json': 'prefer/lib/prefer/loaders/json_loader'
