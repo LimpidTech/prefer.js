@@ -1,4 +1,4 @@
-class Configurator
+class SimpleConfigurator
   constructor: (@context, @options) ->
 
   getKey: (key, callback) ->
@@ -25,5 +25,7 @@ class Configurator
       @getKey key, callback
 
 
-module.exports = {Configurator}
+module.exports = {
+  Configurator: SimpleConfigurator
+}
 
