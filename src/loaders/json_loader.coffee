@@ -1,5 +1,4 @@
 FileLoader = (require './file_loader').Loader
-fs = require 'fs'
 
 
 class JSONLoader extends FileLoader
