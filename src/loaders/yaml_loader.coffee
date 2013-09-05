@@ -1,5 +1,5 @@
 FileLoader = (require './file_loader').Loader
-fs = require 'fs'
+yaml = require 'yaml'
 
 
 class YAMLLoader extends FileLoader
