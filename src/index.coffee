@@ -1,5 +1,4 @@
 defaultLoaders = require './loaders/defaults'
-path = require 'path'
 
 _ = require 'lodash'
 
@@ -32,12 +31,18 @@ load = (identifier, options, callback) ->
 
   options.loaders ?= defaultLoaders
 
-  extension = path.extname identifier
-
-  loaderString = options.loaders[extension]
-
   if not options.loader?
-    module = resolveModule loaderString
+    matches = _.filter options.loaders, (potentialLoader) ->
+      if potentialLoader.match identifier
+        return true
+      else
+        return false
+
+    if matches.length is 0
+      callback new Error 'No configuration loader found for: ' + identifier
+
+    match = _.first matches
+    module = resolveModule match.module
 
     Type = module.Loader
     loader = new Type options
