@@ -7,7 +7,6 @@ winston = require 'winston'
 
 getDefaultPaths = ->
   # TODO: Use proper separators for OS
-  
   searchPaths = [
     './etc'
     './'
