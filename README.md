@@ -52,6 +52,17 @@ Ordering matters, so having a file in `./settings.json` as well as another in
 `/etc/settings.json` is still reliable. The configuration in `./settings.json`
 will be used first.
 
+Supported configuration formats
+-------------------------------
+
+Along with being fully configurable to support any arbitrary data source you'd
+like, the following types of data can immediately be used as configuration formats
+upon installation of prefer:
+
+- JSON
+- YAML
+- CoffeeScript
+
 Why asyncronous?
 ----------------
 
