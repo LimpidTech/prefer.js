@@ -1,3 +1,3 @@
 module.exports =
-  '.json': 'prefer/lib/prefer/loaders/json_loader'
-  '.yml': 'prefer/lib/prefer/loaders/yaml_loader'
+  '.json': './loaders/json_loader'
+  '.yml': './loaders/yaml_loader'

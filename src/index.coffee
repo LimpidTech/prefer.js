@@ -1,4 +1,3 @@
-defaultConfigurations = require './configurators/defaults'
 defaultLoaders = require './loaders/defaults'
 path = require 'path'
 
@@ -32,7 +31,6 @@ load = (identifier, options, callback) ->
   options ?= {}
 
   options.loaders ?= defaultLoaders
-  options.configurations ?= defaultConfigurations
 
   extension = path.extname identifier
 
@@ -52,10 +50,7 @@ load = (identifier, options, callback) ->
       callback err
       return
 
-    configuratorString = options.configurations[loaderString]
-    module = resolveModule configuratorString
-
-    Type = module.Configurator
+    Type = loader.configurator
     configurator = new Type context, options
 
     callback 0, configurator
