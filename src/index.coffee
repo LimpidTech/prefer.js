@@ -2,6 +2,8 @@ defaultConfigurations = require './configurators/defaults'
 defaultLoaders = require './loaders/defaults'
 path = require 'path'
 
+_ = require 'lodash'
+
 
 resolveModule = (identifier, separator) ->
   separator ?= ':'
@@ -23,6 +25,10 @@ resolveModule = (identifier, separator) ->
 
 
 load = (identifier, options, callback) ->
+  if _.isFunction options
+    callback = options
+    options = {}
+
   options ?= {}
 
   options.loaders ?= defaultLoaders
