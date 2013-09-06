@@ -9,8 +9,6 @@ class XMLLoader extends FileLoader
   parser: new xml2js.Parser
     explicitArray: false
     explicitRoot: false
-    normalizeTags: true
-    normalize: true
     async: true
     trim: true
 
