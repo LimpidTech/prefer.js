@@ -19,6 +19,10 @@ module.exports = [
     module: './loaders/yaml_loader'
   ,
 
+    match: extensionMatches '.xml'
+    module: './loaders/xml_loader'
+  ,
+
     match: extensionMatches '.coffee'
     module: './loaders/coffee_loader'
 ]
