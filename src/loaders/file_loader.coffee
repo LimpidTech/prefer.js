@@ -60,12 +60,15 @@ class FileLoader
         callback err
         return
 
-      fs.readFile filename, 'UTF-8', (err, data) =>
-        if err
-          callback err
-          return
+      @get filename, callback
 
-        @parse data, callback
+  get: (filename, callback) ->
+    fs.readFile filename, 'UTF-8', (err, data) =>
+      if err
+        callback err
+        return
+
+      @parse data, callback
 
   parse: (data, callback) ->
     callback 'FileLoader must be inherited, not used directly.'
