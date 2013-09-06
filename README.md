@@ -59,9 +59,10 @@ Along with being fully configurable to support any arbitrary data source you'd
 like, the following types of data can immediately be used as configuration formats
 upon installation of prefer:
 
-- JSON
-- YAML
 - CoffeeScript
+- JSON
+- XML
+- YAML
 
 Why asyncronous?
 ----------------
