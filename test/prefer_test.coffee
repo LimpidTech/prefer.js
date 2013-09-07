@@ -56,3 +56,17 @@ describe 'prefer', ->
       prefer.load 'loader_test.json', localOptions, (err, data) ->
         chai.expect(hook.calledOnce).to.be.true
         done()
+
+    it 'passes an error to the callback when loader.load fails', (done) ->
+      fakeError = new Error 'Injected error for testing load error'
+
+      class FakeLoader
+        load: (filename, callback) ->
+          callback fakeError
+
+      localOptions = _.extend {}, options,
+        loader: FakeLoader
+
+      prefer.load 'loader_test.json', localOptions, (err, data) ->
+        chai.expect(err).to.equal fakeError
+        done()

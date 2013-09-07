@@ -56,14 +56,11 @@ load = (identifier, options, callback) ->
     loader = options.loader
 
   loader.load identifier, (err, context) ->
-    if err
-      callback err
-      return
+    unless err
+      Type = loader.configurator
+      configurator = new Type context, options
 
-    Type = loader.configurator
-    configurator = new Type context, options
-
-    callback null, configurator
+    callback err, configurator
 
 
 module.exports = {load}
