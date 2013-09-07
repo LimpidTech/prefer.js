@@ -4,11 +4,13 @@ IN=src
 build_dir=build
 dist_dir=lib
 
-all: ${OUT} coverage
+all: prefer coverage
+
+prefer: ${dist_dir}/prefer
 
 ${dist_dir}/prefer: ${dist_dir}
-	mkdir ${dist_dir}/prefer
-	${CC} -o "${OUT}" -c "${IN}"
+	mkdir -p ${dist_dir}/prefer
+	${CC} -o "$@" -c "${IN}"
 
 coverage: ${build_dir}/coverage.html
 
@@ -34,4 +36,4 @@ clean: clean_coverage_sources
 clean_coverage_sources:
 	find src -name \*.js -exec rm {} \;
 
-.PHONY: prefer prever_cov clean clean_coverage_sources
+.PHONY: prefer prever_cov clean clean_coverage_sources coverage prefer
