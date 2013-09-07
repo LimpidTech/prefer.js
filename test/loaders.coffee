@@ -24,7 +24,7 @@ loaders =
 
 
   test: (loaderType) ->
-    {Loader} = require '../src/loaders/json_loader'
+    {Loader} = require "../src/loaders/#{ loaderType }_loader"
 
     return (done) ->
       loader = loaders.create Loader
