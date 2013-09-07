@@ -1,6 +1,5 @@
 *.js
 
-lib-cov
 *.seed
 *.log
 *.csv
@@ -17,8 +16,7 @@ npm-debug.log
 
 /node_modules/*
 
-coverage.js
-coverage.html
+build/*
 
 /.*
 !/.git*
