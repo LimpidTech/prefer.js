@@ -1,5 +1,6 @@
 {Loader} = require '../src/loaders/file_loader'
 loaders = require './loaders'
+fs = require 'fs'
 
 sinon = require 'sinon'
 chai = require 'chai'
@@ -36,3 +37,18 @@ describe 'FileLoader', ->
         done()
 
       loader.parse '', callback
+
+    it 'throws an error if reading the requested file fails', (done) ->
+      sandbox = sinon.sandbox.create()
+      sandbox.mock fs, 'readFile', (filename, encoding, callback) ->
+        callback new Error
+
+      loader = loaders.create Loader
+
+      callback = sinon.spy (err, data) ->
+        chai.expect(err).to.be.instanceof Error
+
+        sandbox.restore()
+        done()
+
+      loader.load 'loader_test.json', callback
