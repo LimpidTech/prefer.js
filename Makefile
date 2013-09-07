@@ -10,7 +10,7 @@ prefer: ${OUT}
 
 prefer_cov: ${COV_OUT}
 	./node_modules/.bin/coffeeCoverage \
-		--initfile "${COV_OUT}/coverage.js" \
+		--initfile "lib-cov/init.js" \
 		"${IN}" "${COV_OUT}"
 
 lib/prefer:
