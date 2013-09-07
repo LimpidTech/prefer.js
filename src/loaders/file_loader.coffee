@@ -52,7 +52,7 @@ class FileLoader
     if paths.length
       callback null, paths[0]
     else
-      callback 'not found'
+      callback new Error "Could not find configuration: #{ filename }."
 
   load: (filename, callback) ->
     @find filename, (err, filename) =>
