@@ -4,9 +4,7 @@ sinon = require 'sinon'
 
 
 loaders =
-  fixture:
-    user: 'monokrome'
-    website: 'http://monokro.me'
+  fixture: require './fixtures/loader_test.coffee'
 
   callback: (done) ->
     callback = sinon.spy (err, data) ->
