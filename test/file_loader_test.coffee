@@ -25,3 +25,14 @@ describe 'FileLoader', ->
         done()
 
       loader.load 'loader_test.json'
+
+    it 'throws an error if parse is called without inheriting', (done) ->
+      loader = loaders.create Loader
+
+      callback = sinon.spy (err, data) ->
+        chai.expect(callback.calledOnce).to.be.true
+        chai.expect(err).to.be.instanceof Error
+
+        done()
+
+      loader.parse '', callback
