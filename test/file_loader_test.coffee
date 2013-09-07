@@ -6,6 +6,9 @@ sinon = require 'sinon'
 chai = require 'chai'
 
 
+class FakeError
+
+
 describe 'FileLoader', ->
   describe '#load', ->
     it 'results in a not found error if no file was found', (done) ->
@@ -40,13 +43,14 @@ describe 'FileLoader', ->
 
     it 'throws an error if reading the requested file fails', (done) ->
       sandbox = sinon.sandbox.create()
-      sandbox.mock fs, 'readFile', (filename, encoding, callback) ->
-        callback new Error
+
+      sandbox.stub fs, 'readFile', (filename, encoding, callback) ->
+        callback new FakeError 'Fake error for testing failure reading files.'
 
       loader = loaders.create Loader
 
       callback = sinon.spy (err, data) ->
-        chai.expect(err).to.be.instanceof Error
+        chai.expect(err).to.be.instanceof FakeError
 
         sandbox.restore()
         done()
