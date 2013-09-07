@@ -12,7 +12,7 @@ class BaseConfigurator
     if node
       callback null, node
     else
-      callback 'does not exist'
+      callback new Error key + ' does not exist in this configuration.'
 
   get: (key, callback) ->
     if typeof key == 'function' and not callback
