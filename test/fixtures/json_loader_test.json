@@ -1,9 +1,4 @@
 {
-  "string": "http://monokro.me",
-  "array": [
-    {
-      "innerAttribute": true,
-      "secondaryInnerAttribute": "string"
-    }
-  ]
+  "user": "monokrome",
+  "website": "http://monokro.me"
 }
