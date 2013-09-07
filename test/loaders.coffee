@@ -10,6 +10,8 @@ loaders =
 
   callback: (done) ->
     callback = sinon.spy (err, data) ->
+      chai.expect(err).to.be.null
+
       chai.expect(callback.calledOnce).to.be.true
       chai.expect(data).to.deep.equal loaders.fixture
 
