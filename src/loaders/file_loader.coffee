@@ -71,6 +71,6 @@ class FileLoader
       @parse data, callback
 
   parse: (data, callback) ->
-    callback 'FileLoader must be inherited, not used directly.'
+    callback new Error 'FileLoader must be inherited, not used directly.'
 
 module.exports.Loader = FileLoader
