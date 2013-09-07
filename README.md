@@ -60,6 +60,7 @@ like, the following types of data can immediately be used as configuration forma
 upon installation of prefer:
 
 - CoffeeScript
+- INI
 - JSON
 - XML
 - YAML
