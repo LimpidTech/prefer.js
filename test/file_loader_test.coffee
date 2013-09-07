@@ -22,7 +22,7 @@ describe 'FileLoader', ->
     it 'calls parse if a file was found', sinon.spy (done) ->
       loader = loaders.create Loader
 
-      callback = sinon.stub loader, 'parse', ->
+      callback = @stub loader, 'parse', ->
         chai.expect(callback.calledOnce).to.be.true
         done()
 
