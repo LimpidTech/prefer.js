@@ -25,12 +25,15 @@ loaders =
         searchPaths: [fixturesPath]
 
 
-  test: (loaderType) ->
+  test: (loaderType, loaderExtension) ->
+    unless loaderExtension?
+      loaderExtension = loaderType
+
     {Loader} = require "../src/loaders/#{ loaderType }_loader"
 
     return (done) ->
       loader = loaders.create Loader
-      fixtureName = 'loader_test.' + loaderType
+      fixtureName = 'loader_test.' + loaderExtension
 
       loader.load fixtureName, loaders.callback done
 
