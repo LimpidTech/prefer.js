@@ -31,3 +31,10 @@ describe 'prefer', ->
         done()
 
       prefer.load 'loader_test.json', options, callback
+
+    it 'allows options to be an optional argument', (done) ->
+      callback = sinon.spy (err, configurator) ->
+        chai.expect(callback.calledOnce).to.be.true
+        done()
+
+      prefer.load 'loader_test.json', callback
