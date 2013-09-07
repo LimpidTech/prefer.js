@@ -15,8 +15,6 @@ describe 'FileLoader', ->
         done()
 
       loader = loaders.create Loader
-      sinon.spy.apply sinon, arguments
-
       loader.load 'fakeFile', callback
 
     it 'calls parse if a file was found', sinon.spy (done) ->
