@@ -7,12 +7,21 @@ chai = require 'chai'
 
 
 describe 'prefer', ->
-  describe '#load', ->
-    it 'provides a configurator when successfully loading a file', (done) ->
-      options =
-        files:
-          searchPaths: ['test/fixtures/']
+  options =
+    files:
+      searchPaths: ['test/fixtures/']
 
+  describe '#load', ->
+    it 'throws an error when no configuration loader exists', (done) ->
+      callback = sinon.spy (err, configurator) ->
+        chai.expect(callback.calledOnce).to.be.true
+        chai.expect(err).to.be.instanceof Error
+
+        done()
+
+      prefer.load 'this.isNotEvenReal', options, callback
+
+    it 'provides a configurator when successfully loading a file', (done) ->
       callback = sinon.spy (err, configurator) ->
         chai.expect(callback.calledOnce).to.be.true
 
