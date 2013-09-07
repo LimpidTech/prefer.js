@@ -7,6 +7,7 @@ Makefile
 *.out
 *.pid
 *.gz
+coverage.sh
 
 pids
 logs
