@@ -51,7 +51,7 @@ describe 'prefer', ->
           callback null, {}
 
       localOptions = _.extend {}, options,
-        loader: new FakeLoader
+        loader: FakeLoader
 
       prefer.load 'loader_test.json', localOptions, (err, data) ->
         chai.expect(hook.calledOnce).to.be.true

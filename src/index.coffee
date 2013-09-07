@@ -49,6 +49,10 @@ load = (identifier, options, callback) ->
     loader = new Type options
 
   else
+    if _.isFunction options.loader
+      Type = options.loader
+      options.loader = new Type options
+
     loader = options.loader
 
   loader.load identifier, (err, context) ->
