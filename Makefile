@@ -8,7 +8,7 @@ all: prefer prefer_cov
 prefer: ${OUT}
 	${CC} -o "${OUT}" -c "${IN}"
 
-prefer_cov: lib-cov
+prefer_cov:
 	./node_modules/.bin/coffeeCoverage \
 		--initfile "${COV_OUT}" \
 		--path relative \
@@ -17,11 +17,8 @@ prefer_cov: lib-cov
 lib/prefer:
 	mkdir -p "${OUT}"
 
-lib-cov:
-	mkdir lib-cov
-
 clean: clean_coverage_sources
-	rm -rf lib lib-cov
+	rm -rf lib
 
 clean_coverage_sources:
 	find src -name \*.js -exec rm {} \;
