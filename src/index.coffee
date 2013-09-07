@@ -58,7 +58,7 @@ load = (identifier, options, callback) ->
     Type = loader.configurator
     configurator = new Type context, options
 
-    callback 0, configurator
+    callback null, configurator
 
 
 module.exports = {load}
