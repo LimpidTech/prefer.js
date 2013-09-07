@@ -1,7 +1,7 @@
 path = require 'path'
 chai = require 'chai'
 sinon = require 'sinon'
-fixturesPath = 'test/fixtures/'
+
 
 loaders =
   fixture:
@@ -22,7 +22,7 @@ loaders =
   create: (Type) ->
     new Type
       files:
-        searchPaths: [fixturesPath]
+        searchPaths: ['test/fixtures/']
 
 
   test: (loaderType, loaderExtension) ->
