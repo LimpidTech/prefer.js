@@ -1,4 +1,7 @@
-class SimpleConfigurator
+{Configurator} = require './base'
+
+
+class SimpleConfigurator extends Configurator
   constructor: (@context, @options) ->
 
   getKey: (key, callback) ->
