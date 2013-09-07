@@ -25,13 +25,13 @@ loaders =
 
   test: (loaderType, loaderExtension) ->
     unless loaderExtension?
-      loaderExtension = loaderType
+      loaderExtension = '.' + loaderType
 
     {Loader} = require "../src/loaders/#{ loaderType }_loader"
 
     return (done) ->
       loader = loaders.create Loader
-      fixtureName = 'loader_test.' + loaderExtension
+      fixtureName = 'loader_test' + loaderExtension
 
       loader.load fixtureName, loaders.callback done
 
