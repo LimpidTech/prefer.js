@@ -25,4 +25,8 @@ module.exports = [
 
     match: extensionMatches '.coffee'
     module: './loaders/coffee_loader'
+  ,
+
+    match: extensionMatches '.ini'
+    module: './loaders/ini_loader'
 ]
