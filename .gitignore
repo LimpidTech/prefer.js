@@ -17,6 +17,9 @@ npm-debug.log
 
 /node_modules/*
 
+coverage.js
+coverage.html
+
 /.*
 !/.git*
 !/.travis.yml

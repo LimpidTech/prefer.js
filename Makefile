@@ -1,6 +1,6 @@
 CC=coffee
 OUT=lib/prefer
-COV_OUT=src
+COV_OUT=coverage.js
 IN=src/
 
 all: prefer prefer_cov
@@ -10,9 +10,9 @@ prefer: ${OUT}
 
 prefer_cov: lib-cov
 	./node_modules/.bin/coffeeCoverage \
-		--initfile "lib-cov/init.js" \
+		--initfile "${COV_OUT}" \
 		--path relative \
-		"${IN}" "${COV_OUT}"
+		"${IN}" "${IN}"
 
 lib/prefer:
 	mkdir -p "${OUT}"
