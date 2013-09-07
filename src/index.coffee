@@ -40,6 +40,7 @@ load = (identifier, options, callback) ->
 
     if matches.length is 0
       callback new Error 'No configuration loader found for: ' + identifier
+      return
 
     match = _.first matches
     module = resolveModule match.module
