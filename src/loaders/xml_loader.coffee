@@ -17,4 +17,3 @@ class XMLLoader extends FileLoader
 
 
 module.exports.Loader = XMLLoader
-
