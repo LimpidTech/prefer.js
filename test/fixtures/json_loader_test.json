@@ -1,0 +1,9 @@
+{
+  "string": "http://monokro.me",
+  "array": [
+    {
+      "innerAttribute": true,
+      "secondaryInnerAttribute": "string"
+    }
+  ]
+}
