@@ -24,4 +24,4 @@ describe 'FileLoader', ->
         chai.expect(callback.calledOnce).to.be.true
         done()
 
-      loader.load 'json_loader_test.json'
+      loader.load 'loader_test.json'

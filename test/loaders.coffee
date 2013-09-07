@@ -28,7 +28,9 @@ loaders =
 
     return (done) ->
       loader = loaders.create Loader
-      loader.load loaderType + '_loader_test.json', loaders.callback done
+      fixtureName = 'loader_test.' + loaderType
+
+      loader.load fixtureName, loaders.callback done
 
 
 module.exports = loaders
