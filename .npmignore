@@ -1,7 +1,5 @@
 Makefile
 
-lib-cov
-
 *.seed
 *.log
 *.csv
@@ -17,6 +15,7 @@ results
 npm-debug.log
 
 node_modules/*
+lib-cov/*
 src/*
 
 .*
