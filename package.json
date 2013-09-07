@@ -30,6 +30,6 @@
     "sinon": "~1.7.3",
     "expect": "0.0.2",
     "chai": "~1.7.2",
-    "jscoverage": "~0.3.8"
+    "coffee-coverage": "~0.1.4"
   }
 }
