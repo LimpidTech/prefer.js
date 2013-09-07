@@ -1,4 +1,3 @@
 -R min
 --compilers coffee:coffee-script
 --ui bdd
-test/*_test.coffee
