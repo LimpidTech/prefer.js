@@ -11,6 +11,7 @@ prefer: ${OUT}
 prefer_cov: ${COV_OUT}
 	./node_modules/.bin/coffeeCoverage \
 		--initfile "lib-cov/init.js" \
+		--path relative \
 		"${IN}" "${COV_OUT}"
 
 lib/prefer:
