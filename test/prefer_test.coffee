@@ -4,6 +4,7 @@
 prefer = require '../src/index'
 sinon = require 'sinon'
 chai = require 'chai'
+_ = require 'lodash'
 
 
 describe 'prefer', ->
@@ -38,3 +39,20 @@ describe 'prefer', ->
         done()
 
       prefer.load 'loader_test.json', callback
+
+    it 'uses the given loader instance if one is provided', (done) ->
+      hook = sinon.spy()
+
+      class FakeLoader
+        configurator: sinon.mock()
+
+        load: (filename, callback) ->
+          hook()
+          callback null, {}
+
+      localOptions = _.extend {}, options,
+        loader: new FakeLoader
+
+      prefer.load 'loader_test.json', localOptions, (err, data) ->
+        chai.expect(hook.calledOnce).to.be.true
+        done()
