@@ -45,7 +45,6 @@ loaders =
       loader.load fixtureName, callback done
 
 
-module.exports = loaders
 describe 'JSONLoader', ->
   describe '#load', ->
     it 'provides a native object to the callback', loaders.test 'JSON'
