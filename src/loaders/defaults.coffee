@@ -3,11 +3,7 @@ _ = require 'lodash'
 
 
 extensionMatches = (expectation) -> (pattern) ->
-  unless _.isString pattern
-    return false
-
-  extension = path.extname pattern
-  return extension is expectation
+  return expectation is path.extname pattern
 
 
 module.exports = [
