@@ -1,3 +1,5 @@
+{BaseLoader} = require './loader'
+
 _ = require 'lodash'
 fs = require 'fs'
 path = require 'path'
@@ -21,20 +23,10 @@ getDefaultPaths = ->
   return searchPaths
 
 
-class FileLoader
+class FileLoader extends BaseLoader
   options:
     files:
       searchPaths: getDefaultPaths()
-
-  constructor: (options) ->
-    options ?= {}
-
-    @updateOptions options
-
-  updateOptions: (options) ->
-    options ?= {}
-
-    _.extend @options, options
 
   find: (filename, callback) ->
     paths = _.filter _.map @options.files.searchPaths, (directory) ->
