@@ -4,33 +4,18 @@ _ = require 'lodash'
 fs = require 'fs'
 path = require 'path'
 Step = require 'step'
+pathing = require '../pathing'
 winston = require 'winston'
-
-
-getDefaultPaths = ->
-  # TODO: Use proper separators for OS
-  searchPaths = [
-    './etc'
-    './'
-  ]
-
-  if process.env.HOME?
-    searchPaths.push process.env.HOME + '/.config/'
-    searchPaths.push process.env.HOME + '/'
-
-  searchPaths.push '/etc/'
-
-  return searchPaths
 
 
 class FileLoader extends BaseLoader
   options:
     files:
-      searchPaths: getDefaultPaths()
+      searchPaths: pathing.get()
 
   find: (filename, callback) ->
     paths = _.filter _.map @options.files.searchPaths, (directory) ->
-      relativePath = "#{directory}#{path.sep}#{filename}"
+      relativePath = path.join directory, filename
       absolutePath = path.resolve relativePath
 
       # TODO: Make this async but still reliable?
