@@ -1,5 +1,5 @@
 {Configurator} = require '../configurators/simple'
-FileLoader = (require './file_loader').Loader
+{FileLoader} = require './file_loader'
 
 
 class JSONLoader extends FileLoader
@@ -9,5 +9,5 @@ class JSONLoader extends FileLoader
     callback null, JSON.parse data
 
 
-module.exports.Loader = JSONLoader
+module.exports = {JSONLoader}
 

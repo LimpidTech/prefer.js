@@ -9,8 +9,8 @@ resolveModule = (identifier, separator) ->
   attributeIndex = identifier.lastIndexOf separator
 
   if attributeIndex >= 0
-    attributeName = identifier[attributeIndex + 1..]
-    moduleName = identifier[..attributeIndex + 1]
+    attributeName = identifier[attributeIndex+1..]
+    moduleName = identifier[..attributeIndex-1]
   else
     moduleName = identifier
 
@@ -43,9 +43,8 @@ load = (identifier, options, callback) ->
       return
 
     match = _.first matches
-    module = resolveModule match.module
 
-    Type = module.Loader
+    Type = resolveModule match.module
     loader = new Type options
 
   else
@@ -64,4 +63,3 @@ load = (identifier, options, callback) ->
 
 
 module.exports = {load}
-

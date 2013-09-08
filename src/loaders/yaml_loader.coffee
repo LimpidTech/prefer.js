@@ -1,5 +1,5 @@
 {Configurator} = require '../configurators/simple'
-FileLoader = (require './file_loader').Loader
+{FileLoader} = require './file_loader'
 
 yaml = require 'js-yaml'
 
@@ -11,5 +11,5 @@ class YAMLLoader extends FileLoader
     callback null, yaml.load data
 
 
-module.exports.Loader = YAMLLoader
+module.exports = {YAMLLoader}
 

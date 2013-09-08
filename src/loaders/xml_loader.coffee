@@ -1,5 +1,5 @@
 {Configurator} = require '../configurators/simple'
-FileLoader = (require './file_loader').Loader
+{FileLoader} = require './file_loader'
 
 xml2js = require 'xml2js'
 
@@ -16,4 +16,4 @@ class XMLLoader extends FileLoader
     @parser.parseString data, callback
 
 
-module.exports.Loader = XMLLoader
+module.exports = {XMLLoader}

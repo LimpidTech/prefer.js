@@ -25,9 +25,10 @@ loaders =
 
   test: (loaderType, loaderExtension, callback) ->
     unless loaderExtension?
-      loaderExtension = '.' + loaderType
+      loaderExtension = '.' + loaderType.toLowerCase()
 
-    {Loader} = require "../src/loaders/#{ loaderType }_loader"
+    module = require "../src/loaders/#{ loaderType.toLowerCase() }_loader"
+    Loader = module[loaderType + 'Loader']
 
     callback ?= loaders.callback
 

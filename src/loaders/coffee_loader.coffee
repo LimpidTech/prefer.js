@@ -1,5 +1,5 @@
 {Configurator} = require '../configurators/simple'
-FileLoader = (require './file_loader').Loader
+{FileLoader} = require './file_loader'
 
 require 'coffee-script'
 
@@ -16,5 +16,5 @@ class CoffeeLoader extends FileLoader
       callback error
 
 
-module.exports.Loader = CoffeeLoader
+module.exports = {CoffeeLoader}
 

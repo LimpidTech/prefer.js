@@ -1,5 +1,5 @@
 {Configurator} = require '../configurators/simple'
-FileLoader = (require './file_loader').Loader
+{FileLoader} = require './file_loader'
 
 ini = require 'ini'
 
@@ -11,5 +11,5 @@ class INILoader extends FileLoader
     callback null, ini.decode data
 
 
-module.exports.Loader = INILoader
+module.exports = {INILoader}
 
