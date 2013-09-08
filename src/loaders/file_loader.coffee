@@ -46,13 +46,8 @@ class FileLoader extends BaseLoader
     else
       callback new Error "Could not find configuration: #{ filename }."
 
-  load: (filename, callback) ->
-    @find filename, (err, filename) =>
-      if err
-        callback err
-        return
-
-      @get filename, callback
+  parse: (data, callback) ->
+    callback new Error 'FileLoader must be inherited, not used directly.'
 
   get: (filename, callback) ->
     fs.readFile filename, 'UTF-8', (err, data) =>
@@ -62,7 +57,13 @@ class FileLoader extends BaseLoader
 
       @parse data, callback
 
-  parse: (data, callback) ->
-    callback new Error 'FileLoader must be inherited, not used directly.'
+  load: (filename, callback) ->
+    @find filename, (err, filename) =>
+      if err
+        callback err
+        return
+
+      @get filename, callback
+
 
 module.exports = {FileLoader}
