@@ -32,27 +32,37 @@ You can load these settings simply with the following code:
     var prefer = require('prefer');
 
     // Get a Configurator object which we can use to retrieve settings.
-    prefer.load('settings.json', {}, function (err, configurator) {
+    prefer.load('settings.json', function (err, configurator) {
       if (err !== null) { throw err; }
 
       configurator.get('auth.username', function (err, value) {
         // value will be set to "user" at this point.
       });
-    })
+    });
 
 You will notice that prefer only required 'settings.json'. It should always be
 given in this way, because prefer takes care of looking through the filesystem
-for configuration files. For instance, this specific case just looked in:
-
-- ./etc/settings.json
-- ./settings.json
-- /home/username/.config/settings.json
-- /home/username/settings.json
-- /etc/settings.json
+for configuration files. On both Unix and Windows systems, it will look in all
+of the standard folders, as well as some conventional places where people like
+to put their configurations.
 
 Ordering matters, so having a file in `./settings.json` as well as another in
 `/etc/settings.json` is still reliable. The configuration in `./settings.json`
 will be used first.
+
+If you prefer to look in specific places, you can always pass an options object
+as the second argument to prefer.load, and provide it the `files.searchPaths`
+setting as an array of locations for prefer to look in. Here's an example:
+
+    var prefer = require('prefer'),
+        options = {
+            files: {
+                searchPaths: ['./etc', '.']
+            }
+        };
+
+    // Get a Configurator object which we can use to retrieve settings.
+    prefer.load('settings.json', options, someFunction);
 
 Supported configuration formats
 -------------------------------
