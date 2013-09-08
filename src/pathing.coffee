@@ -8,7 +8,14 @@ path = require 'path'
 platform = os.platform()
 executionCommandSegments = argv.$0.split ' '
 executionLocation = executionCommandSegments[1..]
+
 localDirectory = path.dirname executionLocation
+
+if localDirectory[localDirectory.length-4..] is '/bin'
+  localDirectory = [
+    localDirectory
+    localDirectory[..localDirectory.length-4]
+  ]
 
 
 lastPaths =
