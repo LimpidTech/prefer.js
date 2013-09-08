@@ -3,10 +3,29 @@ os = require 'os'
 path = require 'path'
 
 
-defaultPaths =
-  top: ['.']
-  bottom: [process.env.HOME]
+platform = os.platform()
 
+
+lastPaths =
+  win32: [
+    process.env.USERPROFILE
+
+    process.env.LOCALPROFILE
+    process.env.APPDATA
+
+    process.env.CommonProgramFiles
+    process.env.ProgramData
+    process.env.ProgramFiles
+    process.env['ProgramFiles(x86)']
+
+    process.env.SystemRoot
+    process.env.SystemRoot + '/system32'
+  ]
+
+  default: [
+    process.env.HOME
+    '/'
+  ]
 
 conventionalize = (subject, parent=[]) ->
   if _.isString subject
@@ -24,9 +43,9 @@ conventionalize = (subject, parent=[]) ->
 
 
 standardPaths = conventionalize [
-    defaultPaths.top
-    defaultPaths.mid
-    defaultPaths.bottom
+    '.'
+
+    lastPaths[platform] or lastPaths.default
   ]
 
 
