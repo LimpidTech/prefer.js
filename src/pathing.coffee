@@ -2,8 +2,13 @@ _ = require 'lodash'
 os = require 'os'
 path = require 'path'
 
+{argv} = require 'optimist'
+
 
 platform = os.platform()
+executionCommandSegments = argv.$0.split ' '
+executionLocation = executionCommandSegments[1..]
+localDirectory = path.dirname executionLocation
 
 
 lastPaths =
@@ -46,6 +51,7 @@ conventionalize = (subject, parent=[]) ->
 
 standardPaths = conventionalize [
     '.'
+    localDirectory
 
     lastPaths[platform] or lastPaths.default
   ]
