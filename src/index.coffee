@@ -8,18 +8,16 @@ resolveModule = (identifier, separator) ->
 
   attributeIndex = identifier.lastIndexOf separator
 
-  if attributeIndex >= 0
+  if attributeIndex
     attributeName = identifier[attributeIndex+1..]
-    moduleName = identifier[..attributeIndex-1]
-  else
-    moduleName = identifier
+    identifier = identifier[..attributeIndex-1]
 
-  containedModule = require moduleName
+  result = require identifier
 
   if attributeName?
-    return containedModule[attributeName]
+    result = result[attributeName]
 
-  return containedModule
+  return result
 
 
 load = (identifier, options, callback) ->
