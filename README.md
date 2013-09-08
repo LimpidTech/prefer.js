@@ -1,7 +1,7 @@
 What is it?
 -----------
 
-[![Build Status](https://travis-ci.org/LimpidTech/prefer.png?branch=master)](https://travis-ci.org/LimpidTech/prefer)
+[![Build Status][bs]](https://travis-ci.org/LimpidTech/prefer)
 
 Prefer is a node library for helping you manage application configurations.
 
@@ -77,3 +77,7 @@ limited to specific use-cases - and some projects require real-time, dynamic
 updating of their configuration. Prefer provides all of it's interfaces in an
 asyncronous manner in order to provide that possibility without the requirement
 that those actions are blocking.
+
+
+
+[bs]: https://travis-ci.org/LimpidTech/prefer.png?branch=master "Build Status"
