@@ -24,6 +24,8 @@ lastPaths =
 
   default: [
     process.env.HOME
+    '/usr/local'
+    '/usr/'
     '/'
   ]
 
