@@ -7,7 +7,7 @@ class Formatter
 
   stringify: (asObject, callback) ->
     try
-      return @toString asObject, callback
+      @toString asObject, callback
     catch error
       callback error
 
