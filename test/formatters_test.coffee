@@ -1,6 +1,7 @@
 {JSONFormatter} = require '../src/formatters/json'
 {YAMLFormatter} = require '../src/formatters/yaml'
 {INIFormatter} = require '../src/formatters/ini'
+{CoffeeFormatter} = require '../src/formatters/coffee'
 
 chai = require 'chai'
 sinon = require 'sinon'
@@ -86,6 +87,31 @@ describe 'INIFormat', ->
       callback = (err, data) ->
         chai.expect(err).to.equal null
         chai.expect(shortcuts.noTrainingLine data).to.equal asString
+        done()
+
+      result = formatter.stringify fixture, callback
+
+
+describe 'CoffeeFormat', ->
+  asString = shortcuts.fixture 'coffee'
+
+  describe '#parse', ->
+    it 'converts the provided string to an object', (done) ->
+      formatter = new CoffeeFormatter
+
+      callback = (err, data) ->
+        chai.expect(err).to.equal null
+        chai.expect(data).to.deep.equal fixture
+        done()
+
+      result = formatter.parse asString, callback
+
+  describe '#stringify', ->
+    it 'throws an error since coffee can not be serialized', (done) ->
+      formatter = new CoffeeFormatter
+
+      callback = (err, data) ->
+        chai.expect(err).to.be.instanceof Error
         done()
 
       result = formatter.stringify fixture, callback

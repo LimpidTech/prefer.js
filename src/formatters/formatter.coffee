@@ -1,4 +1,7 @@
 class Formatter
+  toString: ->
+    throw new Error 'The Formatter in use does not support serialization.'
+
   parse: (asString, callback) ->
     try
       @fromString asString, callback
