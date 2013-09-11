@@ -1,5 +1,6 @@
 {JSONFormatter} = require '../src/formatters/json'
 {YAMLFormatter} = require '../src/formatters/yaml'
+{INIFormatter} = require '../src/formatters/ini'
 
 chai = require 'chai'
 sinon = require 'sinon'
@@ -55,6 +56,32 @@ describe 'YAMLFormat', ->
   describe '#stringify', ->
     it 'converts the provided object into a YAML string', (done) ->
       formatter = new YAMLFormatter
+
+      callback = (err, data) ->
+        chai.expect(err).to.equal null
+        chai.expect(shortcuts.noTrainingLine data).to.equal asString
+        done()
+
+      result = formatter.stringify fixture, callback
+
+
+describe 'INIFormat', ->
+  asString = shortcuts.fixture 'ini'
+
+  describe '#parse', ->
+    it 'converts the provided string to an object', (done) ->
+      formatter = new INIFormatter
+
+      callback = (err, data) ->
+        chai.expect(err).to.equal null
+        chai.expect(data).to.deep.equal fixture
+        done()
+
+      result = formatter.parse asString, callback
+
+  describe '#stringify', ->
+    it 'converts the provided object into a INI string', (done) ->
+      formatter = new INIFormatter
 
       callback = (err, data) ->
         chai.expect(err).to.equal null
