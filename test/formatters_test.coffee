@@ -1,26 +1,24 @@
 {JSONFormatter} = require '../src/formatters/json'
+{YAMLFormatter} = require '../src/formatters/yaml'
 
-fs = require 'fs'
 chai = require 'chai'
 sinon = require 'sinon'
+shortcuts = require './shortcuts'
 
 
 fixture = user: 'monokrome', domains: ['monokro.me', 'audalysis.com']
 
 
+
 describe 'JSONFormat', ->
-  normalizePattern = new RegExp '[\\n\\s]+', 'g'
-
-  asString = fs.readFileSync('test/fixtures/fixture.json')
-               .toString()
-               .replace normalizePattern, ''
-
+  asString = shortcuts.fixture 'json'
 
   describe '#parse', ->
     it 'converts the provided string to an object', (done) ->
       formatter = new JSONFormatter
 
       callback = (err, data) ->
+        chai.expect(err).to.equal null
         chai.expect(data).to.deep.equal fixture
         done()
 
