@@ -20,6 +20,7 @@ describe 'JSONFormat', ->
       callback = (err, data) ->
         chai.expect(err).to.equal null
         chai.expect(data).to.deep.equal fixture
+
         done()
 
       result = formatter.parse asString, callback
@@ -29,7 +30,35 @@ describe 'JSONFormat', ->
       formatter = new JSONFormatter
 
       callback = (err, data) ->
-        chai.expect(data).to.deep.equal asString
+        chai.expect(err).to.equal null
+        chai.expect(shortcuts.noTrainingLine data).to.equal asString
+
+        done()
+
+      result = formatter.stringify fixture, callback
+
+
+describe 'YAMLFormat', ->
+  asString = shortcuts.fixture 'yml'
+
+  describe '#parse', ->
+    it 'converts the provided string to an object', (done) ->
+      formatter = new YAMLFormatter
+
+      callback = (err, data) ->
+        chai.expect(err).to.equal null
+        chai.expect(data).to.deep.equal fixture
+        done()
+
+      result = formatter.parse asString, callback
+
+  describe '#stringify', ->
+    it 'converts the provided object into a YAML string', (done) ->
+      formatter = new YAMLFormatter
+
+      callback = (err, data) ->
+        chai.expect(err).to.equal null
+        chai.expect(shortcuts.noTrainingLine data).to.equal asString
         done()
 
       result = formatter.stringify fixture, callback
