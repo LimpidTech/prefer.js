@@ -13,7 +13,7 @@ fixture = user: 'monokrome', domains: ['monokro.me', 'audalysis.com']
 
 
 
-describe 'JSONFormat', ->
+describe 'JSONFormatter', ->
   asString = shortcuts.fixture 'json'
 
   describe '#parse', ->
@@ -41,7 +41,7 @@ describe 'JSONFormat', ->
       result = formatter.stringify fixture, callback
 
 
-describe 'YAMLFormat', ->
+describe 'YAMLFormatter', ->
   asString = shortcuts.fixture 'yml'
 
   describe '#parse', ->
@@ -67,7 +67,7 @@ describe 'YAMLFormat', ->
       result = formatter.stringify fixture, callback
 
 
-describe 'INIFormat', ->
+describe 'INIFormatter', ->
   asString = shortcuts.fixture 'ini'
 
   describe '#parse', ->
@@ -93,7 +93,7 @@ describe 'INIFormat', ->
       result = formatter.stringify fixture, callback
 
 
-describe 'CoffeeFormat', ->
+describe 'CoffeeFormatter', ->
   asString = shortcuts.fixture 'coffee'
 
   describe '#parse', ->
