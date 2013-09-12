@@ -12,7 +12,6 @@ shortcuts = require './shortcuts'
 fixture = user: 'monokrome', domains: ['monokro.me', 'audalysis.com']
 
 
-
 describe 'JSONFormatter', ->
   asString = shortcuts.fixture 'json'
 
