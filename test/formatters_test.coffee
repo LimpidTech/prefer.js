@@ -27,6 +27,14 @@ describe 'JSONFormatter', ->
 
       result = formatter.parse asString, callback
 
+    it 'provides an error to the callback when necessary', ->
+      error = new Error 'Mock error'
+
+      formatter = new JSONFormatter
+      sinon.stub formatter, 'fromString', -> throw error
+
+      callback = (err) -> expect(err).to.equal error
+
   describe '#stringify', ->
     it 'converts the provided object into a JSON string', (done) ->
       formatter = new JSONFormatter
