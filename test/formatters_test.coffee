@@ -34,6 +34,7 @@ describe 'JSONFormatter', ->
       sinon.stub formatter, 'fromString', -> throw error
 
       callback = (err) -> expect(err).to.equal error
+      formatter.parse asString, callback
 
   describe '#stringify', ->
     it 'converts the provided object into a JSON string', (done) ->
