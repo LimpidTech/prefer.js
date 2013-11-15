@@ -3,8 +3,8 @@
 {INIFormatter} = require '../src/formatters/ini'
 {CoffeeFormatter} = require '../src/formatters/coffee'
 {XMLFormatter} = require '../src/formatters/xml'
+{expect} = require 'chai'
 
-chai = require 'chai'
 sinon = require 'sinon'
 shortcuts = require './shortcuts'
 
@@ -20,8 +20,8 @@ describe 'JSONFormatter', ->
       formatter = new JSONFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.equal null
-        chai.expect(data).to.deep.equal fixture
+        expect(err).to.equal null
+        expect(data).to.deep.equal fixture
 
         done()
 
@@ -32,8 +32,8 @@ describe 'JSONFormatter', ->
       formatter = new JSONFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.equal null
-        chai.expect(shortcuts.noTrainingLine data).to.equal asString
+        expect(err).to.equal null
+        expect(shortcuts.noTrainingLine data).to.equal asString
 
         done()
 
@@ -48,8 +48,8 @@ describe 'YAMLFormatter', ->
       formatter = new YAMLFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.equal null
-        chai.expect(data).to.deep.equal fixture
+        expect(err).to.equal null
+        expect(data).to.deep.equal fixture
         done()
 
       result = formatter.parse asString, callback
@@ -59,8 +59,8 @@ describe 'YAMLFormatter', ->
       formatter = new YAMLFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.equal null
-        chai.expect(shortcuts.noTrainingLine data).to.equal asString
+        expect(err).to.equal null
+        expect(shortcuts.noTrainingLine data).to.equal asString
         done()
 
       result = formatter.stringify fixture, callback
@@ -74,8 +74,8 @@ describe 'INIFormatter', ->
       formatter = new INIFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.equal null
-        chai.expect(data).to.deep.equal fixture
+        expect(err).to.equal null
+        expect(data).to.deep.equal fixture
         done()
 
       result = formatter.parse asString, callback
@@ -85,8 +85,8 @@ describe 'INIFormatter', ->
       formatter = new INIFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.equal null
-        chai.expect(shortcuts.noTrainingLine data).to.equal asString
+        expect(err).to.equal null
+        expect(shortcuts.noTrainingLine data).to.equal asString
         done()
 
       result = formatter.stringify fixture, callback
@@ -100,8 +100,8 @@ describe 'CoffeeFormatter', ->
       formatter = new CoffeeFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.equal null
-        chai.expect(data).to.deep.equal fixture
+        expect(err).to.equal null
+        expect(data).to.deep.equal fixture
         done()
 
       result = formatter.parse asString, callback
@@ -111,7 +111,7 @@ describe 'CoffeeFormatter', ->
       formatter = new CoffeeFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.be.instanceof Error
+        expect(err).to.be.instanceof Error
         done()
 
       result = formatter.stringify fixture, callback
@@ -125,8 +125,8 @@ describe 'XMLFormatter', ->
       formatter = new XMLFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.equal null
-        chai.expect(data).to.deep.equal fixture
+        expect(err).to.equal null
+        expect(data).to.deep.equal fixture
         done()
 
       result = formatter.parse asString, callback
@@ -136,7 +136,7 @@ describe 'XMLFormatter', ->
       formatter = new XMLFormatter
 
       callback = (err, data) ->
-        chai.expect(err).to.be.instanceof Error
+        expect(err).to.be.instanceof Error
         done()
 
       result = formatter.stringify fixture, callback
