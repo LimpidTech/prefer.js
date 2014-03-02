@@ -73,7 +73,7 @@ upon installation of prefer:
 
 - CoffeeScript
 - INI
-- JSON
+- JSON (using [json5][j5])
 - XML
 - YAML
 
@@ -91,3 +91,4 @@ that those actions are blocking.
 
 
 [bs]: https://travis-ci.org/LimpidTech/prefer.png?branch=master "Build Status"
+[j5]: http://json5.org/ "json5 - JSON for the ES5 era"
