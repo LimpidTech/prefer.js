@@ -74,6 +74,7 @@ upon installation of prefer:
 - CoffeeScript
 - INI
 - JSON (using [json5][j5])
+- CSON
 - XML
 - YAML
 

@@ -1,4 +1,5 @@
 {JSONFormatter} = require '../src/formatters/json'
+{CSONFormatter} = require '../src/formatters/cson'
 {YAMLFormatter} = require '../src/formatters/yaml'
 {INIFormatter} = require '../src/formatters/ini'
 {CoffeeFormatter} = require '../src/formatters/coffee'
@@ -9,7 +10,12 @@ sinon = require 'sinon'
 shortcuts = require './shortcuts'
 
 
-fixture = user: 'monokrome', domains: ['monokro.me', 'audalysis.com']
+fixture =
+  user: 'monokrome'
+  domains: [
+    'monokro.me'
+    'audalysis.com'
+  ]
 
 
 describe 'JSONFormatter', ->
@@ -42,7 +48,7 @@ describe 'JSONFormatter', ->
 
       callback = (err, data) ->
         expect(err).to.equal null
-        expect(shortcuts.noTrainingLine data).to.equal asString
+        expect(shortcuts.normalize data).to.equal asString
 
         done()
 
@@ -69,7 +75,7 @@ describe 'YAMLFormatter', ->
 
       callback = (err, data) ->
         expect(err).to.equal null
-        expect(shortcuts.noTrainingLine data).to.equal asString
+        expect(shortcuts.normalize data).to.equal asString
         done()
 
       result = formatter.stringify fixture, callback
@@ -95,7 +101,7 @@ describe 'INIFormatter', ->
 
       callback = (err, data) ->
         expect(err).to.equal null
-        expect(shortcuts.noTrainingLine data).to.equal asString
+        expect(shortcuts.normalize data).to.equal asString
         done()
 
       result = formatter.stringify fixture, callback
@@ -146,6 +152,43 @@ describe 'XMLFormatter', ->
 
       callback = (err, data) ->
         expect(err).to.be.instanceof Error
+        done()
+
+      result = formatter.stringify fixture, callback
+
+
+describe 'CSONFormatter', ->
+  asString = shortcuts.fixture 'cson'
+
+  describe '#parse', ->
+    it 'converts the provided string to an object', (done) ->
+      formatter = new CSONFormatter
+
+      callback = (err, data) ->
+        expect(err).to.equal null
+        expect(data).to.deep.equal fixture
+
+        done()
+
+      result = formatter.parse asString, callback
+
+    it 'provides an error to the callback when necessary', ->
+      error = new Error 'Mock error'
+
+      formatter = new CSONFormatter
+      sinon.stub formatter, 'fromString', -> throw error
+
+      callback = (err) -> expect(err).to.equal error
+      formatter.parse asString, callback
+
+  describe '#stringify', ->
+    it 'converts the provided object into a CSON string', (done) ->
+      formatter = new CSONFormatter
+
+      callback = (err, data) ->
+        expect(err).to.equal null
+        expect(shortcuts.normalize data).to.equal asString
+
         done()
 
       result = formatter.stringify fixture, callback

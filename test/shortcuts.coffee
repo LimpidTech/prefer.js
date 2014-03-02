@@ -2,7 +2,7 @@ fs = require 'fs'
 
 
 module.exports =
-  noTrainingLine: (asString) ->
+  normalize: (asString) ->
     if asString[asString.length - 1] is '\n'
       asString = asString[..asString.length - 2]
 
@@ -11,5 +11,4 @@ module.exports =
   fixture: (ext) ->
     contents = fs.readFileSync 'test/fixtures/fixture.' + ext
 
-    return module.exports.noTrainingLine contents.toString()
-
+    return module.exports.normalize contents.toString()
