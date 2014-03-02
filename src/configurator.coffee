@@ -1,8 +1,8 @@
-class BaseConfigurator
-  constructor: (@context, @options) ->
+class Configurator
+  constructor: (@options) ->
 
   getKey: (key, callback) ->
-    node = @context
+    node = @options.context
     stack = key.split '.'
 
     while stack.length and node
@@ -19,12 +19,12 @@ class BaseConfigurator
       callback = key
       key = undefined
 
-      callback null, @context
+      callback null, @options.context
 
     else
       @getKey key, callback
 
 
 module.exports = {
-  Configurator: BaseConfigurator
+  Configurator: Configurator
 }

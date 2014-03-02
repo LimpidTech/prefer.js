@@ -1,4 +1,5 @@
-{Configurator} = require '../src/configurators/base'
+{Configurator} = require '../src/configurator'
+{FileLoader} = require '../src/loaders/file_loader'
 
 
 prefer = require '../src/index'
@@ -13,7 +14,7 @@ describe 'prefer', ->
       searchPaths: ['test/fixtures/']
 
   describe '#load', ->
-    it 'throws an error when no configuration loader exists', (done) ->
+    it 'throws an error when no configuration formatter exists', (done) ->
       callback = sinon.spy (err, configurator) ->
         chai.expect(callback.calledOnce).to.be.true
         chai.expect(err).to.be.instanceof Error
@@ -41,20 +42,13 @@ describe 'prefer', ->
       prefer.load 'loader_test.json', callback
 
     it 'uses the given loader instance if one is provided', (done) ->
-      hook = sinon.spy()
+      localOptions = _.merge {}, options,
+        loader: new FileLoader
 
-      class FakeLoader
-        configurator: sinon.mock()
-
-        load: (filename, callback) ->
-          hook()
-          callback null, {}
-
-      localOptions = _.extend {}, options,
-        loader: FakeLoader
+      localOptions.loader.load = sinon.spy localOptions.loader.load
 
       prefer.load 'loader_test.json', localOptions, (err, data) ->
-        chai.expect(hook.calledOnce).to.be.true
+        chai.expect(localOptions.loader.load.calledOnce).to.be.true
         done()
 
     it 'passes an error to the callback when loader.load fails', (done) ->

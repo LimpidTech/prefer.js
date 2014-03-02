@@ -45,39 +45,6 @@ loaders =
       loader.load fixtureName, callback done
 
 
-describe 'JSONLoader', ->
-  describe '#load', ->
-    it 'provides a native object to the callback', loaders.test 'JSON'
-
-
-describe 'YAMLLoader', ->
-  describe '#load', ->
-    it 'provides a native object to the callback', loaders.test 'YAML', '.yml'
-
-
-describe 'INILoader', ->
-  describe '#load', ->
-    it 'provides a native object to the callback', loaders.test 'INI'
-
-
-describe 'XMLLoader', ->
-  describe '#load', ->
-    it 'provides a native object to the callback', loaders.test 'XML'
-
-
-describe 'CoffeeLoader', ->
-  success_test = loaders.test 'Coffee'
-
-  broken_test = loaders.test 'Coffee', '_broken.coffee', (done) ->
-    return (err, data) ->
-      chai.expect(err).to.be.instanceof Error
-      done()
-
-  describe '#load', ->
-    it 'provides a native object to the callback', success_test
-    it 'passes an error to callback if errors occur', broken_test
-
-
 describe 'FileLoader', ->
   describe '#load', ->
     it 'results in a not found error if no file was found', (done) ->
@@ -89,26 +56,6 @@ describe 'FileLoader', ->
 
       loader = loaders.create FileLoader
       loader.load 'fakeFile', callback
-
-    it 'calls parse if a file was found', sinon.spy (done) ->
-      loader = loaders.create FileLoader
-
-      callback = sinon.stub loader, 'parse', ->
-        chai.expect(callback.calledOnce).to.be.true
-        done()
-
-      loader.load 'loader_test.json'
-
-    it 'throws an error if parse is called without inheriting', (done) ->
-      loader = loaders.create FileLoader
-
-      callback = sinon.spy (err, data) ->
-        chai.expect(callback.calledOnce).to.be.true
-        chai.expect(err).to.be.instanceof Error
-
-        done()
-
-      loader.parse '', callback
 
     it 'throws an error if reading the requested file fails', (done) ->
       sandbox = sinon.sandbox.create()

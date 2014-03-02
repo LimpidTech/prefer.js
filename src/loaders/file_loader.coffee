@@ -31,24 +31,21 @@ class FileLoader extends BaseLoader
     else
       callback new Error "Could not find configuration: #{ filename }."
 
-  parse: (data, callback) ->
-    callback new Error 'FileLoader must be inherited, not used directly.'
-
   get: (filename, callback) ->
     fs.readFile filename, 'UTF-8', (err, data) =>
       if err
         callback err
-        return
-
-      @parse data, callback
+      else
+        callback null,
+          source: filename
+          context: data
 
   load: (filename, callback) ->
     @find filename, (err, filename) =>
       if err
         callback err
-        return
-
-      @get filename, callback
+      else
+        @get filename, callback
 
 
 module.exports = {FileLoader}

@@ -1,9 +1,21 @@
-defaultLoaders = require './loaders/defaults'
+{Configurator} = require './configurator'
 
-_ = require 'lodash'
+loaders = require './loaders/defaults'
+formatters = require './formatters/defaults'
+
+lodash = require 'lodash'
 
 
 class Prefer
+  constructor: (options) ->
+    options ?= {}
+
+    options.loaders = lodash.merge {}, loaders, options.loaders
+    options.formatters = lodash.merge {}, formatters, options.formatters
+
+    @options = options
+
+
   resolveModule: (identifier, separator) ->
     separator ?= ':'
 
@@ -20,50 +32,69 @@ class Prefer
 
     return result
 
+  getConfigurator: (loader, formatter, options) ->
+    new Configurator loader, formatter, lodash.merge {}, options,
+      loader: loader
+      formatter: formatter
+
+  getFormatter: (loader, options, callback) -> (err, results) =>
+    return callback err if err
+
+    if options.formatter?
+      formatter = options.formatter
+
+    else
+      formatters = lodash.filter options.formatters, (potential) ->
+        return potential.match results
+
+      unless formatters.length
+        throw new Error 'Could not find a formatter for ' + results.source
+
+      {_, module} = lodash.first formatters
+      formatter = @resolveModule module
+
+    configurator = @getConfigurator loader, formatter, options, callback
+
+    callback null, configurator
+
+  getLoader: (identifier, options) ->
+    return if options.loader?
+
+    matches = lodash.filter options.loaders, (potential) ->
+      return potential.match identifier
+
+    if matches.length is 0
+      callback new Error 'No configuration loader found for: ' + identifier
+      return
+
+    match = lodash.first matches
+
+    return @resolveModule match.module
 
   load: (identifier, options, callback) =>
     # Allow options to be optional.
-    if _.isFunction options
+    if lodash.isFunction options
       callback = options
       options = undefined
 
-    options ?= {}
-    options.loaders ?= defaultLoaders
+    options = lodash.merge {}, @options, options
 
-    if not options.loader?
-      matches = _.filter options.loaders, (potentialLoader) ->
-        if potentialLoader.match identifier
-          return true
-        else
-          return false
-
-      if matches.length is 0
-        callback new Error 'No configuration loader found for: ' + identifier
-        return
-
-      match = _.first matches
-
-      Type = @resolveModule match.module
-      loader = new Type options
-
-    else
-      if _.isFunction options.loader
-        Type = options.loader
-        options.loader = new Type options
-
+    if options.loader?
       loader = options.loader
+    else
+      loader = @getLoader identifier, options
 
-    loader.load identifier, (err, context) ->
-      unless err
-        Type = loader.configurator
-        configurator = new Type context, options
+    # Instantiate a loader if it's a class
+    loader = new loader options if lodash.isFunction loader
 
-      callback err, configurator
+    getFormatter = @getFormatter loader, options, callback
+    loader.load identifier, getFormatter
 
 
 instance = new Prefer
 
+
 module.exports = {
-  load: instance.load,
+  load: instance.load
   Prefer: Prefer
 }

@@ -1,15 +1,16 @@
-{Configurator} = require '../src/configurators/simple'
+{Configurator} = require '../src/configurator'
 
 
 sinon = require 'sinon'
 chai = require 'chai'
 
 
-describe 'SimpleConfigurator', ->
+describe 'Configurator', ->
   fixture = require './fixtures/loader_test.coffee'
 
   beforeEach ->
-    @configurator = new Configurator fixture
+    @configurator = new Configurator
+      context: fixture
 
   describe '#get', ->
     it 'provides an error when the provided key does not exist', (done) ->
