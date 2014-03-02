@@ -25,7 +25,7 @@ class Prefer
     # Allow options to be optional.
     if _.isFunction options
       callback = options
-      options = {}
+      options = undefined
 
     options ?= {}
     options.loaders ?= defaultLoaders
