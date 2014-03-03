@@ -32,19 +32,18 @@ class Prefer
 
     return result
 
-  getConfigurator: (loader, formatter, options, callback) ->
-    formatter.parse options.results.content, (err, context) ->
-      if err
-        callback err
-      else
-        configurator = new Configurator lodash.merge {}, options,
-          loader: loader
-          formatter: formatter
-          context: context
+  getConfigurator: (options, callback) -> (err, context) ->
+    if err
+      callback err
+    else
+      configurator = new Configurator lodash.merge {}, options,
+        loader: options.loader
+        formatter: options.formatter
+        context: context
 
-        callback null, configurator
+      callback null, configurator
 
-  getFormatter: (loader, options, callback) -> (err, results) =>
+  getFormatter: (options, callback) -> (err, results) =>
     return callback err if err
 
     if options.formatter?
@@ -62,10 +61,11 @@ class Prefer
       {_, module} = lodash.first formatters
       formatter = @resolveModule module
 
+    options.formatter = formatter
+    options.results = results
     formatter = new formatter options if lodash.isFunction formatter
 
-    options.results = results
-    @getConfigurator loader, formatter, options, callback
+    formatter.parse options.results.content, @getConfigurator options, callback
 
   getLoader: (identifier, options, callback) ->
     return if options.loader?
@@ -99,7 +99,9 @@ class Prefer
     # Instantiate a loader if it's a class
     loader = new loader options if lodash.isFunction loader
 
-    getFormatter = @getFormatter loader, options, callback
+    options.loader = loader
+    getFormatter = @getFormatter options, callback
+
     loader.load identifier, getFormatter
 
 
