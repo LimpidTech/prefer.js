@@ -25,6 +25,4 @@ class Configurator
       @getKey key, callback
 
 
-module.exports = {
-  Configurator: Configurator
-}
+module.exports = {Configurator}
