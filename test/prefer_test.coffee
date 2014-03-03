@@ -1,5 +1,6 @@
 {Configurator} = require '../src/configurator'
 {FileLoader} = require '../src/loaders/file_loader'
+{JSONFormatter} = require '../src/formatters/json'
 
 
 prefer = require '../src/index'
@@ -32,14 +33,14 @@ describe 'prefer', ->
 
         done()
 
-      prefer.load 'loader_test.json', options, callback
+      prefer.load 'fixture.json', options, callback
 
     it 'allows options to be an optional argument', (done) ->
       callback = sinon.spy (err, configurator) ->
         chai.expect(callback.calledOnce).to.be.true
         done()
 
-      prefer.load 'loader_test.json', callback
+      prefer.load 'fixture.json', callback
 
     it 'uses the given loader instance if one is provided', (done) ->
       localOptions = _.merge {}, options,
@@ -47,8 +48,18 @@ describe 'prefer', ->
 
       localOptions.loader.load = sinon.spy localOptions.loader.load
 
-      prefer.load 'loader_test.json', localOptions, (err, data) ->
+      prefer.load 'fixture.json', localOptions, (err, data) ->
         chai.expect(localOptions.loader.load.calledOnce).to.be.true
+        done()
+
+    it 'uses the given formatter instance if one is provided', (done) ->
+      localOptions = _.merge {}, options,
+        formatter: new JSONFormatter
+
+      localOptions.formatter.fromString = sinon.spy localOptions.formatter.fromString
+
+      prefer.load 'fixture.json', localOptions, (err, data) ->
+        chai.expect(localOptions.formatter.fromString.calledOnce).to.be.true
         done()
 
     it 'passes an error to the callback when loader.load fails', (done) ->
@@ -61,6 +72,6 @@ describe 'prefer', ->
       localOptions = _.extend {}, options,
         loader: FakeLoader
 
-      prefer.load 'loader_test.json', localOptions, (err, data) ->
+      prefer.load 'fixture.json', localOptions, (err, data) ->
         chai.expect(err).to.equal fakeError
         done()

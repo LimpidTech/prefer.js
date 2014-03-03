@@ -6,7 +6,13 @@ chai = require 'chai'
 
 
 describe 'Configurator', ->
-  fixture = require './fixtures/loader_test.coffee'
+  fixture =
+    user: 'monokrome'
+    domains: [
+      'monokro.me'
+      'audalysis.com'
+    ]
+ 
 
   beforeEach ->
     @configurator = new Configurator

@@ -38,7 +38,7 @@ class FileLoader extends BaseLoader
       else
         callback null,
           source: filename
-          context: data
+          content: data
 
   load: (filename, callback) ->
     @find filename, (err, filename) =>

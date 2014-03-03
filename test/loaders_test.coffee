@@ -10,7 +10,7 @@ class FakeError
 
 
 loaders =
-  fixture: require './fixtures/loader_test.coffee'
+  fixture: require './fixtures/fixture.coffee'
 
   callback: (done) ->
     callback = sinon.spy (err, data) ->
@@ -40,7 +40,7 @@ loaders =
 
     return (done) ->
       loader = loaders.create Loader
-      fixtureName = 'loader_test' + loaderExtension
+      fixtureName = 'fixture' + loaderExtension
 
       loader.load fixtureName, callback done
 
@@ -71,4 +71,4 @@ describe 'FileLoader', ->
         sandbox.restore()
         done()
 
-      loader.load 'loader_test.json', callback
+      loader.load 'fixture.json', callback
