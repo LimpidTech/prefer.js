@@ -1,4 +1,4 @@
-{BaseLoader} = require './loader'
+{Loader} = require './loader'
 
 _ = require 'lodash'
 fs = require 'fs'
@@ -8,9 +8,10 @@ pathing = require '../pathing'
 winston = require 'winston'
 
 
-class FileLoader extends BaseLoader
+class FileLoader extends Loader
   options:
     files:
+      watch: yes
       searchPaths: pathing.get()
 
   find: (filename, callback) ->
@@ -31,7 +32,7 @@ class FileLoader extends BaseLoader
     else
       callback new Error "Could not find configuration: #{ filename }."
 
-  get: (filename, callback) ->
+  get: (filename, callback) =>
     fs.readFile filename, 'UTF-8', (err, data) =>
       if err
         callback err
@@ -40,12 +41,23 @@ class FileLoader extends BaseLoader
           source: filename
           content: data
 
+  changed: (event, filename) =>
+    @emit event, filename
+    @get filename, @updated
+  
+  watch: (filename) ->
+    options =
+      persistent: false
+
+    fs.watch filename, options, @changed
+
   load: (filename, callback) ->
     @find filename, (err, filename) =>
       if err
         callback err
       else
         @get filename, callback
+        @watch filename if @options.files.watch
 
 
 module.exports = {FileLoader}

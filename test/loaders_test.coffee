@@ -1,5 +1,7 @@
+{Loader} = require '../src/loaders/loader'
 {FileLoader} = require '../src/loaders/file_loader'
 
+lodash = require 'lodash'
 sinon = require 'sinon'
 path = require 'path'
 chai = require 'chai'
@@ -23,26 +25,16 @@ loaders =
 
     return callback
 
-  create: (Type) ->
-    new Type
-      files:
-        searchPaths: ['test/fixtures/']
 
+describe 'Loader', ->
+  loader = new Loader
 
-  test: (loaderType, loaderExtension, callback) ->
-    unless loaderExtension?
-      loaderExtension = '.' + loaderType.toLowerCase()
+  describe '#updated', ->
+    it 'should emit "updated" without error', ->
+      loader.updated null
 
-    module = require "../src/loaders/#{ loaderType.toLowerCase() }_loader"
-    Loader = module[loaderType + 'Loader']
-
-    callback ?= loaders.callback
-
-    return (done) ->
-      loader = loaders.create Loader
-      fixtureName = 'fixture' + loaderExtension
-
-      loader.load fixtureName, callback done
+    it 'should emit "updateFailed" with an error', ->
+      loader.updated new Error 'Fake error'
 
 
 describe 'FileLoader', ->
@@ -54,7 +46,11 @@ describe 'FileLoader', ->
 
         done()
 
-      loader = loaders.create FileLoader
+      loader = new FileLoader
+        files:
+          watch: no
+          searchPaths: ['test/fixtures/']
+
       loader.load 'fakeFile', callback
 
     it 'throws an error if reading the requested file fails', (done) ->
@@ -63,12 +59,81 @@ describe 'FileLoader', ->
       sandbox.stub fs, 'readFile', (filename, encoding, callback) ->
         callback new FakeError 'Fake error for testing failure reading files.'
 
-      loader = loaders.create FileLoader
+      loader = new FileLoader
+        files:
+          watch: no
+          searchPaths: ['test/fixtures/']
 
       callback = sinon.spy (err, data) ->
         chai.expect(err).to.be.instanceof FakeError
 
         sandbox.restore()
         done()
+
+      loader.load 'fixture.json', callback
+
+  describe '#changed', ->
+    it 'emits the provided event', (done) ->
+      loader = new FileLoader
+        files:
+          watch: no
+          searchPaths: ['test/fixtures/']
+
+      callback = (err, results) ->
+        loader.on 'changed', (filename) ->
+          chai.expect(filename).to.equal results.source
+          done()
+
+        loader.changed 'changed', results.source
+
+      loader.load 'fixture.json', callback
+
+  describe '#watch', ->
+    beforeEach ->
+      fs.watch = sinon.stub fs, 'watch'
+
+    afterEach ->
+      fs.watch.restore()
+
+    it 'calls #changed when file changes', (done) ->
+      loader = new FileLoader
+        files:
+          watch: yes
+          searchPaths: ['test/fixtures/']
+
+      callback = (err, results) ->
+        chai.expect(fs.watch.calledOnce).to.be.true
+
+        hasExpectedArgs = fs.watch.calledWith results.source,
+          persistent: false
+        , loader.changed
+
+        chai.expect(hasExpectedArgs).to.be.true
+
+        done()
+
+      loader.load 'fixture.json', callback
+
+    it 'calls #updated when new configuration is ready', (done) ->
+      loader =  new FileLoader
+        files:
+          watch: yes
+          searchPaths: ['test/fixtures/']
+
+      callback = sinon.spy (err, results) ->
+        loader.updated = sinon.stub loader, 'updated', (err, results) ->
+          chai.expect(loader.updated.calledOnce).to.be.true
+
+          chai.expect(err).to.equal null
+          chai.expect(results).to.deep.equal results
+
+          loader.updated.restore()
+
+          done()
+
+        chai.expect(loader.updated.notCalled).to.be.true
+
+        # fs.watch will call this in the real world
+        loader.changed 'changed', results.source
 
       loader.load 'fixture.json', callback
