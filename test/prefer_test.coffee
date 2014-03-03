@@ -15,14 +15,32 @@ describe 'prefer', ->
       searchPaths: ['test/fixtures/']
 
   describe '#load', ->
-    it 'throws an error when no configuration formatter exists', (done) ->
+    it 'provides an error when no matching formatter exists', (done) ->
       callback = sinon.spy (err, configurator) ->
         chai.expect(callback.calledOnce).to.be.true
         chai.expect(err).to.be.instanceof Error
 
         done()
 
-      prefer.load 'this.isNotEvenReal', options, callback
+      prefer.load 'fixture.fake', options, callback
+
+    it 'provides an error when data is malformed', (done) ->
+      callback = sinon.spy (err, configurator) ->
+        chai.expect(callback.calledOnce).to.be.true
+        chai.expect(err).to.be.instanceof Error
+
+        done()
+
+      prefer.load 'fixture_malformed.coffee', options, callback
+
+    it 'provides an error when no loader could be found', (done) ->
+      callback = sinon.spy (err, configurator) ->
+        chai.expect(callback.calledOnce).to.be.true
+        chai.expect(err).to.be.instanceof Error
+
+        done()
+
+      prefer.load '/////// THIS URL IS IMPOSSIBLE ////////', options, callback
 
     it 'provides a configurator when successfully loading a file', (done) ->
       callback = sinon.spy (err, configurator) ->

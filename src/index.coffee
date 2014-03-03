@@ -51,11 +51,13 @@ class Prefer
       formatter = options.formatter
 
     else
+      {source, content} = results
+
       formatters = lodash.filter options.formatters, (potential) ->
         return potential.match results
 
       unless formatters.length
-        throw new Error 'Could not find a formatter for ' + results.source
+        return callback new Error 'Could not find formatter for ' + source
 
       {_, module} = lodash.first formatters
       formatter = @resolveModule module
@@ -65,15 +67,15 @@ class Prefer
     options.results = results
     @getConfigurator loader, formatter, options, callback
 
-  getLoader: (identifier, options) ->
+  getLoader: (identifier, options, callback) ->
     return if options.loader?
 
     matches = lodash.filter options.loaders, (potential) ->
       return potential.match identifier
 
-    if matches.length is 0
+    unless matches.length
       callback new Error 'No configuration loader found for: ' + identifier
-      return
+      return null
 
     match = lodash.first matches
 
@@ -90,7 +92,9 @@ class Prefer
     if options.loader?
       loader = options.loader
     else
-      loader = @getLoader identifier, options
+      loader = @getLoader identifier, options, callback
+
+    return unless loader?
 
     # Instantiate a loader if it's a class
     loader = new loader options if lodash.isFunction loader
