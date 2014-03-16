@@ -1,7 +1,8 @@
 {Configurator} = require './configurator'
 
-loaders = require './loaders/defaults'
 formatters = require './formatters/defaults'
+loaders = require './loaders/defaults'
+cli = require './cli'
 
 lodash = require 'lodash'
 
@@ -106,5 +107,7 @@ instance = new Prefer
 
 module.exports = {
   load: instance.load
+  cli: cli
+
   Prefer: Prefer
 }

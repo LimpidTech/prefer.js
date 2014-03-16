@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('prefer/cli')();
+require('prefer').cli();
