@@ -84,7 +84,8 @@ describe 'FileLoader', ->
           chai.expect(filename).to.equal results.source
           done()
 
-        loader.changed 'changed', results.source
+        changed = loader.getChangeHandler results.source
+        changed 'changed'
 
       loader.load 'fixture.json', callback
 
@@ -95,18 +96,23 @@ describe 'FileLoader', ->
     afterEach ->
       fs.watch.restore()
 
-    it 'calls #changed when file changes', (done) ->
+    it 'calls the handler returned from #changed when files change', (done) ->
       loader = new FileLoader
         files:
           watch: yes
           searchPaths: ['test/fixtures/']
+
+      changedHandler = sinon.stub()
+
+      changed = sinon.stub loader, 'getChangeHandler'
+      changed.returns changedHandler
 
       callback = (err, results) ->
         chai.expect(fs.watch.calledOnce).to.be.true
 
         hasExpectedArgs = fs.watch.calledWith results.source,
           persistent: false
-        , loader.changed
+        , changedHandler
 
         chai.expect(hasExpectedArgs).to.be.true
 
@@ -134,6 +140,7 @@ describe 'FileLoader', ->
         chai.expect(loader.updated.notCalled).to.be.true
 
         # fs.watch will call this in the real world
-        loader.changed 'changed', results.source
+        changed = loader.getChangeHandler results.source
+        changed 'changed'
 
       loader.load 'fixture.json', callback

@@ -1,5 +1,7 @@
 class Configurator
   constructor: (@options) ->
+    @loader = @options.loader
+    @formatter = @options.formatter
 
   getKey: (key, callback) ->
     node = @options.context

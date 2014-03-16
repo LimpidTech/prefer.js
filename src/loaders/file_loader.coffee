@@ -3,7 +3,6 @@
 _ = require 'lodash'
 fs = require 'fs'
 path = require 'path'
-Step = require 'step'
 pathing = require '../pathing'
 winston = require 'winston'
 
@@ -22,26 +21,28 @@ class FileLoader extends Loader
       # TODO: Make this async but still reliable?
       exists = fs.existsSync absolutePath
 
-      if exists
-        return absolutePath
-      else
-        return false
+      return absolutePath if exists
+      return false
 
     if paths.length
       callback null, paths[0]
     else
-      callback new Error "Could not find configuration: #{ filename }."
+      callback new Error 'Could not find configuration: ' + filename
 
   get: (filename, callback) =>
-    fs.readFile filename, 'UTF-8', (err, data) =>
-      if err
-        callback err
-      else
-        callback null,
-          source: filename
-          content: data
+    options =
+      encoding: 'UTF-8'
 
-  changed: (event, filename) =>
+    fs.readFile filename, options, (err, data) =>
+      return callback err if err
+
+      callback null,
+        source: filename
+        content: data
+
+  # fs.watch does not reliably provide the filename back to us, so this
+  # closure protects us from the situation where a filename is not provided.
+  getChangeHandler: (filename) -> (event) =>
     @emit event, filename
     @get filename, @updated
   
@@ -49,7 +50,7 @@ class FileLoader extends Loader
     options =
       persistent: false
 
-    fs.watch filename, options, @changed
+    fs.watch filename, options, @getChangeHandler filename
 
   load: (filename, callback) ->
     @find filename, (err, filename) =>
