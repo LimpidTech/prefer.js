@@ -9,9 +9,6 @@
     "type": "git",
     "url": "git://github.com/LimpidTech/preferjs.git"
   },
-  "bin": {
-    "prefer": "bin/prefer.js"
-  },
   "scripts": {
     "test": "mocha"
   },
