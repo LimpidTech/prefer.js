@@ -15,22 +15,19 @@ class Prefer
 
     @options = options
 
-
   resolveModule: (identifier, separator) ->
     separator ?= ':'
-
     attributeIndex = identifier.lastIndexOf separator
 
-    if attributeIndex
+    if attributeIndex > -1
       attributeName = identifier[attributeIndex+1..]
       identifier = identifier[..attributeIndex-1]
 
-    result = require identifier
+    module = require identifier
+    return module unless attributeName?
 
-    if attributeName?
-      result = result[attributeName]
-
-    return result
+    attribute = module[attributeName]
+    return attribute
 
   getConfigurator: (options, callback) -> (err, context) ->
     if err
@@ -78,7 +75,6 @@ class Prefer
       return null
 
     match = lodash.first matches
-
     return @resolveModule match.module
 
   load: (identifier, options, callback) =>
