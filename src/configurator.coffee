@@ -1,8 +1,17 @@
-class Configurator
-  constructor: (@options) ->
-    @loader = @options.loader
-    @formatter = @options.formatter
+events = require 'events'
 
+
+class Configurator extends events.EventEmitter
+  updated: (changes) =>
+    formatter = new @options.formatter
+
+    formatter.parse changes.content, (err, updated) =>
+      @options.context = updated
+      @emit 'updated', @options.context
+
+  constructor: (@options) ->
+    @options.loader?.on 'updated', @updated
+    
   getKey: (key, callback) ->
     node = @options.context
     stack = key.split '.'

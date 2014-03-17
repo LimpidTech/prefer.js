@@ -1,4 +1,6 @@
+{YAMLFormatter} = require '../src/formatters/yaml'
 {Configurator} = require '../src/configurator'
+{Loader} = require '../src/loaders/loader'
 
 
 sinon = require 'sinon'
@@ -12,11 +14,22 @@ describe 'Configurator', ->
       'monokro.me'
       'audalysis.com'
     ]
- 
 
   beforeEach ->
+    @loader = new Loader
+
     @configurator = new Configurator
       context: fixture
+      loader: @loader
+      formatter: YAMLFormatter
+
+  it 'updates the configuration when loader emits "updated"', sinon.test ->
+    @loader.updated null,
+      source: @configurator.options.source
+      content: 'fakeData: true'
+
+    chai.expect(@configurator.options.context).to.deep.equal
+      fakeData: true
 
   describe '#get', ->
     it 'provides an error when the provided key does not exist', (done) ->
@@ -32,7 +45,6 @@ describe 'Configurator', ->
         done()
 
       @configurator.get callback
-
 
     it 'returns data associated with the provided key', (done) ->
       callback = sinon.spy (err, data) ->

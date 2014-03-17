@@ -10,10 +10,8 @@ class Loader extends events.EventEmitter
     _.extend @options, {}, options
 
   updated: (err, results) =>
-    if err
-      @emit 'updateFailed', err
-    else
-      @emit 'updated', results
+    return @emit 'updateFailed', err if err
+    @emit 'updated', results
 
 
 module.exports = {Loader}

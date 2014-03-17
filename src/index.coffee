@@ -58,10 +58,10 @@ class Prefer
       {_, module} = lodash.first formatters
       formatter = @resolveModule module
 
-    options.formatter = formatter
     options.results = results
-    formatter = new formatter options if lodash.isFunction formatter
+    options.formatter = formatter
 
+    formatter = new formatter options if lodash.isFunction formatter
     formatter.parse options.results.content, @getConfigurator options, callback
 
   getLoader: (identifier, options, callback) ->
