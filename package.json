@@ -10,7 +10,7 @@
     "url": "git://github.com/LimpidTech/preferjs.git"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -R spec"
   },
   "engines": {
     "node": "*"
