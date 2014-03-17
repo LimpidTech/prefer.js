@@ -2,6 +2,7 @@ What is it?
 -----------
 
 [![Build Status][bs]](https://travis-ci.org/LimpidTech/prefer)
+[100% Coverage][cov]
 
 Prefer is a node library for helping you manage application configurations.
 
@@ -91,5 +92,6 @@ that those actions are blocking.
 
 
 
+[cov]: http://monokro.me/projects/prefer/coverage.html
 [bs]: https://travis-ci.org/LimpidTech/prefer.png?branch=master "Build Status"
 [j5]: http://json5.org/ "json5 - JSON for the ES5 era"
