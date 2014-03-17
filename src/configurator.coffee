@@ -14,28 +14,26 @@ class Configurator extends events.EventEmitter
   constructor: (@options) ->
     @options.loader?.on 'updated', @updated
     
-  getKey: (key, callback) ->
-    node = @options.context
-    stack = key.split '.'
-
-    while stack.length and node
-      nextLevel = stack.shift()
-      node = node[nextLevel]
-
-    if node
-      callback null, _.cloneDeep node
-    else
-      callback new Error key + ' does not exist in this configuration.'
-
   get: (key, callback) ->
-    if typeof key == 'function' and not callback
+    if not callback and _.isFunction key
       callback = key
       key = undefined
-
-      callback null, _.cloneDeep @options.context
+      node = @options.context
 
     else
-      @getKey key, callback
+      node = @options.context
+      stack = key.split '.'
+
+      while stack.length and node
+        nextLevel = stack.shift()
+        node = node[nextLevel]
+
+      unless node
+        return callback new Error """
+          #{ key } does not exist in this configuration.
+        """
+
+    callback null, _.cloneDeep node
 
 
 module.exports = {Configurator}
