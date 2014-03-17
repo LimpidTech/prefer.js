@@ -41,7 +41,7 @@ describe 'Configurator', ->
 
     it 'returns the entire context if no key is provided', (done) ->
       callback = sinon.spy (err, data) ->
-        chai.expect(data).to.equal fixture
+        chai.expect(data).to.deep.equal fixture
         done()
 
       @configurator.get callback

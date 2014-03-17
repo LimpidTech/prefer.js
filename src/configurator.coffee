@@ -23,7 +23,7 @@ class Configurator extends events.EventEmitter
       node = node[nextLevel]
 
     if node
-      callback null, node
+      callback null, _.cloneDeep node
     else
       callback new Error key + ' does not exist in this configuration.'
 
@@ -32,7 +32,7 @@ class Configurator extends events.EventEmitter
       callback = key
       key = undefined
 
-      callback null, @options.context
+      callback null, _.cloneDeep @options.context
 
     else
       @getKey key, callback
