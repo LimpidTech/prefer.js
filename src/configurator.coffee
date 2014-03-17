@@ -1,9 +1,11 @@
 events = require 'events'
+_ = require 'lodash'
 
 
 class Configurator extends events.EventEmitter
   updated: (changes) =>
-    formatter = new @options.formatter
+    formatter = @options.formatter
+    formatter = new formatter if _.isFunction formatter
 
     formatter.parse changes.content, (err, updated) =>
       @options.context = updated
