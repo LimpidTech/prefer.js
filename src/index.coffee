@@ -17,13 +17,13 @@ class Prefer
     @options = options
 
   getConfigurator: (options, callback) -> (err, context) ->
-    if err
-      callback err
-    else
-      configurator = new Configurator options.loader, options.formatter, lodash.merge {}, options,
-        context: context
+    return callback err if err
 
-      callback null, configurator
+    options = lodash.merge {}, options,
+      context: context
+
+    configurator = new Configurator options.loader, options.formatter, options
+    callback null, configurator
 
   getFormatter: (options, callback) -> (err, results) =>
     return callback err if err
