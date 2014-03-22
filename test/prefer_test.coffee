@@ -6,7 +6,7 @@
 prefer = require '../src/index'
 sinon = require 'sinon'
 chai = require 'chai'
-_ = require 'lodash'
+lodash = require 'lodash'
 
 
 describe 'prefer', ->
@@ -24,15 +24,14 @@ describe 'prefer', ->
 
       prefer.load 'fixture.fake', options, callback
 
-    # TODO: Consider reimplementing this for new interface.
-    # it 'provides an error when data is malformed', (done) ->
-    #   callback = sinon.spy (err, configurator) ->
-    #     chai.expect(callback.calledOnce).to.be.true
-    #     chai.expect(err).to.be.instanceof Error
+    it 'provides an error when data is malformed', (done) ->
+      callback = sinon.spy (err, configurator) ->
+        chai.expect(callback.calledOnce).to.be.true
+        chai.expect(err).to.be.instanceof Error
 
-    #     done()
+        done()
 
-    #   prefer.load 'fixture_malformed.coffee', options, callback
+      prefer.load 'fixture_malformed.coffee', options, callback
 
     it 'provides an error when no loader could be found', (done) ->
       callback = sinon.spy (err, configurator) ->
@@ -41,7 +40,7 @@ describe 'prefer', ->
 
         done()
 
-      prefer.load '/////// THIS URL IS IMPOSSIBLE ////////', options, callback
+      prefer.load '/\////// THIS LOCATION IS IMPOSSIBLE ///////\/', options, callback
 
     it 'provides a configurator when successfully loading a file', (done) ->
       callback = sinon.spy (err, configurator) ->
@@ -62,7 +61,7 @@ describe 'prefer', ->
       prefer.load 'fixture.json', callback
 
     it 'uses the given loader instance if one is provided', (done) ->
-      localOptions = _.merge {}, options,
+      localOptions = lodash.merge {}, options,
         loader: new FileLoader
 
       localOptions.loader.load = sinon.spy localOptions.loader.load
@@ -72,13 +71,13 @@ describe 'prefer', ->
         done()
 
     it 'uses the given formatter instance if one is provided', (done) ->
-      localOptions = _.merge {}, options,
-        formatter: new JSONFormatter
+      formatter = new JSONFormatter
+      localOptions = lodash.merge {}, options, {formatter}
 
-      localOptions.formatter.fromString = sinon.spy localOptions.formatter.fromString
+      formatter.parse = sinon.spy formatter.parse
 
       prefer.load 'fixture.json', localOptions, (err, data) ->
-        chai.expect(localOptions.formatter.fromString.calledOnce).to.be.true
+        chai.expect(formatter.parse.calledOnce).to.be.true
         done()
 
     it 'passes an error to the callback when loader.load fails', (done) ->
@@ -88,7 +87,7 @@ describe 'prefer', ->
         load: (filename, callback) ->
           callback fakeError
 
-      localOptions = _.extend {}, options,
+      localOptions = lodash.extend {}, options,
         loader: FakeLoader
 
       prefer.load 'fixture.json', localOptions, (err, data) ->

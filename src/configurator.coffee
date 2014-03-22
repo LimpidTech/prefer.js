@@ -3,16 +3,21 @@ _ = require 'lodash'
 
 
 class Configurator extends events.EventEmitter
-  format: (updates) =>
+  format: (updates, callback) =>
     formatter = @formatter
     formatter = new formatter if _.isFunction formatter
 
     formatter.parse updates.content, (err, context) =>
+      if err
+        callback? err
+        return
+
       @context = context
       @emit 'updated', @context
+      callback? null, @
 
-  constructor: (@options, @loader, @formatter) ->
-    @format @options.results if @options.results?
+  constructor: (@options, @loader, @formatter, callback) ->
+    @format @options.results, callback if @options.results?
     @loader?.on 'updated', @format
 
   get: (key, callback) ->

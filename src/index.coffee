@@ -17,8 +17,7 @@ class Prefer
     @options = options
 
   getConfigurator: (options, callback) ->
-    configurator = new Configurator options, options.loader, options.formatter
-    callback null, configurator
+    configurator = new Configurator options, options.loader, options.formatter, callback
 
   getFormatter: (options, callback) -> (err, results) =>
     return callback err if err
