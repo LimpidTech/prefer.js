@@ -54,11 +54,12 @@ class Configurator extends events.EventEmitter
 
         if stack.length
           node[item] ?= {}
-          node = node[item]
         else
           node[item] = value
 
-      return node[item]
+        node = node[item]
+
+      return node
 
     else
       @options.context = _.first args
