@@ -2,21 +2,17 @@ events = require 'events'
 _ = require 'lodash'
 
 
-class ConfigurationError extends Error
-
-
 class Configurator extends events.EventEmitter
-  updated: (changes) =>
-    formatter = @options.formatter
+  updated: (formatter) -> (changes) =>
     formatter = new formatter if _.isFunction formatter
 
     formatter.parse changes.content, (err, updated) =>
       @options.context = updated
       @emit 'updated', @options.context
 
-  constructor: (@options) ->
-    @options.loader?.on 'updated', @updated
-    
+  constructor: (loader, formatter, @options) ->
+    loader.on 'updated', @updated formatter
+
   get: (key, callback) ->
     if not callback and _.isFunction key
       callback = key
@@ -66,7 +62,4 @@ class Configurator extends events.EventEmitter
       return @options.context
 
 
-module.exports = {
-  Configurator
-  ConfigurationError
-}
+module.exports = {Configurator}

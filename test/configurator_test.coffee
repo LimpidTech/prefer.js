@@ -22,11 +22,10 @@ describe 'Configurator', ->
 
   beforeEach ->
     @loader = new Loader
+    @formatter = YAMLFormatter
 
-    @configurator = new Configurator
+    @configurator = new Configurator @loader, @formatter,
       context: fixture
-      loader: @loader
-      formatter: YAMLFormatter
 
   it 'updates the configuration when loader emits "updated"', sinon.test ->
     @loader.updated null,

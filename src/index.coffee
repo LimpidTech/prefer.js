@@ -20,9 +20,7 @@ class Prefer
     if err
       callback err
     else
-      configurator = new Configurator lodash.merge {}, options,
-        loader: options.loader
-        formatter: options.formatter
+      configurator = new Configurator options.loader, options.formatter, lodash.merge {}, options,
         context: context
 
       callback null, configurator
