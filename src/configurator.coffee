@@ -38,30 +38,31 @@ class Configurator extends events.EventEmitter
 
     callback null, _.cloneDeep node
 
-  set: (key, value) ->
-    if value?
+  set: (args...) ->
+    return @options.context if args.length is 0
+
+    if args.length > 1
+      key = _.first args
+      value = _.first _.filter args[1..]
+
       stack = key.split '.'
       node = @options.context
 
-      while stack.length > 1
+      # TODO: Should we prevent setting values on some types here?
+      while stack.length
         item = stack.shift()
-        node[item] ?= {}
 
-        if _.isObject node
+        if stack.length
+          node[item] ?= {}
           node = node[item]
         else
-          throw new Error 'Can not set a value on ' + node.toString()
+          node[item] = value
 
-      item = stack.shift()
-      node[item] = value
-
+      console.log @options.context
       return node[item]
 
     else
-      value = key
-      key = undefined
-
-      @options.context = value
+      @options.context = _.first args
       return @options.context
 
 

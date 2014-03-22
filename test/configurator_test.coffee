@@ -1,6 +1,11 @@
 {YAMLFormatter} = require '../src/formatters/yaml'
-{Configurator} = require '../src/configurator'
 {Loader} = require '../src/loaders/loader'
+
+
+{
+  Configurator
+  ConfigurationError
+} = require '../src/configurator'
 
 
 sinon = require 'sinon'
