@@ -52,3 +52,20 @@ describe 'Configurator', ->
         done()
 
       @configurator.get 'user', callback
+
+  describe '#set', ->
+    beforeEach ->
+      @fixture =
+        example: 'data'
+
+    it 'updates the context with the provided value', (done) ->
+      @configurator.set @fixture
+      @configurator.get (err, result) =>
+        chai.expect(result).to.deep.equal @fixture
+        done()
+
+    it 'updates a key in the context with the provided value', (done) ->
+      @configurator.set 'fake.key.here', @fixture
+      @configurator.get 'fake.key.here', (err, result) =>
+        chai.expect(result).to.deep.equal @fixture
+        done()

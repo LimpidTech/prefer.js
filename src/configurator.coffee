@@ -2,6 +2,9 @@ events = require 'events'
 _ = require 'lodash'
 
 
+class ConfigurationError extends Error
+
+
 class Configurator extends events.EventEmitter
   updated: (changes) =>
     formatter = @options.formatter
@@ -35,5 +38,34 @@ class Configurator extends events.EventEmitter
 
     callback null, _.cloneDeep node
 
+  set: (key, value) ->
+    if value?
+      stack = key.split '.'
+      node = @options.context
 
-module.exports = {Configurator}
+      while stack.length > 1
+        item = stack.shift()
+        node[item] ?= {}
+
+        if _.isObject node
+          node = node[item]
+        else
+          throw new Error 'Can not set a value on ' + node.toString()
+
+      item = stack.shift()
+      node[item] = value
+
+      return node[item]
+
+    else
+      value = key
+      key = undefined
+
+      @options.context = value
+      return @options.context
+
+
+module.exports = {
+  Configurator
+  ConfigurationError
+}
