@@ -1,4 +1,5 @@
 {Configurator} = require './configurator'
+{resolveModule} = require './util'
 
 formatters = require './formatters/defaults'
 loaders = require './loaders/defaults'
@@ -14,20 +15,6 @@ class Prefer
     options.formatters = lodash.merge {}, formatters, options.formatters
 
     @options = options
-
-  resolveModule: (identifier, separator) ->
-    separator ?= ':'
-    attributeIndex = identifier.lastIndexOf separator
-
-    if attributeIndex > -1
-      attributeName = identifier[attributeIndex+1..]
-      identifier = identifier[..attributeIndex-1]
-
-    module = require identifier
-    return module unless attributeName?
-
-    attribute = module[attributeName]
-    return attribute
 
   getConfigurator: (options, callback) -> (err, context) ->
     if err
@@ -56,7 +43,7 @@ class Prefer
         return callback new Error 'Could not find formatter for ' + source
 
       {_, module} = lodash.first formatters
-      formatter = @resolveModule module
+      formatter = resolveModule module
 
     options.results = results
     options.formatter = formatter
@@ -75,7 +62,7 @@ class Prefer
       return null
 
     match = lodash.first matches
-    return @resolveModule match.module
+    return resolveModule match.module
 
   load: (identifier, options, callback) =>
     # Allow options to be optional.
