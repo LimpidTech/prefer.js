@@ -3,24 +3,26 @@ _ = require 'lodash'
 
 
 class Configurator extends events.EventEmitter
-  updated: (formatter) -> (changes) =>
+  format: (updates) =>
+    formatter = @formatter
     formatter = new formatter if _.isFunction formatter
 
-    formatter.parse changes.content, (err, updated) =>
-      @options.context = updated
-      @emit 'updated', @options.context
+    formatter.parse updates.content, (err, context) =>
+      @context = context
+      @emit 'updated', @context
 
-  constructor: (loader, formatter, @options) ->
-    loader.on 'updated', @updated formatter
+  constructor: (@options, @loader, @formatter) ->
+    @format @options.results if @options.results?
+    @loader?.on 'updated', @format
 
   get: (key, callback) ->
     if not callback and _.isFunction key
       callback = key
       key = undefined
-      node = @options.context
+      node = @context
 
     else
-      node = @options.context
+      node = @context
       stack = key.split '.'
 
       while stack.length and node
@@ -35,14 +37,14 @@ class Configurator extends events.EventEmitter
     callback null, _.cloneDeep node
 
   set: (args...) ->
-    return @options.context if args.length is 0
+    return @context if args.length is 0
 
     if args.length > 1
       key = _.first args
       value = _.first _.filter args[1..]
 
       stack = key.split '.'
-      node = @options.context
+      node = @context
 
       # TODO: Should we prevent setting values on some types here?
       while stack.length
@@ -58,8 +60,8 @@ class Configurator extends events.EventEmitter
       return node
 
     else
-      @options.context = _.first args
-      return @options.context
+      @context = _.first args
+      return @context
 
 
 module.exports = {Configurator}

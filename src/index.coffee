@@ -16,13 +16,8 @@ class Prefer
 
     @options = options
 
-  getConfigurator: (options, callback) -> (err, context) ->
-    return callback err if err
-
-    options = lodash.merge {}, options,
-      context: context
-
-    configurator = new Configurator options.loader, options.formatter, options
+  getConfigurator: (options, callback) ->
+    configurator = new Configurator options, options.loader, options.formatter
     callback null, configurator
 
   getFormatter: (options, callback) -> (err, results) =>
@@ -38,7 +33,9 @@ class Prefer
         return potential.match results
 
       unless formatters.length
-        return callback new Error 'Could not find formatter for ' + source
+        return callback new Error '''
+          Could not find formatter for ' + source
+        '''
 
       {_, module} = lodash.first formatters
       formatter = resolveModule module
@@ -47,7 +44,7 @@ class Prefer
     options.formatter = formatter
 
     formatter = new formatter options if lodash.isFunction formatter
-    formatter.parse options.results.content, @getConfigurator options, callback
+    @getConfigurator options, callback
 
   getLoader: (identifier, options, callback) ->
     return if options.loader?

@@ -1,10 +1,9 @@
-{YAMLFormatter} = require '../src/formatters/yaml'
+{JSONFormatter} = require '../src/formatters/json'
 {Loader} = require '../src/loaders/loader'
 
 
 {
   Configurator
-  ConfigurationError
 } = require '../src/configurator'
 
 
@@ -22,17 +21,20 @@ describe 'Configurator', ->
 
   beforeEach ->
     @loader = new Loader
-    @formatter = YAMLFormatter
+    @formatter = JSONFormatter
 
-    @configurator = new Configurator @loader, @formatter,
-      context: fixture
+    options =
+      results:
+        content: JSON.stringify fixture
+
+    @configurator = new Configurator options, @loader, @formatter
 
   it 'updates the configuration when loader emits "updated"', sinon.test ->
     @loader.updated null,
       source: @configurator.options.source
-      content: 'fakeData: true'
+      content: '{ "fakeData": true }'
 
-    chai.expect(@configurator.options.context).to.deep.equal
+    chai.expect(@configurator.context).to.deep.equal
       fakeData: true
 
   describe '#get', ->
