@@ -91,6 +91,5 @@ instance = new Prefer
 
 module.exports = {
   load: instance.load
-
-  Prefer: Prefer
+  Prefer
 }
