@@ -58,7 +58,6 @@ class Configurator extends events.EventEmitter
         else
           node[item] = value
 
-      console.log @options.context
       return node[item]
 
     else
