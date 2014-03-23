@@ -5,6 +5,8 @@ events = require 'events'
 
 Q = require 'q'
 lodash = require 'lodash'
+
+{Configurator} = require './configurator'
 {resolveModule, adaptToCallback} = require './util'
 
 
@@ -34,8 +36,10 @@ class Prefer extends events.EventEmitter
 
     formatter.parse updates, (err, context) =>
       return deferred.reject err if err
-      @emit 'updated', context
-      deferred.resolve context
+      configurator = new Configurator context
+
+      @emit 'updated', configurator
+      deferred.resolve configurator
 
     return deferred.promise
 
@@ -70,8 +74,8 @@ class Prefer extends events.EventEmitter
     loader.load options.identifier, (err, results) ->
       return deferred.reject err if err
 
-      format(results.content).then (context) ->
-        deferred.resolve context
+      format(results.content).then (configurator) ->
+        deferred.resolve configurator
 
     adaptToCallback deferred.promise, callback if callback?
     return deferred.promise

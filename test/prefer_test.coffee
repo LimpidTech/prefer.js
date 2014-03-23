@@ -59,35 +59,34 @@ describe 'prefer', ->
     it 'returns the expected loader', ->
       expect(@loader).to.be.instanceof FileLoader
 
-  describe '#format', ->
+  describe '#format returns a function that', ->
     beforeEach ->
       @format = prefer.format @formatter
+      @promise = @format @updates
 
-    it 'returns a method that wraps #formatter.parse', ->
-      promise = @format @updates
+    it 'wraps #formatter.parse', ->
       expect(@formatter.parse.calledOnce).to.be.true
 
-    describe 'returned function that', ->
-      it 'returns a promise which provides a formatted context', (done) ->
-        promise = @format @updates
-        promise.then (result) =>
-          expect(result).to.deep.equal @fixture
-          done()
+    it 'returns a promise which provides a formatted context', (done) ->
+      @promise.then (result) => result.get (err, context) =>
+        expect(context).to.deep.equal @fixture
+        done()
   
   describe '#load', ->
     it 'returns a promise that provides the configuration', (done) ->
       options = lodash.cloneDeep @options
       promise = prefer.load options
 
-      promise.then (result) =>
-        expect(result).to.deep.equal @fixture
+      promise.then (result) => result.get (err, context) =>
+        expect(context).to.deep.equal @fixture
         done()
 
     it 'supports callback style usage', (done) ->
       options = lodash.cloneDeep @options
       promise = prefer.load options, (err, result) =>
-        expect(result).to.deep.equal @fixture
-        done()
+        result.get (err, context) =>
+          expect(context).to.deep.equal @fixture
+          done()
 
     it 'allows identifier as a string', ->
       action = => prefer.load @identifier

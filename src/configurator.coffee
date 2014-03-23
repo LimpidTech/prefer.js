@@ -1,10 +1,15 @@
 lodash = require 'lodash'
+Q = require 'q'
+
+{adaptToCallback} = require './util'
 
 
 class Configurator
   constructor: (@context) ->
 
   get: (key, callback) ->
+    deferred = Q.defer()
+
     if not callback and lodash.isFunction key
       callback = key
       key = undefined
@@ -23,15 +28,25 @@ class Configurator
           #{ key } does not exist in this configuration.
         """
 
-    callback null, lodash.cloneDeep node
+    deferred.resolve lodash.cloneDeep node
+    adaptToCallback deferred.promise, callback
 
-  set: (args...) ->
-    return @context if args.length is 0
+    return deferred.promise
 
-    if args.length > 1
-      key = lodash.first args
-      value = lodash.first lodash.filter args[1..]
+  set: (key, value, callback) ->
+    deferred = Q.defer()
 
+    unless key?
+      deferred.resolve @context
+
+    else unless value?
+      value = key
+      key = undefined
+
+      @context = value
+      deferred.resolve @context
+
+    else
       stack = key.split '.'
       node = @context
 
@@ -46,11 +61,12 @@ class Configurator
 
         node = node[item]
 
-      return node
+      deferred.resolve node
 
-    else
-      @context = lodash.first args
-      return @context
+    deferred.resolve lodash.cloneDeep node
+    adaptToCallback deferred.promise, callback
+
+    return deferred.promise
 
 
 module.exports = {Configurator}
