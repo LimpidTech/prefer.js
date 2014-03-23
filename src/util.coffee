@@ -13,4 +13,12 @@ resolveModule = (identifier, separator) ->
   return attribute
 
 
-module.exports = {resolveModule}
+adaptToCallback = (promise, callback) ->
+  promise.then (result) -> callback null, result
+  promise.catch (err) -> callback err
+
+
+module.exports = {
+  resolveModule
+  adaptToCallback
+}

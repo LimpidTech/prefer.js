@@ -5,7 +5,7 @@ events = require 'events'
 
 Q = require 'q'
 lodash = require 'lodash'
-{resolveModule} = require './util'
+{resolveModule, adaptToCallback} = require './util'
 
 
 class Prefer extends events.EventEmitter
@@ -39,8 +39,12 @@ class Prefer extends events.EventEmitter
 
     return deferred.promise
 
-  load: (identifier, options) ->
+  load: (identifier, options, callback) ->
     deferred = Q.defer()
+
+    if lodash.isFunction options
+      callback = options
+      options = undefined
 
     unless options?
       if lodash.isString identifier
@@ -69,6 +73,7 @@ class Prefer extends events.EventEmitter
       format(results.content).then (context) ->
         deferred.resolve context
 
+    adaptToCallback deferred.promise, callback if callback?
     return deferred.promise
 
 

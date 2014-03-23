@@ -77,9 +77,15 @@ describe 'prefer', ->
   describe '#load', ->
     it 'returns a promise that provides the configuration', (done) ->
       options = lodash.cloneDeep @options
-      promise = prefer.load lodash.extend options
+      promise = prefer.load options
 
       promise.then (result) =>
+        expect(result).to.deep.equal @fixture
+        done()
+
+    it 'supports callback style usage', (done) ->
+      options = lodash.cloneDeep @options
+      promise = prefer.load options, (err, result) =>
         expect(result).to.deep.equal @fixture
         done()
 
