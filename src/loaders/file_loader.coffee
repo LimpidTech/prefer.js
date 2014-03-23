@@ -1,10 +1,13 @@
-{Loader} = require './loader'
-
 fs = require 'fs'
 lodash = require 'lodash'
 path = require 'path'
-pathing = require '../pathing'
 winston = require 'winston'
+Q = require 'q'
+
+pathing = require '../pathing'
+{Loader} = require './loader'
+{proxyPromise, adaptToCallback} = require '../util'
+
 
 
 class FileLoader extends Loader
@@ -18,7 +21,9 @@ class FileLoader extends Loader
     lodash.extend @options, options
 
   find: (filename, callback) ->
+    deferred = Q.defer()
     searchPaths = @options.files.searchPaths
+
     paths = lodash.filter lodash.map searchPaths, (directory) ->
       relativePath = path.join directory, filename
       absolutePath = path.resolve relativePath
@@ -30,20 +35,28 @@ class FileLoader extends Loader
       return false
 
     if paths.length
-      callback null, paths[0]
+      deferred.resolve lodash.first paths
     else
-      callback new Error 'Could not find configuration: ' + filename
+      deferred.reject new Error 'Could not find configuration: ' + filename
+
+    adaptToCallback deferred.promise, callback
+    return deferred.promise
 
   get: (filename, callback) =>
+    deferred = Q.defer()
+
     options =
       encoding: 'UTF-8'
 
     fs.readFile filename, options, (err, data) =>
-      return callback err if err
+      return deferred.reject err if err
 
-      callback null,
+      deferred.resolve
         source: filename
         content: data
+
+    adaptToCallback deferred.promise, callback
+    return deferred.promise
 
   # fs.watch does not reliably provide the filename back to us, so this
   # closure protects us from the situation where a filename is not provided.
@@ -58,12 +71,17 @@ class FileLoader extends Loader
     fs.watch filename, options, @getChangeHandler filename
 
   load: (filename, callback) ->
+    deferred = Q.defer()
+
     @find filename, (err, filename) =>
       if err
-        callback err
+        deferred.reject err
       else
-        @get filename, callback
+        proxyPromise deferred, @get filename
         @watch filename if @options.files.watch
+
+    adaptToCallback deferred.promise, callback
+    return deferred.promise
 
 
 module.exports = {FileLoader}

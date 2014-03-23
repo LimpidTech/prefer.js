@@ -14,11 +14,18 @@ resolveModule = (identifier, separator) ->
 
 
 adaptToCallback = (promise, callback) ->
-  promise.then (result) -> callback null, result
-  promise.catch (err) -> callback err
+  if callback?
+    promise.then (result) -> callback null, result
+    promise.catch (err) -> callback err
+
+
+proxyPromise = (deferred, promise) ->
+  promise.then deferred.resolve
+  promise.catch deferred.reject
 
 
 module.exports = {
   resolveModule
   adaptToCallback
+  proxyPromise
 }
