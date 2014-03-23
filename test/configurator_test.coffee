@@ -35,19 +35,26 @@ describe 'Configurator', ->
 
   describe '#set', ->
     beforeEach ->
+      @initial = @fixture
       @fixture =
         example: 'data'
 
+    it 'resolves the context without any provided arguments', (done) ->
+      @configurator.set()
+      @configurator.get (err, context) =>
+        expect(context).to.deep.equal @initial
+        done()
+
     it 'updates the context with the provided value', (done) ->
       @configurator.set @fixture
-      @configurator.get (err, result) =>
-        expect(result).to.deep.equal @fixture
+      @configurator.get (err, context) =>
+        expect(context).to.deep.equal @fixture
         done()
 
     it 'updates a key in the context with the provided value', (done) ->
       @configurator.set 'fake.key.here', @fixture
-      @configurator.get 'fake.key.here', (err, result) =>
-        expect(result).to.deep.equal @fixture
+      @configurator.get 'fake.key.here', (err, context) =>
+        expect(context).to.deep.equal @fixture
         done()
 
   describe '#load', ->
