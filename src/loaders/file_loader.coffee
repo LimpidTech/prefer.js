@@ -69,7 +69,11 @@ class FileLoader extends Loader
         findMatches.catch (err) -> existance.reject err
 
       else
-        fs.exists absolutePath, (result) -> existance.resolve absolutePath
+        fs.exists absolutePath, (result) ->
+          if result is true
+            existance.resolve absolutePath
+          else
+            existance.reject absolutePath
 
       return existance.promise
 
@@ -124,7 +128,7 @@ class FileLoader extends Loader
     findPromise = @find requestedFilename, shouldDetermineFormat
 
     if shouldDetermineFormat
-      findPromise.then (files) ->
+      findPromise = findPromise.then (files) ->
         return lodash.first files if files.length
 
         deferred.reject new Error "
