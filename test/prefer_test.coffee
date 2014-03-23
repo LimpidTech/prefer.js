@@ -11,7 +11,8 @@ prefer = require '../src'
 
 describe 'prefer', ->
   beforeEach ->
-    @identifier = 'fixture.json'
+    @identifierBase = 'fixture'
+    @identifier = @identifierBase + '.json'
 
     @options =
       identifier: @identifier
@@ -32,8 +33,10 @@ describe 'prefer', ->
     @formatter = prefer.getFormatter @options
     @loader = prefer.getLoader @options
 
-    sinon.stub @formatter, 'parse', (content, callback) =>
-      callback null, @fixture
+    sinon.stub @formatter, 'parse', (content) =>
+      deferred = Q.defer()
+      deferred.resolve @fixture
+      return deferred.promise
 
   describe '#getFormatter', ->
     it 'throws an error when no formatter exists', ->
@@ -77,9 +80,10 @@ describe 'prefer', ->
       options = lodash.cloneDeep @options
       promise = prefer.load options
 
-      promise.then (result) => result.get (err, context) =>
-        expect(context).to.deep.equal @fixture
-        done()
+      promise.then (result) =>
+        result.get (err, context) =>
+          expect(context).to.deep.equal @fixture
+          done()
 
     it 'supports callback style usage', (done) ->
       options = lodash.cloneDeep @options
@@ -95,3 +99,7 @@ describe 'prefer', ->
     it 'throws an error without an identifier', ->
       action = => prefer.load()
       expect(action).to.throw()
+
+    it 'loads configurations without requiring their format', ->
+      action = => prefer.load @identifier
+      expect(action).not.to.throw()

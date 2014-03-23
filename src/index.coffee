@@ -11,12 +11,15 @@ lodash = require 'lodash'
 
 
 class Prefer extends events.EventEmitter
-  getEntity: (type, options) ->
+  getEntity: (type, options, suggestion) ->
     pluralType = type + 's'
     potentials = options[pluralType]
 
+    filterBy = suggestion or options.identifier
+    filterBy = lodash.toArray filterBy unless lodash.isArray filterBy
+
     matches = lodash.filter potentials, (potential) ->
-      return potential.provides options.identifier
+      potential.provides filterBy
 
     unless matches.length
       throw new Error "
@@ -28,18 +31,19 @@ class Prefer extends events.EventEmitter
     Entity = resolveModule provider.module
     return new Entity options
 
-  getFormatter: (options) -> @getEntity 'formatter', options
+  getFormatter: (options, suggestion) -> @getEntity 'formatter', options
   getLoader: (options) -> @getEntity 'loader', options
 
-  format: (formatter) => (updates) =>
+  format: (formatter) -> (updates) =>
     deferred = Q.defer()
 
-    formatter.parse updates, (err, context) =>
-      return deferred.reject err if err
+    promise = formatter.parse updates
+    promise.then (context) =>
       configurator = new Configurator context
-
-      @emit 'updated', configurator
       deferred.resolve configurator
+      @emit 'updated', configurator
+
+    promise.catch (err) -> deferred.reject err
 
     return deferred.promise
 
@@ -66,22 +70,27 @@ class Prefer extends events.EventEmitter
     options.formatters ?= formatters
 
     loader = @getLoader options
-    formatter = @getFormatter options
+    formatter = null
 
-    format = @format formatter
-    loader.on 'updated', format
+    shouldFormatPromise = loader.formatterRequired options
+    shouldFormatPromise.then (shouldFormat) =>
+      suggestionPromise = loader.formatterSuggested? options
+      suggestionPromise.then (suggestion) =>
+        formatter = @getFormatter options, suggestion
+        format = @format formatter
 
-    loader.load options.identifier, (err, results) ->
-      return deferred.reject err if err
+        loader.on 'updated', format
 
-      format(results.content).then (configurator) ->
-        deferred.resolve configurator
+        loadPromise = loader.load options.identifier
+        loadPromise.then (result) ->
+          formatPromise = format result.content
+          formatPromise.then deferred.resolve
 
-    adaptToCallback deferred.promise, callback if callback?
-    return deferred.promise
+    return adaptToCallback deferred.promise, callback
 
 
 instance = new Prefer
 instance.Prefer = Prefer
+
 
 module.exports = instance

@@ -18,10 +18,13 @@ adaptToCallback = (promise, callback) ->
     promise.then (result) -> callback null, result
     promise.catch (err) -> callback err
 
+  return promise
+
 
 proxyPromise = (deferred, promise) ->
   promise.then deferred.resolve
   promise.catch deferred.reject
+  return deferred.promise
 
 
 module.exports = {

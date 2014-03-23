@@ -1,10 +1,13 @@
 path = require 'path'
-_ = require 'lodash'
+lodash = require 'lodash'
+
 
 fileNamePattern = /^((file):\/\/)?((\/)?[^/?*:;{}\\])+$/
 
 
-provides = (pattern) -> (potential) -> pattern.test potential
+provides = (pattern) -> (potentials) ->
+  lodash.map potentials, (potential) ->
+    pattern.test potential
 
 
 module.exports = [

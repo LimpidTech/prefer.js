@@ -1,8 +1,8 @@
+Q = require 'q'
 fs = require 'fs'
 lodash = require 'lodash'
 path = require 'path'
 winston = require 'winston'
-Q = require 'q'
 
 pathing = require '../pathing'
 {Loader} = require './loader'
@@ -15,31 +15,72 @@ class FileLoader extends Loader
       watch: yes
       searchPaths: pathing.get()
 
+  formatterSuggested: (options) ->
+    deferred = Q.defer()
+
+    baseName = path.basename options.identifier
+    dotIndex = baseName.lastIndexOf '.'
+
+    if dotIndex > -1
+      extensionIndex = dotIndex + 1
+      deferred.resolve baseName[extensionIndex..]
+
+    else
+      search = @find options.identifier, true
+      search.then (result) -> deferred.resolve result
+
+    return deferred.promise
+
   constructor: (options) ->
     @options = lodash.cloneDeep @options
     lodash.extend @options, options
 
-  find: (filename, callback) ->
+  findByPrefix: (directory, fileName) ->
+    deferred = Q.defer()
+
+    read = Q.nfcall fs.readdir, directory
+    read.then (fileNames) ->
+      matches = lodash.filter fileNames, (potentialFileName) ->
+        index = potentialFileName.indexOf fileName
+        return true if index is 0
+      deferred.resolve matches
+
+    read.catch (err) -> deferred.reject err
+
+    return deferred.promise
+            
+  find: (filename, asPrefix=false, callback) ->
     deferred = Q.defer()
     searchPaths = @options.files.searchPaths
 
-    promise = Q.allSettled lodash.map searchPaths, (directory) ->
+    promise = Q.allSettled lodash.map searchPaths, (directory) =>
       existance = Q.defer()
 
       relativePath = path.join directory, filename
       absolutePath = path.resolve relativePath
 
-      fs.exists absolutePath, (result) -> existance.resolve absolutePath
+      if asPrefix
+        absoluteDirectoryPath = path.resolve directory
+
+        findMatches = @findByPrefix absoluteDirectoryPath, filename
+        findMatches.then (matches) ->
+          existance.resolve lodash.map matches, (match) ->
+            return path.join absoluteDirectoryPath, match
+        findMatches.catch (err) -> existance.reject err
+
+      else
+        fs.exists absolutePath, (result) -> existance.resolve absolutePath
+
       return existance.promise
 
     promise.then (paths) ->
       found = lodash.filter paths, (result) -> result.state is 'fulfilled'
       found = lodash.map found, (result) -> result.value
 
-      if found.length
-        deferred.resolve lodash.first found
+      if asPrefix
+        deferred.resolve lodash.filter lodash.flatten found
       else
-        deferred.reject new Error 'Could not find configuration: ' + filename
+        deferred.resolve lodash.first found
 
     adaptToCallback deferred.promise, callback
     return deferred.promise
@@ -75,12 +116,12 @@ class FileLoader extends Loader
   load: (filename, callback) ->
     deferred = Q.defer()
 
-    @find filename, (err, filename) =>
-      if err
-        deferred.reject err
-      else
-        proxyPromise deferred, @get filename
-        @watch filename if @options.files.watch
+    findPromise = @find filename
+    findPromise.then (filename) =>
+      proxyPromise deferred, @get filename
+      @watch filename if @options.files.watch
+
+    findPromise.catch deferred.reject
 
     adaptToCallback deferred.promise, callback
     return deferred.promise

@@ -61,12 +61,9 @@ class Configurator
 
         node = node[item]
 
-      deferred.resolve node
+      deferred.resolve lodash.cloneDeep node
 
-    deferred.resolve lodash.cloneDeep node
-    adaptToCallback deferred.promise, callback
-
-    return deferred.promise
+    return adaptToCallback deferred.promise, callback
 
 
 module.exports = {Configurator}

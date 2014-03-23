@@ -1,12 +1,13 @@
 path = require 'path'
-_ = require 'lodash'
+lodash = require 'lodash'
 
 
 provides = (type) ->
   type = '.' + type if type[0] isnt '.'
 
-  return (potential) ->
-    return type is path.extname potential
+  return (potentials) ->
+    lodash.map potentials, (potential) ->
+      type is path.extname potential
 
 
 module.exports = [
