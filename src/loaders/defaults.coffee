@@ -4,11 +4,11 @@ _ = require 'lodash'
 fileNamePattern = /^((file):\/\/)?((\/)?[^/?*:;{}\\])+$/
 
 
-matches = (pattern) -> (potential) -> pattern.test potential
+provides = (pattern) -> (potential) -> pattern.test potential
 
 
 module.exports = [
-    match: matches fileNamePattern
+    provides: provides fileNamePattern
     module: './loaders/file_loader:FileLoader'
   ,
 ]

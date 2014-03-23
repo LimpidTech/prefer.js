@@ -1,27 +1,11 @@
-events = require 'events'
-_ = require 'lodash'
+lodash = require 'lodash'
 
 
-class Configurator extends events.EventEmitter
-  format: (updates, callback) =>
-    formatter = @formatter
-    formatter = new formatter if _.isFunction formatter
-
-    formatter.parse updates.content, (err, context) =>
-      if err
-        callback? err
-        return
-
-      @context = context
-      @emit 'updated', @context
-      callback? null, @
-
-  constructor: (@options, @loader, @formatter, callback) ->
-    @format @options.results, callback if @options.results?
-    @loader?.on 'updated', @format
+class Configurator
+  constructor: (@context) ->
 
   get: (key, callback) ->
-    if not callback and _.isFunction key
+    if not callback and lodash.isFunction key
       callback = key
       key = undefined
       node = @context
@@ -39,14 +23,14 @@ class Configurator extends events.EventEmitter
           #{ key } does not exist in this configuration.
         """
 
-    callback null, _.cloneDeep node
+    callback null, lodash.cloneDeep node
 
   set: (args...) ->
     return @context if args.length is 0
 
     if args.length > 1
-      key = _.first args
-      value = _.first _.filter args[1..]
+      key = lodash.first args
+      value = lodash.first lodash.filter args[1..]
 
       stack = key.split '.'
       node = @context
@@ -65,7 +49,7 @@ class Configurator extends events.EventEmitter
       return node
 
     else
-      @context = _.first args
+      @context = lodash.first args
       return @context
 
 

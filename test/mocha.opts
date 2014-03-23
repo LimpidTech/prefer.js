@@ -1,3 +1,4 @@
 -R min
---compilers coffee:coffee-script/register
 --ui bdd
+--compilers coffee:coffee-script/register
+--require test/helpers.coffee

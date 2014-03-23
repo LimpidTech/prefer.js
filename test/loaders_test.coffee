@@ -2,9 +2,7 @@
 {FileLoader} = require '../src/loaders/file_loader'
 
 lodash = require 'lodash'
-sinon = require 'sinon'
 path = require 'path'
-chai = require 'chai'
 fs = require 'fs'
 
 
@@ -16,10 +14,10 @@ loaders =
 
   callback: (done) ->
     callback = sinon.spy (err, data) ->
-      chai.expect(err).to.be.null
+      expect(err).to.be.null
 
-      chai.expect(callback.calledOnce).to.be.true
-      chai.expect(data).to.deep.equal loaders.fixture
+      expect(callback.calledOnce).to.be.true
+      expect(data).to.deep.equal loaders.fixture
 
       done()
 
@@ -41,8 +39,8 @@ describe 'FileLoader', ->
   describe '#load', ->
     it 'results in a not found error if no file was found', (done) ->
       callback = sinon.spy (err, data) ->
-        chai.expect(err).to.be.instanceof Error
-        chai.expect(callback.calledOnce).to.be.true
+        expect(err).to.be.instanceof Error
+        expect(callback.calledOnce).to.be.true
 
         done()
 
@@ -65,7 +63,7 @@ describe 'FileLoader', ->
           searchPaths: ['test/fixtures/']
 
       callback = sinon.spy (err, data) ->
-        chai.expect(err).to.be.instanceof FakeError
+        expect(err).to.be.instanceof FakeError
 
         sandbox.restore()
         done()
@@ -81,7 +79,7 @@ describe 'FileLoader', ->
 
       callback = (err, results) ->
         loader.on 'changed', (filename) ->
-          chai.expect(filename).to.equal results.source
+          expect(filename).to.equal results.source
           done()
 
         changed = loader.getChangeHandler results.source
@@ -90,11 +88,8 @@ describe 'FileLoader', ->
       loader.load 'fixture.json', callback
 
   describe '#watch', ->
-    beforeEach ->
-      fs.watch = sinon.stub fs, 'watch'
-
-    afterEach ->
-      fs.watch.restore()
+    beforeEach -> sinon.stub fs, 'watch'
+    afterEach -> fs.watch.restore()
 
     it 'calls the handler returned from #changed when files change', (done) ->
       loader = new FileLoader
@@ -108,14 +103,15 @@ describe 'FileLoader', ->
       changed.returns changedHandler
 
       callback = (err, results) ->
-        chai.expect(fs.watch.calledOnce).to.be.true
+        expect(fs.watch.calledOnce).to.be.true
 
         hasExpectedArgs = fs.watch.calledWith results.source,
           persistent: false
         , changedHandler
 
-        chai.expect(hasExpectedArgs).to.be.true
+        expect(hasExpectedArgs).to.be.true
 
+        changed.restore()
         done()
 
       loader.load 'fixture.json', callback
@@ -128,16 +124,16 @@ describe 'FileLoader', ->
 
       callback = sinon.spy (err, results) ->
         loader.updated = sinon.stub loader, 'updated', (err, results) ->
-          chai.expect(loader.updated.calledOnce).to.be.true
+          expect(loader.updated.calledOnce).to.be.true
 
-          chai.expect(err).to.equal null
-          chai.expect(results).to.deep.equal results
+          expect(err).to.equal null
+          expect(results).to.deep.equal results
 
           loader.updated.restore()
 
           done()
 
-        chai.expect(loader.updated.notCalled).to.be.true
+        expect(loader.updated.notCalled).to.be.true
 
         # fs.watch will call this in the real world
         changed = loader.getChangeHandler results.source

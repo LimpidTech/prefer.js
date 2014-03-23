@@ -1,7 +1,7 @@
 {Loader} = require './loader'
 
-_ = require 'lodash'
 fs = require 'fs'
+lodash = require 'lodash'
 path = require 'path'
 pathing = require '../pathing'
 winston = require 'winston'
@@ -13,8 +13,13 @@ class FileLoader extends Loader
       watch: yes
       searchPaths: pathing.get()
 
+  constructor: (options) ->
+    @options = lodash.cloneDeep @options
+    lodash.extend @options, options
+
   find: (filename, callback) ->
-    paths = _.filter _.map @options.files.searchPaths, (directory) ->
+    searchPaths = @options.files.searchPaths
+    paths = lodash.filter lodash.map searchPaths, (directory) ->
       relativePath = path.join directory, filename
       absolutePath = path.resolve relativePath
 
@@ -44,7 +49,7 @@ class FileLoader extends Loader
   # closure protects us from the situation where a filename is not provided.
   getChangeHandler: (filename) -> (event) =>
     @emit event, filename
-    @get filename, @updated
+    @get filename, (args...) => @updated args...
   
   watch: (filename) ->
     options =

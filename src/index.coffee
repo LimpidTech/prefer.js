@@ -1,91 +1,78 @@
-{Configurator} = require './configurator'
+loaders = require './loaders/defaults'
+formatters = require './formatters/defaults'
+
+events = require 'events'
+
+Q = require 'q'
+lodash = require 'lodash'
 {resolveModule} = require './util'
 
-formatters = require './formatters/defaults'
-loaders = require './loaders/defaults'
 
-lodash = require 'lodash'
+class Prefer extends events.EventEmitter
+  getEntity: (type, options) ->
+    pluralType = type + 's'
+    potentials = options[pluralType]
 
-
-class Prefer
-  constructor: (options) ->
-    options ?= {}
-
-    options.loaders = lodash.merge {}, loaders, options.loaders
-    options.formatters = lodash.merge {}, formatters, options.formatters
-
-    @options = options
-
-  getConfigurator: (options, callback) ->
-    configurator = new Configurator options, options.loader, options.formatter, callback
-
-  getFormatter: (options, callback) -> (err, results) =>
-    return callback err if err
-
-    if options.formatter?
-      formatter = options.formatter
-
-    else
-      {source, content} = results
-
-      formatters = lodash.filter options.formatters, (potential) ->
-        return potential.match results
-
-      unless formatters.length
-        return callback new Error '''
-          Could not find formatter for ' + source
-        '''
-
-      {_, module} = lodash.first formatters
-      formatter = resolveModule module
-
-    options.results = results
-    options.formatter = formatter
-
-    formatter = new formatter options if lodash.isFunction formatter
-    @getConfigurator options, callback
-
-  getLoader: (identifier, options, callback) ->
-    return if options.loader?
-
-    matches = lodash.filter options.loaders, (potential) ->
-      return potential.match identifier
+    matches = lodash.filter potentials, (potential) ->
+      return potential.provides options.identifier
 
     unless matches.length
-      callback new Error 'No configuration loader found for: ' + identifier
-      return null
+      throw new Error "
+        No configuration #{type} found for #{options.identifier}
+      "
 
-    match = lodash.first matches
-    return resolveModule match.module
+    provider = lodash.first matches
 
-  load: (identifier, options, callback) =>
-    # Allow options to be optional.
-    if lodash.isFunction options
-      callback = options
-      options = undefined
+    Entity = resolveModule provider.module
+    return new Entity options
 
-    options = lodash.merge {}, @options, options
+  getFormatter: (options) -> @getEntity 'formatter', options
+  getLoader: (options) -> @getEntity 'loader', options
 
-    if options.loader?
-      loader = options.loader
-    else
-      loader = @getLoader identifier, options, callback
+  format: (formatter) => (updates) =>
+    deferred = Q.defer()
 
-    return unless loader?
+    formatter.parse updates, (err, context) =>
+      return deferred.reject err if err
+      @emit 'updated', context
+      deferred.resolve context
 
-    # Instantiate a loader if it's a class
-    loader = new loader options if lodash.isFunction loader
+    return deferred.promise
 
-    options.loader = loader
-    getFormatter = @getFormatter options, callback
+  load: (identifier, options) ->
+    deferred = Q.defer()
 
-    loader.load identifier, getFormatter
+    unless options?
+      if lodash.isString identifier
+        options = {}
+      else
+        options = identifier
+
+    options.identifier = identifier if lodash.isString identifier
+    identifier = undefined
+
+    unless options?.identifier?
+      throw new Error 'No identifier provided for configuration.'
+
+    options.loaders ?= loaders
+    options.formatters ?= formatters
+
+    loader = @getLoader options
+    formatter = @getFormatter options
+
+    format = @format formatter
+    loader.on 'updated', format
+
+    loader.load options.identifier, (err, results) ->
+      return deferred.reject err if err
+
+      format(results.content).then (context) ->
+        deferred.resolve context
+
+    return deferred.promise
 
 
 instance = new Prefer
+instance.Prefer = Prefer
 
-
-module.exports = {
-  load: instance.load
-  Prefer
-}
+module.exports = instance

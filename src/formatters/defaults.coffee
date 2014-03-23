@@ -2,29 +2,30 @@ path = require 'path'
 _ = require 'lodash'
 
 
-matches = (type) ->
+provides = (type) ->
   type = '.' + type if type[0] isnt '.'
+
   return (potential) ->
-    return type is path.extname potential.source
+    return type is path.extname potential
 
 
 module.exports = [
-    match: matches 'json'
+    provides: provides 'json'
     module: './formatters/json:JSONFormatter'
   ,
 
-    match: matches 'yml'
+    provides: provides 'yml'
     module: './formatters/yaml:YAMLFormatter'
   ,
 
-    match: matches 'xml'
+    provides: provides 'xml'
     module: './formatters/xml:XMLFormatter'
   ,
 
-    match: matches 'coffee'
+    provides: provides 'coffee'
     module: './formatters/coffee:CoffeeFormatter'
   ,
 
-    match: matches 'ini'
+    provides: provides 'ini'
     module: './formatters/ini:INIFormatter'
 ]

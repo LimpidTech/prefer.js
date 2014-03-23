@@ -1,95 +1,92 @@
-{Configurator} = require '../src/configurator'
+lodash = require 'lodash'
+path = require 'path'
+Q = require 'q'
+
+prefer = require '../src'
+
 {FileLoader} = require '../src/loaders/file_loader'
 {JSONFormatter} = require '../src/formatters/json'
-
-
-prefer = require '../src/index'
-sinon = require 'sinon'
-chai = require 'chai'
-lodash = require 'lodash'
+{fixture} = require './shortcuts'
 
 
 describe 'prefer', ->
-  options =
-    files:
-      searchPaths: ['test/fixtures/']
+  beforeEach ->
+    @identifier = 'fixture.json'
 
+    @options =
+      identifier: @identifier
+      loaders: require '../src/loaders/defaults'
+      formatters: require '../src/formatters/defaults'
+      files:
+        searchPaths: ['test/fixtures/']
+
+    @fixtureString = fixture 'json'
+    @fixture = JSON.parse @fixtureString
+
+    @updates =
+      source: path.resolve 'test/fixtures/' + @identifier
+      content: @fixtureString
+
+    @identifier = 'fixture.json'
+
+    @formatter = prefer.getFormatter @options
+    @loader = prefer.getLoader @options
+
+    sinon.stub @formatter, 'parse', (content, callback) =>
+      callback null, @fixture
+
+  describe '#getFormatter', ->
+    it 'throws an error when no formatter exists', ->
+      action = =>
+        formatter = prefer.getLoader
+          identifier: @identifier
+          formatters: []
+
+      expect(action).to.throw()
+
+    it 'returns the expected formatter', ->
+      expect(@formatter).to.be.instanceof JSONFormatter
+
+  describe '#getLoader', ->
+    it 'throws an error when no loader exists', ->
+      action = =>
+        loader = prefer.getLoader
+          identifier: @identifier
+          loaders: []
+
+      expect(action).to.throw()
+
+    it 'returns the expected loader', ->
+      expect(@loader).to.be.instanceof FileLoader
+
+  describe '#format', ->
+    beforeEach ->
+      @format = prefer.format @formatter
+
+    it 'returns a method that wraps #formatter.parse', ->
+      promise = @format @updates
+      expect(@formatter.parse.calledOnce).to.be.true
+
+    describe 'returned function that', ->
+      it 'returns a promise which provides a formatted context', (done) ->
+        promise = @format @updates
+        promise.then (result) =>
+          expect(result).to.deep.equal @fixture
+          done()
+  
   describe '#load', ->
-    it 'provides an error when no matching formatter exists', (done) ->
-      callback = sinon.spy (err, configurator) ->
-        chai.expect(callback.calledOnce).to.be.true
-        chai.expect(err).to.be.instanceof Error
+    it 'returns a promise that provides the configuration', (done) ->
+      options = lodash.cloneDeep @options
+      promise = prefer.load lodash.extend options
 
+      promise.then (result) =>
+        expect(result).to.deep.equal @fixture
         done()
 
-      prefer.load 'fixture.fake', options, callback
+    it 'allows identifier as a string', ->
+      action = => prefer.load @identifier
+      expect(action).not.to.throw()
 
-    it 'provides an error when data is malformed', (done) ->
-      callback = sinon.spy (err, configurator) ->
-        chai.expect(callback.calledOnce).to.be.true
-        chai.expect(err).to.be.instanceof Error
-
-        done()
-
-      prefer.load 'fixture_malformed.coffee', options, callback
-
-    it 'provides an error when no loader could be found', (done) ->
-      callback = sinon.spy (err, configurator) ->
-        chai.expect(callback.calledOnce).to.be.true
-        chai.expect(err).to.be.instanceof Error
-
-        done()
-
-      prefer.load '/\////// THIS LOCATION IS IMPOSSIBLE ///////\/', options, callback
-
-    it 'provides a configurator when successfully loading a file', (done) ->
-      callback = sinon.spy (err, configurator) ->
-        chai.expect(callback.calledOnce).to.be.true
-
-        chai.expect(err).to.equal null
-        chai.expect(configurator).to.be.instanceof Configurator
-
-        done()
-
-      prefer.load 'fixture.json', options, callback
-
-    it 'allows options to be an optional argument', (done) ->
-      callback = sinon.spy (err, configurator) ->
-        chai.expect(callback.calledOnce).to.be.true
-        done()
-
-      prefer.load 'fixture.json', callback
-
-    it 'uses the given loader instance if one is provided', (done) ->
-      localOptions = lodash.merge {}, options,
-        loader: new FileLoader
-
-      localOptions.loader.load = sinon.spy localOptions.loader.load
-
-      prefer.load 'fixture.json', localOptions, (err, data) ->
-        chai.expect(localOptions.loader.load.calledOnce).to.be.true
-        done()
-
-    it 'uses the given formatter instance if one is provided', (done) ->
-      formatter = new JSONFormatter
-      localOptions = lodash.merge {}, options, {formatter}
-
-      formatter.parse = sinon.spy formatter.parse
-
-      prefer.load 'fixture.json', localOptions, (err, data) ->
-        chai.expect(formatter.parse.calledOnce).to.be.true
-        done()
-
-    it 'passes an error to the callback when loader.load fails', (done) ->
-      fakeError = new Error 'Injected error for testing load error'
-
-      class FakeLoader
-        load: (filename, callback) ->
-          callback fakeError
-
-      localOptions = lodash.extend {}, options,
-        loader: FakeLoader
-
-      prefer.load 'fixture.json', localOptions, (err, data) ->
-        chai.expect(err).to.equal fakeError
-        done()
+    it 'throws an error without an identifier', ->
+      action = => prefer.load()
+      expect(action).to.throw()
