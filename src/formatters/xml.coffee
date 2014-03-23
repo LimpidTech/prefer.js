@@ -1,6 +1,8 @@
-{Formatter} = require './formatter'
-
+Q = require 'q'
 xml2js = require 'xml2js'
+
+{Formatter} = require './formatter'
+{proxyPromise} = require '../util'
 
 
 options =
@@ -13,8 +15,7 @@ parser = new xml2js.Parser options
 
 
 class XMLFormatter extends Formatter
-  fromString: (asString, callback) ->
-    parser.parseString asString, callback
-
+  fromString: (asString, deferred) ->
+    proxyPromise deferred, Q.nfcall parser.parseString, asString
 
 module.exports = {XMLFormatter}

@@ -1,12 +1,10 @@
+JSON5 = require 'json5'
 {Formatter} = require './formatter'
 
 
 class JSONFormatter extends Formatter
-  fromString: (asString, callback) ->
-    callback null, JSON.parse asString
-
-  toString: (asObject, callback) ->
-    callback null, JSON.stringify asObject
+  fromString: (asString, deferred) -> deferred.resolve JSON5.parse asString
+  toString: (asObject, deferred) -> deferred.resolve JSON5.stringify asObject
 
 
 module.exports = {JSONFormatter}

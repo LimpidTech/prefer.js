@@ -4,8 +4,7 @@ coffee = require 'coffee-script'
 
 
 class CoffeeFormatter extends Formatter
-  fromString: (asString, callback) ->
-    callback null, coffee.eval asString
+  fromString: (asString, deferred) -> deferred.resolve coffee.eval asString
 
 
 module.exports = {CoffeeFormatter}
