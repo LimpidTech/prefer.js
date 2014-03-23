@@ -9,7 +9,6 @@ pathing = require '../pathing'
 {proxyPromise, adaptToCallback} = require '../util'
 
 
-
 class FileLoader extends Loader
   options:
     files:
