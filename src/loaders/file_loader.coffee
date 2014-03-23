@@ -24,20 +24,23 @@ class FileLoader extends Loader
     deferred = Q.defer()
     searchPaths = @options.files.searchPaths
 
-    paths = lodash.filter lodash.map searchPaths, (directory) ->
+    promise = Q.allSettled lodash.map searchPaths, (directory) ->
+      existance = Q.defer()
+
       relativePath = path.join directory, filename
       absolutePath = path.resolve relativePath
 
-      # TODO: Make this async but still reliable?
-      exists = fs.existsSync absolutePath
+      fs.exists absolutePath, (result) -> existance.resolve absolutePath
+      return existance.promise
 
-      return absolutePath if exists
-      return false
+    promise.then (paths) ->
+      found = lodash.filter paths, (result) -> result.state is 'fulfilled'
+      found = lodash.map found, (result) -> result.value
 
-    if paths.length
-      deferred.resolve lodash.first paths
-    else
-      deferred.reject new Error 'Could not find configuration: ' + filename
+      if found.length
+        deferred.resolve lodash.first found
+      else
+        deferred.reject new Error 'Could not find configuration: ' + filename
 
     adaptToCallback deferred.promise, callback
     return deferred.promise
