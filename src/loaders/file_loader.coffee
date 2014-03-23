@@ -113,18 +113,31 @@ class FileLoader extends Loader
 
     fs.watch filename, options, @getChangeHandler filename
 
-  load: (filename, callback) ->
+  load: (requestedFilename, callback) ->
     deferred = Q.defer()
 
-    findPromise = @find filename
+    baseName = path.basename requestedFilename
+    dotIndex = baseName.lastIndexOf '.'
+
+    shouldDetermineFormat = dotIndex is -1
+
+    findPromise = @find requestedFilename, shouldDetermineFormat
+
+    if shouldDetermineFormat
+      findPromise.then (files) ->
+        return lodash.first files if files.length
+
+        deferred.reject new Error "
+          No configuration files found matching #{ requestedFilename }.
+        "
+
     findPromise.then (filename) =>
       proxyPromise deferred, @get filename
       @watch filename if @options.files.watch
 
     findPromise.catch deferred.reject
 
-    adaptToCallback deferred.promise, callback
-    return deferred.promise
+    return adaptToCallback deferred.promise, callback
 
 
 module.exports = {FileLoader}
