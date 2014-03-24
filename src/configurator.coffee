@@ -5,7 +5,8 @@ Q = require 'q'
 
 
 class Configurator
-  constructor: (@context) ->
+  constructor: (@context, state) ->
+    @state = state
 
   get: (key, callback) ->
     deferred = Q.defer()

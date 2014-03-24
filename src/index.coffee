@@ -34,14 +34,14 @@ class Prefer extends events.EventEmitter
   getFormatter: (options, suggestion) -> @getEntity 'formatter', options
   getLoader: (options) -> @getEntity 'loader', options
 
-  format: (formatter) -> (updates) =>
+  format: (formatter) -> (updates, isUpdate=true) =>
     deferred = Q.defer()
 
-    promise = formatter.parse updates
+    promise = formatter.parse updates.content
     promise.then (context) =>
-      configurator = new Configurator context
+      configurator = new Configurator context, updates
       deferred.resolve configurator
-      @emit 'updated', configurator
+      @emit 'updated', configurator if isUpdate
 
     promise.catch (err) -> deferred.reject err
 
@@ -79,11 +79,11 @@ class Prefer extends events.EventEmitter
         formatter = @getFormatter options, suggestion
         format = @format formatter
 
-        loader.on 'updated', format
+        loader.on 'updated', (updates) -> format updates
 
         loadPromise = loader.load options.identifier
         loadPromise.then (result) ->
-          formatPromise = format result.content
+          formatPromise = format result, false
           formatPromise.then deferred.resolve
 
     return adaptToCallback deferred.promise, callback
