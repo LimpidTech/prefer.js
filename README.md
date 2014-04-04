@@ -28,7 +28,7 @@ following JSON configuration:
       }
     }
 
-You can load these settings simply with the following code:
+You can load these settings ith the following code:
 
     var prefer = require('prefer');
 
@@ -84,7 +84,7 @@ Why asyncronous?
 
 A lot of configuration tools prefer to provide a blocking method of retrieving
 a project's configuration, in order to supply a more-simple method of getting
-the configuration. However, one goal of prefer is to make sure that we aren't
+the configuration. One goal of prefer is to make sure that we aren't
 limited to specific use-cases - and some projects require real-time, dynamic
 updating of their configuration. Prefer provides all of it's interfaces in an
 asyncronous manner in order to provide that possibility without the requirement
