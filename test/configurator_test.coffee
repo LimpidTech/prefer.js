@@ -9,7 +9,16 @@ describe 'Configurator', ->
     @fixtureString = fixture 'json'
     @fixture = JSON.parse @fixtureString
 
-    @configurator = new Configurator @fixture
+    @state = {}
+
+    @configurator = new Configurator @fixture, @state
+
+  describe '#constructor', ->
+    it 'sets #context to the provided context', ->
+      expect(@configurator.context).to.equal @fixture
+
+    it 'sets #state to the provided state', ->
+      expect(@configurator.state).to.equal @state
 
   describe '#get', ->
     it 'provides an error when the provided key does not exist', (done) ->
@@ -36,13 +45,14 @@ describe 'Configurator', ->
   describe '#set', ->
     beforeEach ->
       @initial = @fixture
+
       @fixture =
         example: 'data'
 
-    it 'resolves the context without any provided arguments', (done) ->
-      @configurator.set()
-      @configurator.get (err, context) =>
+    it.only 'resolves an unchanged context without any key or value provided', (done) ->
+      @configurator.set (err, context) =>
         expect(context).to.deep.equal @initial
+        expect(@configurator.context).to.deep.equal @initial
         done()
 
     it 'updates the context with the provided value', (done) ->
@@ -56,5 +66,3 @@ describe 'Configurator', ->
       @configurator.get 'fake.key.here', (err, context) =>
         expect(context).to.deep.equal @fixture
         done()
-
-  describe '#load', ->

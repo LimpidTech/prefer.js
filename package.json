@@ -2,7 +2,7 @@
   "author": "Brandon R. Stoner <monokrome@limpidtech.com> (http://monokro.me/)",
   "name": "prefer",
   "description": "Configuration management for NodeJS",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "homepage": "http://preferjs.limpidtech.com/",
   "main": "lib/prefer",
   "repository": {
@@ -10,7 +10,7 @@
     "url": "git://github.com/LimpidTech/preferjs.git"
   },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R min"
   },
   "engines": {
     "node": "*"

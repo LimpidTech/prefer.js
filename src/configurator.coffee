@@ -5,19 +5,18 @@ Q = require 'q'
 
 
 class Configurator
-  constructor: (@context, state) ->
-    @state = state
+  constructor: (@context, @state) ->
 
   get: (key, callback) ->
     deferred = Q.defer()
 
-    if not callback and lodash.isFunction key
+    node = @context
+
+    if lodash.isFunction key
       callback = key
       key = undefined
-      node = @context
 
     else
-      node = @context
       stack = key.split '.'
 
       while stack.length and node
@@ -36,6 +35,10 @@ class Configurator
 
   set: (key, value, callback) ->
     deferred = Q.defer()
+
+    if lodash.isFunction key
+      callback = key
+      key = undefined
 
     unless key?
       deferred.resolve @context
