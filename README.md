@@ -28,18 +28,33 @@ following JSON configuration:
       }
     }
 
-You can load these settings ith the following code:
+You can load these settings with the following code using promises:
 
-    var prefer = require('prefer');
+```javascript
+function configure (value) {
+    // value will be set to "user" at this point.
+}
 
-    // Get a Configurator object which we can use to retrieve settings.
-    prefer.load('settings.json', function (err, configurator) {
-      if (err !== null) { throw err; }
-
-      configurator.get('auth.username', function (err, value) {
-        // value will be set to "user" at this point.
-      });
+require('prefer').load('settings.json')
+    .then(function (configurator) {
+        configurator.get('auth.username').then(configure);
     });
+```
+
+
+If you prefer to use callbacks, you can also use them as you wish throughout
+the prefer APIs:
+
+```javascript
+// Get a Configurator object which we can use to retrieve settings.
+require('prefer').load('settings.json', function (err, configurator) {
+    if (err !== null) { throw err; }
+
+    configurator.get('auth.username', function (err, value) {
+        // value will be set to "user" at this point.
+    });
+});
+```
 
 You will notice that prefer only required 'settings.json'. It should always be
 given in this way, because prefer takes care of looking through the filesystem
