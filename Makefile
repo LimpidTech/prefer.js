@@ -19,7 +19,7 @@ ${build_dir}/coverage.html: ${build_dir}/coverage.js
 	make clean_coverage_sources
 
 ${build_dir}/coverage.js: ${build_dir} 
-	./node_modules/.bin/coffeeCoverage \
+	node_modules/.bin/coffeeCoverage \
 		--initfile "$@" \
 		--path relative \
 		"${IN}" "${IN}"
@@ -36,4 +36,4 @@ clean: clean_coverage_sources
 clean_coverage_sources:
 	find src -name \*.js -exec rm {} \;
 
-.PHONY: prefer prever_cov clean clean_coverage_sources coverage prefer
+.PHONY: all prefer coverage prefer ${build_dir}/*
