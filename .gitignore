@@ -22,5 +22,6 @@ build/*
 /.*
 !/.git*
 !/.travis.yml
-!.npm*
+!/.npm*
+!/.projections.json
 

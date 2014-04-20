@@ -1,0 +1,15 @@
+{
+  "src/*.coffee": {
+    "alternate": "test/{}_test.coffee",
+    "command": "source",
+    "template": ["module.exports = {open}{close}"]
+  },
+  "test/*_test.coffee": {
+    "alternate": "src/{}.coffee",
+    "command": "test",
+    "template": ["{expect} = require 'chai'"]
+  },
+  "README.md": {
+    "command": "docs"
+  }
+}
