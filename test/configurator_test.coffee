@@ -49,7 +49,7 @@ describe 'Configurator', ->
       @fixture =
         example: 'data'
 
-    it.only 'resolves an unchanged context without any key or value provided', (done) ->
+    it 'resolves an unchanged context without any key or value provided', (done) ->
       @configurator.set (err, context) =>
         expect(context).to.deep.equal @initial
         expect(@configurator.context).to.deep.equal @initial
