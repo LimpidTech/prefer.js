@@ -9,6 +9,9 @@
     "command": "test",
     "template": ["{expect} = require 'chai'"]
   },
+  "Makefile": {
+    "command": "make"
+  },
   "README.md": {
     "command": "docs"
   }
