@@ -12,7 +12,7 @@ prefer = require '../src'
 describe 'prefer', ->
   beforeEach ->
     @identifierBase = 'fixture'
-    @identifier = @identifierBase + '.json'
+    @identifier = @identifierBase + '.yml'
 
     @options =
       identifier: @identifier
@@ -76,7 +76,7 @@ describe 'prefer', ->
         done()
   
   describe '#load', ->
-    it 'returns a promise that provides the configuration', (done) ->
+    it.only 'returns a promise that provides the configuration', (done) ->
       options = lodash.cloneDeep @options
       promise = prefer.load options
 
