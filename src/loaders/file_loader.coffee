@@ -26,8 +26,8 @@ class FileLoader extends Loader
       deferred.resolve baseName[extensionIndex..]
 
     else
-      search = @find options.identifier, true
-      search.then (result) -> deferred.resolve result
+      @find options.identifier, true
+        .then deferred.resolve, deferred.reject
 
     return deferred.promise
 
@@ -60,13 +60,13 @@ class FileLoader extends Loader
       absolutePath = path.resolve relativePath
 
       if asPrefix
-        absoluteDirectoryPath = path.resolve directory
-
-        findMatches = @findByPrefix absoluteDirectoryPath, filename
-        findMatches.then (matches) ->
+        resolveMatches = (matches) ->
           existance.resolve lodash.map matches, (match) ->
             return path.join absoluteDirectoryPath, match
-        findMatches.catch (err) -> existance.reject err
+
+        absoluteDirectoryPath = path.resolve directory
+        @findByPrefix absoluteDirectoryPath, filename
+          .then resolveMatches, existance.reject
 
       else
         fs.exists absolutePath, (result) ->

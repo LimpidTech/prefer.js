@@ -16,10 +16,16 @@ class Prefer extends events.EventEmitter
     potentials = options[pluralType]
 
     filterBy = suggestion or options.identifier
-    filterBy = lodash.toArray filterBy unless lodash.isArray filterBy
+
+    filteredAsString = lodash.isString filterBy
+    filteredAsArray = lodash.isArray filterBy
+
+    unless filteredAsArray or filteredAsString
+      filterBy = lodash.toArray filterBy 
 
     matches = lodash.filter potentials, (potential) ->
-      potential.provides filterBy
+      filterMatches = potential.provides filterBy
+      return true in filterMatches
 
     unless matches.length
       throw new Error "
@@ -31,7 +37,7 @@ class Prefer extends events.EventEmitter
     Entity = resolveModule provider.module
     return new Entity options
 
-  getFormatter: (options, suggestion) -> @getEntity 'formatter', options
+  getFormatter: (args...) -> @getEntity 'formatter', args...
   getLoader: (options) -> @getEntity 'loader', options
 
   format: (formatter) -> (updates, isUpdate=true) =>
@@ -72,19 +78,25 @@ class Prefer extends events.EventEmitter
     loader = @getLoader options
     formatter = null
 
-    shouldFormatPromise = loader.formatterRequired options
-    shouldFormatPromise.then (shouldFormat) =>
-      suggestionPromise = loader.formatterSuggested? options
-      suggestionPromise.then (suggestion) =>
-        formatter = @getFormatter options, suggestion
-        format = @format formatter
+    onFormatSuggested = (suggestion) =>
+      formatter = @getFormatter options, suggestion
+      format = @format formatter
 
-        loader.on 'updated', (updates) -> format updates
+      loader.on 'updated', (updates) -> format updates
 
-        loadPromise = loader.load options.identifier
-        loadPromise.then (result) ->
-          formatPromise = format result, false
-          formatPromise.then deferred.resolve
+      onLoaded = (result) ->
+        format result, false
+          .then deferred.resolve, deferred.reject
+
+      loader.load options.identifier
+        .then onLoaded, deferred.reject
+
+    onRequestFormat = (shouldFormat) =>
+      loader.formatterSuggested options
+        .then onFormatSuggested, deferred.reject
+
+    loader.formatterRequired options
+      .then onRequestFormat
 
     return adaptToCallback deferred.promise, callback
 
