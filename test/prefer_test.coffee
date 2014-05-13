@@ -5,7 +5,7 @@ Q = require 'q'
 prefer = require '../src'
 
 {FileLoader} = require '../src/loaders/file_loader'
-{JSONFormatter} = require '../src/formatters/json'
+{YAMLFormatter} = require '../src/formatters/yaml'
 {fixture} = require './shortcuts'
 
 
@@ -48,7 +48,7 @@ describe 'prefer', ->
       expect(action).to.throw()
 
     it 'returns the expected formatter', ->
-      expect(@formatter).to.be.instanceof JSONFormatter
+      expect(@formatter).to.be.instanceof YAMLFormatter
 
   describe '#getLoader', ->
     it 'throws an error when no loader exists', ->
@@ -74,9 +74,9 @@ describe 'prefer', ->
       @promise.then (result) => result.get (err, context) =>
         expect(context).to.deep.equal @fixture
         done()
-  
+
   describe '#load', ->
-    it.only 'returns a promise that provides the configuration', (done) ->
+    it 'returns a promise that provides the configuration', (done) ->
       options = lodash.cloneDeep @options
       promise = prefer.load options
 
