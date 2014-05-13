@@ -16,12 +16,8 @@ class Prefer extends events.EventEmitter
     potentials = options[pluralType]
 
     filterBy = suggestion or options.identifier
-
-    filteredAsString = lodash.isString filterBy
-    filteredAsArray = lodash.isArray filterBy
-
-    unless filteredAsArray or filteredAsString
-      filterBy = lodash.toArray filterBy 
+    filterBy = [filterBy] if lodash.isString filterBy
+    filterBy = lodash.toArray filterBy unless lodash.isArray filterBy
 
     matches = lodash.filter potentials, (potential) ->
       filterMatches = potential.provides filterBy
@@ -96,7 +92,7 @@ class Prefer extends events.EventEmitter
         .then onFormatSuggested, deferred.reject
 
     loader.formatterRequired options
-      .then onRequestFormat
+      .then onRequestFormat, deferred.reject
 
     return adaptToCallback deferred.promise, callback
 

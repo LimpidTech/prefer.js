@@ -2,12 +2,15 @@ path = require 'path'
 lodash = require 'lodash'
 
 
-provides = (type) ->
-  type = '.' + type if type[0] isnt '.'
+ensureDot = (val) -> '.' + val if val[0] isnt '.'
 
-  return (potentials) ->
-    lodash.map potentials, (potential) ->
-      type is path.extname potential
+
+provides = (type) ->
+  type = ensureDot type
+
+  return (potentials) -> lodash.map potentials, (potential) ->
+    return yes if type is ensureDot potential
+    return type is path.extname potential
 
 
 module.exports = [
