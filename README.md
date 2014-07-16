@@ -1,3 +1,4 @@
+
 What is it?
 -----------
 
@@ -56,15 +57,17 @@ require('prefer').load('settings', function (err, configurator) {
 });
 ```
 
-You will notice that prefer only required 'settings.json'. It should always be
-given in this way, because prefer takes care of looking through the filesystem
-for configuration files. On both Unix and Windows systems, it will look in all
-of the standard folders, as well as some conventional places where people like
-to put their configurations.
+You will notice that prefer only required 'settings'. It should always be given
+in this way, because prefer takes care of looking through the filesystem for
+configuration files. On both Unix and Windows systems, it will look in all of
+the standard folders, as well as some conventional places where people like to
+put their configurations.
 
 Ordering matters, so having a file in `./settings.json` as well as another in
 `/etc/settings.json` is still reliable. The configuration in `./settings.json`
-will be used first.
+will be used first. Prefer doesn't care what format your user writes your
+settings in, so they can also use `settings.yaml`, `settings.xml`,
+`settings.cson`, or any other supported format.
 
 If you prefer to look in specific places, you can always pass an options object
 as the second argument to prefer.load, and provide it the `files.searchPaths`
@@ -78,7 +81,7 @@ setting as an array of locations for prefer to look in. Here's an example:
         };
 
     // Get a Configurator object which we can use to retrieve settings.
-    prefer.load('settings.json', options, someFunction);
+    prefer.load('settings', options, someFunction);
 
 Supported configuration formats
 -------------------------------
