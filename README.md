@@ -5,6 +5,8 @@ What is it?
 [![Build Status][bs]](https://travis-ci.org/LimpidTech/prefer)
 [100% Coverage][cov]
 
+**NOTE: Tests are passing, but mocha is using an old version of coffee which breaks them on TravisCI.**
+
 Prefer is a node library for helping you manage application configurations.
 
 It provides a set of interfaces which provide standard methods for
