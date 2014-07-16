@@ -35,7 +35,7 @@ function configure (value) {
     // value will be set to "user" at this point.
 }
 
-require('prefer').load('settings.json')
+require('prefer').load('settings')
     .then(function (configurator) {
         configurator.get('auth.username').then(configure);
     });
