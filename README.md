@@ -47,7 +47,7 @@ the prefer APIs:
 
 ```javascript
 // Get a Configurator object which we can use to retrieve settings.
-require('prefer').load('settings.json', function (err, configurator) {
+require('prefer').load('settings', function (err, configurator) {
     if (err !== null) { throw err; }
 
     configurator.get('auth.username', function (err, value) {
