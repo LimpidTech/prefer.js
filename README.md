@@ -54,11 +54,11 @@ require('prefer').load('settings', function (err, configurator) {
 });
 ```
 
-You will notice that prefer only required 'settings'. It should always be given
-in this way, because prefer takes care of looking through the filesystem for
-configuration files. On both Unix and Windows systems, it will look in all of
-the standard folders, as well as some conventional places where people like to
-put their configurations.
+You will notice that prefer only required 'settings' as the filename. It should
+always be given in this way, because prefer takes care of looking through the
+filesystem for configuration files. On both Unix and Windows systems, it will
+look in all of the standard folders, as well as some conventional places where
+people like to put their configurations.
 
 Ordering matters, so having a file in `./settings.json` as well as another in
 `/etc/settings.json` is still reliable. The configuration in `./settings.json`
