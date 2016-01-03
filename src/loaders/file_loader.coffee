@@ -82,12 +82,16 @@ class FileLoader extends Loader
       found = lodash.map found, (result) -> result.value
 
       if asPrefix
-        deferred.resolve lodash.filter lodash.flatten found
+        matches = lodash.filter lodash.flatten found
       else
-        deferred.resolve lodash.first found
+        matches = lodash.first found
 
-    adaptToCallback deferred.promise, callback
-    return deferred.promise
+      if matches.length
+        deferred.resolve matches
+      else
+        deferred.reject new Error 'No files found matching: ' + filename
+
+    return adaptToCallback deferred.promise, callback
 
   get: (filename, callback) =>
     deferred = Q.defer()
@@ -128,19 +132,13 @@ class FileLoader extends Loader
     findPromise = @find requestedFilename, shouldDetermineFormat
 
     if shouldDetermineFormat
-      findPromise = findPromise.then (files) ->
-        return lodash.first files if files.length
-
-        deferred.reject new Error "
-          No configuration files found matching #{ requestedFilename }.
-        "
+      findPromise = findPromise.then (files) -> lodash.first files
 
     findPromise.then (filename) =>
       proxyPromise deferred, @get filename
       @watch filename if @options.files.watch
 
-    findPromise.catch deferred.reject
-
+    findPromise.fail deferred.reject
     return adaptToCallback deferred.promise, callback
 
 

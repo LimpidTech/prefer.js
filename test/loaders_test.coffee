@@ -48,6 +48,7 @@ describe 'Loader', ->
         expect(result).to.be.false
         done()
 
+
 describe 'FileLoader', ->
   beforeEach ->
     @fixturesPath = path.resolve 'test/fixtures'
@@ -61,14 +62,9 @@ describe 'FileLoader', ->
         searchPaths: ['test/fixtures/']
 
   describe '#load', ->
-    it 'results in a not found error if no file was found', (done) ->
-      callback = sinon.spy (err, data) ->
-        expect(err).to.be.instanceof Error
-        expect(callback.calledOnce).to.be.true
-
-        done()
-
-      @loader.load 'fakeFile', callback
+    it 'results in a not found error if no file was found', ->
+      expect -> @loader.load 'fakeFile'
+        .to.throw.error
 
     it 'throws an error if reading the requested file fails', (done) ->
       sandbox = sinon.sandbox.create()
