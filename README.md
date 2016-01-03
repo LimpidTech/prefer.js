@@ -1,4 +1,3 @@
-
 What is it? [![Build Status](https://travis-ci.org/LimpidTech/prefer.svg?branch=master)](https://travis-ci.org/LimpidTech/prefer)
 -----------
 
@@ -9,6 +8,7 @@ reading arbitrary project configuration data. This can vary from simple cases
 like JSON, to more complicated examples - such as retreiving configuration data
 from a database.
 
+
 How do I use it?
 ----------------
 
@@ -17,7 +17,7 @@ Firstly, you'll want to install the module. This can be done easily with `npm`.
     npm install prefer
 
 Prefer is fairly simple to use. A basic use case might be that you have the
-following JSON configuration:
+following JSON configuration in *settings.json*:
 
     {
       "auth": {
@@ -80,6 +80,7 @@ setting as an array of locations for prefer to look in. Here's an example:
     // Get a Configurator object which we can use to retrieve settings.
     prefer.load('settings', options, someFunction);
 
+
 Supported configuration formats
 -------------------------------
 
@@ -93,6 +94,7 @@ upon installation of prefer:
 - CSON
 - XML
 - YAML
+
 
 Why asyncronous?
 ----------------
