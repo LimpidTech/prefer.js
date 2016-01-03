@@ -13,9 +13,9 @@ class CSONFormatter extends Formatter
       deferred.resolve result
 
   toString: (asObject, deferred) ->
-    CSON.stringify asObject, (err, result) ->
-      return deferred.reject err if err
-      deferred.resolve result
+    parsed = CSON.stringify asObject
+    return deferred.resolve parsed if 'string' is typeof parsed
+    deferred.reject parsed
 
 
 module.exports = {CSONFormatter}

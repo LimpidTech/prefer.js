@@ -24,35 +24,28 @@ describe 'JSONFormatter', ->
   describe '#parse', ->
     it 'converts the provided string to an object', (done) ->
       formatter = new JSONFormatter
-
-      callback = (err, data) ->
+      formatter.parse asString, (err, data) ->
         expect(err).to.equal null
         expect(data).to.deep.equal fixture
-
         done()
 
-      result = formatter.parse asString, callback
-
-    it 'provides an error to the callback when necessary', ->
-      error = new Error 'Mock error'
-
+    it 'provides an error to the callback when necessary', sinon.test (done) ->
+      error = new Error 'Mock Error'
       formatter = new JSONFormatter
-      sinon.stub formatter, 'fromString', -> throw error
 
-      callback = (err) -> expect(err).to.equal error
-      formatter.parse asString, callback
+      @stub formatter, 'fromString', -> throw error
+
+      formatter.parse asString, (err) ->
+        expect(err).to.equal error
+        done()
 
   describe '#stringify', ->
     it 'converts the provided object into a JSON string', (done) ->
       formatter = new JSONFormatter
-
-      callback = (err, data) ->
+      formatter.stringify fixture, (err, data) ->
         expect(err).to.equal null
         expect(shortcuts.normalize data).to.equal asString
-
         done()
-
-      result = formatter.stringify fixture, callback
 
 
 describe 'YAMLFormatter', ->
@@ -61,24 +54,18 @@ describe 'YAMLFormatter', ->
   describe '#parse', ->
     it 'converts the provided string to an object', (done) ->
       formatter = new YAMLFormatter
-
-      callback = (err, data) ->
+      formatter.parse asString, (err, data) ->
         expect(err).to.equal null
         expect(data).to.deep.equal fixture
         done()
 
-      result = formatter.parse asString, callback
-
   describe '#stringify', ->
     it 'converts the provided object into a YAML string', (done) ->
       formatter = new YAMLFormatter
-
-      callback = (err, data) ->
+      formatter.stringify fixture, (err, data) ->
         expect(err).to.equal null
         expect(shortcuts.normalize data).to.equal asString
         done()
-
-      result = formatter.stringify fixture, callback
 
 
 describe 'INIFormatter', ->
@@ -87,24 +74,19 @@ describe 'INIFormatter', ->
   describe '#parse', ->
     it 'converts the provided string to an object', (done) ->
       formatter = new INIFormatter
-
-      callback = (err, data) ->
+      formatter.parse asString, (err, data) ->
         expect(err).to.equal null
         expect(data).to.deep.equal fixture
         done()
 
-      result = formatter.parse asString, callback
-
   describe '#stringify', ->
     it 'converts the provided object into a INI string', (done) ->
       formatter = new INIFormatter
-
-      callback = (err, data) ->
+      formatter.stringify fixture, (err, data) ->
         expect(err).to.equal null
-        expect(shortcuts.normalize data).to.equal asString
+        expect shortcuts.normalize data
+          .to.equal asString
         done()
-
-      result = formatter.stringify fixture, callback
 
 
 describe 'CoffeeFormatter', ->
@@ -113,23 +95,17 @@ describe 'CoffeeFormatter', ->
   describe '#parse', ->
     it 'converts the provided string to an object', (done) ->
       formatter = new CoffeeFormatter
-
-      callback = (err, data) ->
+      formatter.parse asString, (err, data) ->
         expect(err).to.equal null
         expect(data).to.deep.equal fixture
         done()
 
-      result = formatter.parse asString, callback
-
   describe '#stringify', ->
     it 'throws an error since coffee can not be serialized', (done) ->
       formatter = new CoffeeFormatter
-
-      callback = (err, data) ->
+      formatter.stringify fixture, (err, data) ->
         expect(err).to.be.instanceof Error
         done()
-
-      result = formatter.stringify fixture, callback
 
 
 describe 'XMLFormatter', ->
@@ -138,23 +114,17 @@ describe 'XMLFormatter', ->
   describe '#parse', ->
     it 'converts the provided string to an object', (done) ->
       formatter = new XMLFormatter
-
-      callback = (err, data) ->
+      formatter.parse asString, (err, data) ->
         expect(err).to.equal null
         expect(data).to.deep.equal fixture
         done()
 
-      result = formatter.parse asString, callback
-
   describe '#stringify', ->
     it 'throws an error since coffee can not be serialized', (done) ->
       formatter = new XMLFormatter
-
-      callback = (err, data) ->
+      formatter.stringify fixture, (err, data) ->
         expect(err).to.be.instanceof Error
         done()
-
-      result = formatter.stringify fixture, callback
 
 
 describe 'CSONFormatter', ->
@@ -163,32 +133,28 @@ describe 'CSONFormatter', ->
   describe '#parse', ->
     it 'converts the provided string to an object', (done) ->
       formatter = new CSONFormatter
-
-      callback = (err, data) ->
+      formatter.parse asString, (err, data) ->
         expect(err).to.equal null
         expect(data).to.deep.equal fixture
-
         done()
 
-      result = formatter.parse asString, callback
-
-    it 'provides an error to the callback when necessary', ->
-      error = new Error 'Mock error'
-
+    it 'provides an error to the callback when necessary', sinon.test (done) ->
+      error = new Error 'Mock Error'
       formatter = new CSONFormatter
-      sinon.stub formatter, 'fromString', -> throw error
 
-      callback = (err) -> expect(err).to.equal error
-      formatter.parse asString, callback
+      @stub formatter, 'fromString', -> throw error
+
+      formatter.parse asString, (err) ->
+        expect(err).to.equal error
+        done()
 
   describe '#stringify', ->
     it 'converts the provided object into a CSON string', (done) ->
       formatter = new CSONFormatter
 
-      callback = (err, data) ->
+      formatter.stringify fixture, (err, data) ->
         expect(err).to.equal null
-        expect(shortcuts.normalize data).to.equal asString
+        expect shortcuts.normalize data
+          .to.equal asString
 
         done()
-
-      result = formatter.stringify fixture, callback

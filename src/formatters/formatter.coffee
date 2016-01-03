@@ -7,26 +7,24 @@ class Formatter
     throw new Error 'The Formatter in use does not support serialization.'
 
   parse: (asString, callback) ->
-    deferred  = Q.defer()
+    deferred = Q.defer()
 
     try
       @fromString asString, deferred
     catch error
       deferred.reject error
 
-    adaptToCallback deferred.promise, callback
-    return deferred.promise
+    return adaptToCallback deferred.promise, callback
 
   stringify: (asObject, callback) ->
-    deferred  = Q.defer()
+    deferred = Q.defer()
 
     try
       @toString asObject, deferred
     catch error
       deferred.reject error
 
-    adaptToCallback deferred.promise, callback
-    return deferred.promise
+    return adaptToCallback deferred.promise, callback
 
 
 module.exports = {Formatter}

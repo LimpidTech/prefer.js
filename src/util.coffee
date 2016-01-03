@@ -15,8 +15,9 @@ resolveModule = (identifier, separator) ->
 
 adaptToCallback = (promise, callback) ->
   if callback?
-    promise.then (result) -> callback null, result
-    promise.catch (err) -> callback err
+    promise
+      .then (result) -> callback null, result
+      .fail callback
 
   return promise
 
