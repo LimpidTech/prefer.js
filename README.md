@@ -1,5 +1,5 @@
 
-What is it?
+What is it? [![Build Status](https://travis-ci.org/LimpidTech/prefer.svg?branch=master)](https://travis-ci.org/LimpidTech/prefer)
 -----------
 
 Prefer is a node library for helping you manage application configurations.
