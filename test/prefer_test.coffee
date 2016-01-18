@@ -1,8 +1,8 @@
+Q = require 'q'
 lodash = require 'lodash'
 path = require 'path'
-Q = require 'q'
-
 prefer = require '../src'
+
 
 {FileLoader} = require '../src/loaders/file_loader'
 {YAMLFormatter} = require '../src/formatters/yaml'
