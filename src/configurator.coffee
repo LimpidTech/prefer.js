@@ -9,14 +9,13 @@ class Configurator
 
   get: (key, callback) ->
     deferred = Q.defer()
-
     node = @context
 
     if lodash.isFunction key
       callback = key
       key = undefined
 
-    else
+    else if key?
       stack = key.split '.'
 
       while stack.length and node

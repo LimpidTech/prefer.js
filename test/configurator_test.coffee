@@ -42,6 +42,11 @@ describe 'Configurator', ->
 
       @configurator.get 'user', callback
 
+    it 'provides all data when no key is provided', (done) ->
+      @configurator.get().then (data) =>
+        expect(data).to.deep.equal @fixture
+        done()
+
   describe '#set', ->
     beforeEach ->
       @initial = @fixture
