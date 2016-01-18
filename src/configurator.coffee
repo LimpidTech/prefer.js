@@ -1,5 +1,6 @@
-lodash = require 'lodash'
 Q = require 'q'
+lodash = require 'lodash'
+util = require './util'
 
 {adaptToCallback} = require './util'
 
@@ -16,11 +17,7 @@ class Configurator
       key = undefined
 
     else if key?
-      stack = key.split '.'
-
-      while stack.length and node
-        nextLevel = stack.shift()
-        node = node[nextLevel]
+      node = util.queryNestedKey node, key
 
       unless node
         return callback new Error """

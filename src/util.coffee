@@ -28,8 +28,24 @@ proxyPromise = (deferred, promise) ->
   return deferred.promise
 
 
+queryNestedKey = (obj, key) ->
+  return obj unless key?
+
+  key = key.slice 1 while key[0] is '.'
+
+  stack = key.split '.'
+  node = obj
+
+  while stack.length and node
+    nextLevel = stack.shift()
+    node = node[nextLevel]
+
+  return node
+
+
 module.exports = {
-  resolveModule
   adaptToCallback
   proxyPromise
+  queryNestedKey
+  resolveModule
 }
