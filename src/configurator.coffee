@@ -2,8 +2,6 @@ Q = require 'q'
 lodash = require 'lodash'
 util = require './util'
 
-{adaptToCallback} = require './util'
-
 
 class Configurator
   constructor: (@context, @state) ->
@@ -25,7 +23,7 @@ class Configurator
         """
 
     deferred.resolve lodash.cloneDeep node
-    adaptToCallback deferred.promise, callback
+    util.adaptToCallback deferred.promise, callback
 
     return deferred.promise
 
@@ -63,7 +61,7 @@ class Configurator
 
       deferred.resolve lodash.cloneDeep node
 
-    return adaptToCallback deferred.promise, callback
+    return util.adaptToCallback deferred.promise, callback
 
 
 module.exports = {Configurator}
