@@ -9,7 +9,7 @@ platform = os.platform()
 executionCommandSegments = argv.$0.split ' '
 executionLocation = executionCommandSegments[1..]
 
-localDirectory = path.dirname executionLocation
+localDirectory = path.dirname _.first executionLocation
 
 if localDirectory[localDirectory.length-4..] is '/bin'
   localDirectory = [
