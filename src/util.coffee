@@ -14,18 +14,17 @@ resolveModule = (identifier, separator) ->
 
 
 adaptToCallback = (promise, callback) ->
-  if callback?
-    promise
-      .then (result) -> callback null, result
-      .fail callback
+  return promise unless callback?
 
-  return promise
+  onSuccess = (result) ->
+    callback null, result
+    return result
+
+  return promise.done onSuccess, callback
 
 
 proxyPromise = (deferred, promise) ->
-  promise.then deferred.resolve
-  promise.catch deferred.reject
-  return deferred.promise
+  return promise.then deferred.resolve, deferred.reject
 
 
 queryNestedKey = (obj, key) ->
