@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Spiffy boilerplate for building and testing with ES2015+.",
   "private": "true",
+  "main": "./src/index.js",
+  "author": "Justin Krueger <justin@kroo.gs>",
+  "license": "MIT",
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server",
     "test": "jest",
@@ -10,8 +13,6 @@
     "lint": "flow && prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src",
     "precommit": "npm run lint"
   },
-  "author": "Justin Krueger <justin@kroo.gs>",
-  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
