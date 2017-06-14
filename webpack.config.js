@@ -1,18 +1,17 @@
 const path = require('path')
-const webpack = require('webpack')
 
 module.exports = {
-  plugins: [],
   context: __dirname,
   entry: './src/index.js',
+  devtool: 'source-map',
 
   output: {
+    libraryTarget: 'umd',
     path: path.resolve('dist'),
-    filename: 'index.js',
+    filename: 'es2015-starter.js',
   },
 
   resolve: {
-    alias: {},
     extensions: ['.js'],
     modules: [
       path.resolve('node_modules'),
@@ -25,11 +24,13 @@ module.exports = {
       {
         use: ['babel-loader'],
         test: /\.js$/,
-        exclude: [
-          path.resolve('node_modules'),
-        ],
+        exclude: [path.resolve('node_modules')],
       },
-      { loader: 'file-loader', test: /.*/ },
+      {
+        use: 'file-loader',
+        test: /.*/,
+        exclude: [/\.js$/],
+      },
     ],
   },
 

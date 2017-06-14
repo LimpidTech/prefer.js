@@ -1,3 +1,3 @@
 module.exports.sum = function(...args: number[]): number {
-  return args.reduce((total, number) => total + number, 0)
+  return args.reduce((total, current) => total + current, 0)
 }
