@@ -10,7 +10,8 @@
     "start": "webpack-dev-server",
     "build": "webpack -p",
     "test": "jest",
-    "lint": "flow && prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src"
+    "lint": "flow && prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src",
+    "prepublishOnly": "npm run lint"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
