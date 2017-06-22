@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   context: __dirname,
@@ -6,7 +7,7 @@ module.exports = {
   devtool: 'source-map',
 
   output: {
-    library: 'es2016-starter',
+    library: 'es2015-starter',
     libraryTarget: 'umd',
     path: path.resolve('dist'),
     filename: 'es2015-starter.js',
@@ -19,6 +20,10 @@ module.exports = {
       path.resolve('src'),
     ],
   },
+
+  plugins: [
+    new webpack.optimize.ModuleConcatenationPlugin(),
+  ],
 
   module: {
     loaders: [
