@@ -7,23 +7,16 @@ module.exports = {
   devtool: 'source-map',
 
   output: {
-    library: 'es2015-starter',
-    libraryTarget: 'umd',
     path: path.resolve('dist'),
-    filename: 'es2015-starter.js',
+    filename: 'quarry.js',
   },
 
   resolve: {
     extensions: ['.js'],
-    modules: [
-      path.resolve('node_modules'),
-      path.resolve('src'),
-    ],
+    modules: [path.resolve('node_modules'), path.resolve('src')],
   },
 
-  plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin(),
-  ],
+  plugins: [new webpack.optimize.ModuleConcatenationPlugin()],
 
   module: {
     loaders: [

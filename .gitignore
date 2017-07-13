@@ -1,6 +1,5 @@
 *.log
 dist
-flow-typed
 node_modules
 package-lock.json
 yarn.lock
@@ -10,6 +9,5 @@ yarn.lock
 !.npm*
 !.babelrc
 !.eslintrc
-!.flowconfig
 !.projections.json
 !.travis.yml
