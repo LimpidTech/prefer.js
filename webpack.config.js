@@ -1,5 +1,4 @@
 const path = require('path')
-const webpack = require('webpack')
 
 module.exports = {
   context: __dirname,
@@ -17,8 +16,6 @@ module.exports = {
     extensions: ['.js'],
     modules: [path.resolve('node_modules'), path.resolve('src')],
   },
-
-  plugins: [new webpack.optimize.ModuleConcatenationPlugin()],
 
   module: {
     loaders: [
