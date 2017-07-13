@@ -1,0 +1,33 @@
+{
+  "parser": "babel-eslint",
+  "extends": "eslint:recommended",
+
+  "plugins": [
+    "import",
+    "flowtype"
+  ],
+
+  "globals": {
+    "require": true,
+    "console": true,
+    "document": true,
+    "process": true,
+    "module": true,
+    "__dirname": true
+  },
+
+  "ecmaFeatures": {
+    "modules": true
+  },
+
+  "env": {
+    "es6": true,
+    "jest": true,
+    "browser": true,
+    "node": true
+  },
+
+  "rules": {
+    "strict": [2, "never"]
+  }
+}
