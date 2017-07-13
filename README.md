@@ -1,7 +1,7 @@
 # Proto ES2015+
 [![Dependencies](https://img.shields.io/david/kroogs/proto-es2015.svg)]()
 [![Dev Dependencies](https://img.shields.io/david/dev/kroogs/proto-es2015.svg)]()
-[![MIT license](https://img.shields.io/npm/l/proto-es2015.svg)](https://spdx.org/licenses/MIT)
+[![MIT license](https://img.shields.io/github/license/kroogs/proto-es2015.svg)](https://spdx.org/licenses/MIT)
 [![Spiffy](https://img.shields.io/badge/project-spiffy-green.svg)]()
 
 > Spiffy boilerplate for building and testing with ES2015+.
