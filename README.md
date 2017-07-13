@@ -1,7 +1,7 @@
-# ES2015+ Starter
-[![Dependencies](https://img.shields.io/david/kroogs/es2015-starter.svg)]()
-[![Dev Dependencies](https://img.shields.io/david/dev/kroogs/es2015-starter.svg)]()
-[![MIT license](https://img.shields.io/npm/l/es2015-starter.svg)](https://spdx.org/licenses/MIT)
+# Proto ES2015+
+[![Dependencies](https://img.shields.io/david/kroogs/proto-es2015.svg)]()
+[![Dev Dependencies](https://img.shields.io/david/dev/kroogs/proto-es2015.svg)]()
+[![MIT license](https://img.shields.io/npm/l/proto-es2015.svg)](https://spdx.org/licenses/MIT)
 [![Spiffy](https://img.shields.io/badge/project-spiffy-green.svg)]()
 
 > Spiffy boilerplate for building and testing with ES2015+.
@@ -10,7 +10,7 @@
 
   Clone and cd to `project_name`:
   ```
-  git clone https://github.com/kroogs/es2015-starter project_name && cd project_name
+  git clone https://github.com/kroogs/proto-es2015 project_name && cd project_name
   ```
 
   Setup `origin` remote:
