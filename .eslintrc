@@ -6,6 +6,10 @@
     "import"
   ],
 
+  "parserOptions": {
+    "sourceType": "module"
+  },
+
   "globals": {
     "require": true,
     "console": true,
@@ -13,10 +17,6 @@
     "process": true,
     "module": true,
     "__dirname": true
-  },
-
-  "ecmaFeatures": {
-    "modules": true
   },
 
   "env": {
