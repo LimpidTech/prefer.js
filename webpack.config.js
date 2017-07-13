@@ -7,8 +7,10 @@ module.exports = {
   devtool: 'source-map',
 
   output: {
+    library: 'prefer',
+    libraryTarget: 'umd',
     path: path.resolve('dist'),
-    filename: 'quarry.js',
+    filename: 'prefer.js',
   },
 
   resolve: {
@@ -25,25 +27,10 @@ module.exports = {
         test: /\.js$/,
         exclude: [path.resolve('node_modules')],
       },
-      {
-        use: 'file-loader',
-        test: /.*/,
-        exclude: [/\.js$/],
-      },
     ],
   },
 
   watchOptions: {
     ignored: /node_modules/,
-  },
-
-  devServer: {
-    port: 3030,
-    contentBase: path.resolve('src'),
-    stats: 'errors-only',
-    overlay: {
-      warnings: true,
-      errors: true,
-    },
   },
 }
