@@ -10,4 +10,5 @@ yarn.lock
 !.babelrc
 !.eslintrc
 !.projections.json
+!.tern-project
 !.travis.yml
