@@ -8,5 +8,6 @@ flow-typed
 .*
 !.git*
 !.babelrc
-!.flowconfig
 !.eslintrc
+!.flowconfig
+!.tern-project
