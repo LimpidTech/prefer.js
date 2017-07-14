@@ -1,6 +1,4 @@
 import { stub } from 'sinon'
-
-import { fixture, normalize } from './helpers'
 import {
   JSONFormatter,
   CSONFormatter,
@@ -9,6 +7,7 @@ import {
   CoffeeFormatter,
   // XMLFormatter,
 } from '../src/formatters'
+import { fixture, normalize } from './helpers'
 
 const record = {
   user: 'monokrome',
@@ -19,7 +18,7 @@ describe('JSONFormatter', () => {
   const asString = fixture('json')
 
   describe('#parse', () => {
-    test('converts the provided string to an object', done => {
+    it('converts the provided string to an object', done => {
       new JSONFormatter().parse(asString, (err, data) => {
         expect(err).toBe(null)
         expect(data).toEqual(record)
@@ -27,7 +26,7 @@ describe('JSONFormatter', () => {
       })
     })
 
-    test('provides an error to the callback when necessary', done => {
+    it('provides an error to the callback when necessary', done => {
       const mockErr = new Error('Mock Error')
       const formatter = new JSONFormatter()
 
@@ -43,7 +42,7 @@ describe('JSONFormatter', () => {
   })
 
   describe('#stringify', () => {
-    test('converts the provided object into a JSON string', done => {
+    it('converts the provided object into a JSON string', done => {
       new JSONFormatter().stringify(record, (err, data) => {
         expect(err).toBe(null)
         expect(normalize(data)).toBe(asString)
@@ -57,7 +56,7 @@ describe('YAMLFormatter', () => {
   const asString = fixture('yml')
 
   describe('#parse', () => {
-    test('converts the provided string to an object', done => {
+    it('converts the provided string to an object', done => {
       new YAMLFormatter().parse(asString, (err, data) => {
         expect(err).toBe(null)
         expect(data).toEqual(record)
@@ -67,7 +66,7 @@ describe('YAMLFormatter', () => {
   })
 
   describe('#stringify', () => {
-    test('converts the provided object into a YAML string', done => {
+    it('converts the provided object into a YAML string', done => {
       new YAMLFormatter().stringify(record, (err, data) => {
         expect(err).toBe(null)
         expect(normalize(data)).toBe(asString)
@@ -81,7 +80,7 @@ describe('INIFormatter', () => {
   const asString = fixture('ini')
 
   describe('#parse', () => {
-    test('converts the provided string to an object', done => {
+    it('converts the provided string to an object', done => {
       new INIFormatter().parse(asString, (err, data) => {
         expect(err).toBe(null)
         expect(data).toEqual(record)
@@ -91,7 +90,7 @@ describe('INIFormatter', () => {
   })
 
   describe('#stringify', () => {
-    test('converts the provided object into a INI string', done => {
+    it('converts the provided object into a INI string', done => {
       new INIFormatter().stringify(record, (err, data) => {
         expect(err).toBe(null)
         expect(normalize(data)).toBe(asString)
@@ -105,7 +104,7 @@ describe('CoffeeFormatter', () => {
   const asString = fixture('coffee')
 
   describe('#parse', () => {
-    test('converts the provided string to an object', done => {
+    it('converts the provided string to an object', done => {
       new CoffeeFormatter().parse(asString, (err, data) => {
         expect(err).toBe(null)
         expect(data).toEqual(record)
@@ -115,7 +114,7 @@ describe('CoffeeFormatter', () => {
   })
 
   describe('#stringify', () => {
-    test('throws an error since coffee can not be serialized', done => {
+    it('throws an error since coffee can not be serialized', done => {
       new CoffeeFormatter().stringify(record, err => {
         expect(err).toBeInstanceOf(Error)
         done()
@@ -128,7 +127,7 @@ describe('CSONFormatter', () => {
   const asString = fixture('cson')
 
   describe('#parse', () => {
-    test('converts the provided string to an object', done => {
+    it('converts the provided string to an object', done => {
       new CSONFormatter().parse(asString, (err, data) => {
         expect(err).toBe(null)
         expect(data).toEqual(record)
@@ -136,7 +135,7 @@ describe('CSONFormatter', () => {
       })
     })
 
-    test('provides an error to the callback when necessary', done => {
+    it('provides an error to the callback when necessary', done => {
       const error = new Error('Mock Error')
       const formatter = new CSONFormatter()
 
@@ -152,7 +151,7 @@ describe('CSONFormatter', () => {
   })
 
   describe('#stringify', () => {
-    test('converts the provided object into a CSON string', done => {
+    it('converts the provided object into a CSON string', done => {
       new CSONFormatter().stringify(record, (err, data) => {
         expect(err).toBe(null)
         expect(normalize(data)).toBe(asString)
@@ -167,7 +166,7 @@ describe('CSONFormatter', () => {
 //   console.log('the fuck')
 
 //   describe('#parse', () => {
-//     test('converts the provided string to an object', done => {
+//     it('converts the provided string to an object', done => {
 //       console.log('honk honk', record)
 //       debugger
 //       new XMLFormatter().parse(asString, (err, data) => {
@@ -179,7 +178,7 @@ describe('CSONFormatter', () => {
 //   })
 
 //   describe('#stringify', () => {
-//     test('throws an error since XML can not be serialized', done => {
+//     it('throws an error since XML can not be serialized', done => {
 //       new XMLFormatter().stringify(record, err => {
 //         expect(err).toBeInstanceOf(Error)
 //         done()
