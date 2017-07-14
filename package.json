@@ -15,7 +15,7 @@
   "scripts": {
     "build": "webpack -p",
     "test": "jest",
-    "lint": "prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src",
+    "lint": "prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src test",
     "prepublishOnly": "npm run lint"
   },
   "dependencies": {
@@ -23,7 +23,6 @@
     "cson": "^4.1.0",
     "ini": "^1.1.0",
     "js-yaml": "^3.9.0",
-    "json5": "^0.5.1",
     "lodash": "^4.13.1",
     "step": ">=0.0.4",
     "winston": "^2.3.1",
@@ -43,6 +42,7 @@
     "jest": "^20.0.4",
     "jest-cli": "^20.0.4",
     "prettier": "^1.5.2",
+    "sinon": "^2.3.8",
     "webpack": "^3.2.0"
   },
   "jest": {
