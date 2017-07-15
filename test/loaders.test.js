@@ -1,170 +1,190 @@
-{Loader} = require '../src/loaders/loader'
-{FileLoader} = require '../src/loaders/file_loader'
+import fs from 'fs'
+import path from 'path'
+import { sandbox, stub, spy } from 'sinon'
+import { Loader, FileLoader } from '../src/loaders'
 
-lodash = require 'lodash'
-path = require 'path'
-fs = require 'fs'
+class FakeError {}
 
+describe('Loader', function() {
+  beforeEach(() => {
+    this.loader = new Loader()
+  })
 
-class FakeError
+  describe('#updated', () => {
+    it('should emit "updated" without error', () => {
+      this.loader.updated(null)
+    })
 
+    it('should emit "updateFailed" with an error', () => {
+      this.loader.updated(new Error('Fake error'))
+    })
+  })
 
-loaders =
-  fixture: require './fixtures/fixture.coffee'
-
-  callback: (done) ->
-    callback = sinon.spy (err, data) ->
-      expect(err).to.be.null
-
-      expect(callback.calledOnce).to.be.true
-      expect(data).to.deep.equal loaders.fixture
-
-      done()
-
-    return callback
-
-
-describe 'Loader', ->
-  beforeEach ->
-    @loader = new Loader
-
-  describe '#updated', ->
-    it 'should emit "updated" without error', ->
-      @loader.updated null
-
-    it 'should emit "updateFailed" with an error', ->
-      @loader.updated new Error 'Fake error'
-
-  describe '#formatterRequired', ->
-    it 'should default to true', (done) ->
-      @loader.formatterRequired().then (result) ->
-        expect(result).to.be.true
+  describe('#formatterRequired', () => {
+    it('should default to true', done => {
+      this.loader.formatterRequired().then(result => {
+        expect(result).toBe(true)
         done()
+      })
+    })
+  })
 
-  describe '#formatterSuggested', ->
-    it "should not suggest formatters by default", (done) ->
-      search = @loader.formatterSuggested()
-      search.then (result) ->
-        expect(result).to.be.false
+  describe('#formatterSuggested', () => {
+    it('should not suggest formatters by default', done => {
+      this.loader.formatterSuggested().then(result => {
+        expect(result).toBe(false)
         done()
+      })
+    })
+  })
+})
 
+describe('FileLoader', function() {
+  beforeEach(() => {
+    this.fixturesPath = path.resolve('test/fixtures')
+    this.identifierBase = 'fixture'
+    this.identifier = `${this.identifierBase}.json`
+    this.loader = new FileLoader({
+      files: {
+        watch: false,
+        searchPaths: ['test/fixtures/'],
+      },
+    })
+  })
 
-describe 'FileLoader', ->
-  beforeEach ->
-    @fixturesPath = path.resolve 'test/fixtures'
+  describe('#load', () => {
+    it('results in a not found error if no file was found', () => {
+      expect(() => this.loader.load('fakeFile')).toThrow()
+    })
 
-    @identifierBase = 'fixture'
-    @identifier = @identifierBase + '.json'
+    it('throws an error if reading the requested file fails', done => {
+      const box = sandbox.create()
 
-    @loader = new FileLoader
-      files:
-        watch: no
-        searchPaths: ['test/fixtures/']
+      box.stub(fs, 'readFile').callsFake((filename, encoding, callback) => {
+        callback(new FakeError('Fake error for testing failure reading files.'))
+      })
 
-  describe '#load', ->
-    it 'results in a not found error if no file was found', ->
-      expect -> @loader.load 'fakeFile'
-        .to.throw.error
-
-    it 'throws an error if reading the requested file fails', (done) ->
-      sandbox = sinon.sandbox.create()
-
-      sandbox.stub fs, 'readFile', (filename, encoding, callback) ->
-        callback new FakeError 'Fake error for testing failure reading files.'
-
-      callback = sinon.spy (err, data) ->
-        expect(err).to.be.instanceof FakeError
-
-        sandbox.restore()
-        done()
-
-      @loader.load 'fixture.json', callback
-
-  describe '#formatterRequired', ->
-    it 'should always result as true', (done) ->
-      @loader.formatterRequired().then (result) ->
-        expect(result).to.be.true
-        done()
-
-  describe '#formatterSuggested', ->
-    it "should suggest a formatter using it's file extension", (done) ->
-      search = @loader.formatterSuggested
-        identifier: @identifier
-
-      search.then (result) ->
-        expect(result).to.equal 'json'
-        done()
-
-    it 'should find all possible configurations when no extension is provided', (done) ->
-      search = @loader.formatterSuggested
-        identifier: @identifierBase
-
-      allFixtures = fs.readdir @fixturesPath, (err, fileNames) =>
-        absoluteFileNames = lodash.map fileNames, (fileName) =>
-          path.join @fixturesPath, fileName
-
-        search.then (result) ->
-          expect(absoluteFileNames).to.deep.equal result
+      this.loader.load(
+        'fixture.json',
+        spy(err => {
+          expect(err).toBeInstanceOf(FakeError)
+          box.restore()
           done()
+        }),
+      )
+    })
+  })
 
-  describe '#changed', ->
-    it 'emits the provided event', (done) ->
-      callback = (err, results) =>
-        @loader.on 'changed', (filename) ->
-          expect(filename).to.equal results.source
+  describe('#formatterRequired', () => {
+    it('should always result as true', done => {
+      this.loader.formatterRequired().then(result => {
+        expect(result).toBe(true)
+        done()
+      })
+    })
+  })
+
+  describe('#formatterSuggested', () => {
+    it("should suggest a formatter using it's file extension", done => {
+      this.loader
+        .formatterSuggested({
+          identifier: this.identifier,
+        })
+        .then(result => {
+          expect(result).toBe('json')
           done()
+        })
+    })
 
-        changed = @loader.getChangeHandler results.source
-        changed 'changed'
+    it('should find all possible configurations when no extension is provided', done => {
+      let absoluteFileNames
 
-      @loader.load 'fixture.json', callback
+      fs.readdir(this.fixturesPath, (err, fileNames) => {
+        absoluteFileNames = fileNames.map(fileName =>
+          path.join(this.fixturesPath, fileName),
+        )
+      })
 
-  describe '#watch', ->
-    beforeEach -> sinon.stub fs, 'watch'
-    afterEach -> fs.watch.restore()
+      this.loader
+        .formatterSuggested({
+          identifier: this.identifierBase,
+        })
+        .then(result => {
+          expect(absoluteFileNames).toEqual(result)
+          done()
+        })
+    })
+  })
 
-    beforeEach ->
-      @loader = new FileLoader
-        files:
-          watch: yes
-          searchPaths: ['test/fixtures/']
+  describe('#changed', () => {
+    it('emits the provided event', done => {
+      this.loader.load('fixture.json', (err, results) => {
+        this.loader.on('changed', filename => {
+          expect(filename).toBe(results.source)
+          done()
+        })
 
-    it 'calls the handler returned from #changed when files change', (done) ->
-      changedHandler = sinon.stub()
+        this.loader.getChangeHandler(results.source)('changed')
+      })
+    })
+  })
 
-      changed = sinon.stub @loader, 'getChangeHandler'
-      changed.returns changedHandler
+  describe('#watch', function() {
+    stub(fs, 'watch')
 
-      callback = (err, results) ->
-        expect(fs.watch.calledOnce).to.be.true
+    afterEach(() => fs.watch.restore())
+    beforeEach(() => {
+      this.loader = new FileLoader({
+        files: {
+          watch: true,
+          searchPaths: ['test/fixtures/'],
+        },
+      })
+    })
 
-        hasExpectedArgs = fs.watch.calledWith results.source,
-          persistent: false
-        , changedHandler
+    it('calls the handler returned from #changed when files change', done => {
+      const changedHandler = stub()
+      const changed = stub(this.loader, 'getChangeHandler')
 
-        expect(hasExpectedArgs).to.be.true
+      changed.returns(changedHandler)
+
+      this.loader.load('fixture.json', (err, results) => {
+        expect(fs.watch.calledOnce).toBe(true)
+        expect(
+          fs.watch.calledWith(
+            results.source,
+            { persistent: false },
+            changedHandler,
+          ),
+        ).toBe(true)
 
         changed.restore()
         done()
+      })
+    })
 
-      @loader.load 'fixture.json', callback
+    it('calls #updated when new configuration is ready', done => {
+      this.loader.load(
+        'fixture.json',
+        spy((err, results) => {
+          this.loader.updated = stub(
+            this.loader,
+            'updated',
+          ).callsFake((err, results) => {
+            expect(this.loader.updated.calledOnce).toBe(true)
+            expect(err).toBe(null)
+            expect(results).toEqual(results)
 
-    it 'calls #updated when new configuration is ready', (done) ->
-      callback = sinon.spy (err, results) =>
-        @loader.updated = sinon.stub @loader, 'updated', (err, results) =>
-          expect(@loader.updated.calledOnce).to.be.true
+            this.loader.updated.restore()
+            done()
+          })
 
-          expect(err).to.equal null
-          expect(results).to.deep.equal results
+          expect(this.loader.updated.notCalled).toBe(true)
 
-          @loader.updated.restore()
-
-          done()
-
-        expect(@loader.updated.notCalled).to.be.true
-
-        # fs.watch will call this in the real world
-        changed = @loader.getChangeHandler results.source
-        changed 'changed'
-
-      @loader.load 'fixture.json', callback
+          // fs.watch will call this in the real world
+          this.loader.getChangeHandler(results.source)('changed')
+        }),
+      )
+    })
+  })
+})

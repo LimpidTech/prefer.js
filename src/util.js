@@ -8,12 +8,7 @@ export function resolveModule(identifier, separator = ':') {
   }
 
   const module = require(identifier)
-
-  if (attributeName) {
-    return module[attributeName]
-  } else {
-    return module
-  }
+  return module[attributeName] || module
 }
 
 export function adaptToCallback(promise, callback) {

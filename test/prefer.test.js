@@ -1,105 +1,103 @@
-Q = require 'q'
-lodash = require 'lodash'
-path = require 'path'
-prefer = require '../src'
+// Q = require 'q'
+// lodash = require 'lodash'
+// path = require 'path'
+// prefer = require '../src'
 
+// {FileLoader} = require '../src/loaders/file_loader'
+// {YAMLFormatter} = require '../src/formatters/yaml'
+// {fixture} = require './shortcuts'
 
-{FileLoader} = require '../src/loaders/file_loader'
-{YAMLFormatter} = require '../src/formatters/yaml'
-{fixture} = require './shortcuts'
+// describe 'prefer', ->
+//   beforeEach ->
+//     @identifierBase = 'fixture'
+//     @identifier = @identifierBase + '.yml'
 
+//     @options =
+//       identifier: @identifier
+//       loaders: require '../src/loaders/defaults'
+//       formatters: require '../src/formatters/defaults'
+//       files:
+//         searchPaths: ['test/fixtures/']
 
-describe 'prefer', ->
-  beforeEach ->
-    @identifierBase = 'fixture'
-    @identifier = @identifierBase + '.yml'
+//     @fixtureString = fixture 'json'
+//     @fixture = JSON.parse @fixtureString
 
-    @options =
-      identifier: @identifier
-      loaders: require '../src/loaders/defaults'
-      formatters: require '../src/formatters/defaults'
-      files:
-        searchPaths: ['test/fixtures/']
+//     @updates =
+//       source: path.resolve 'test/fixtures/' + @identifier
+//       content: @fixtureString
 
-    @fixtureString = fixture 'json'
-    @fixture = JSON.parse @fixtureString
+//     @identifier = 'fixture.json'
 
-    @updates =
-      source: path.resolve 'test/fixtures/' + @identifier
-      content: @fixtureString
+//     @formatter = prefer.getFormatter @options
+//     @loader = prefer.getLoader @options
 
-    @identifier = 'fixture.json'
+//     sinon.stub @formatter, 'parse', (content) =>
+//       deferred = Q.defer()
+//       deferred.resolve @fixture
+//       return deferred.promise
 
-    @formatter = prefer.getFormatter @options
-    @loader = prefer.getLoader @options
+//   describe '#getFormatter', ->
+//     it 'throws an error when no formatter exists', ->
+//       action = =>
+//         formatter = prefer.getLoader
+//           identifier: @identifier
+//           formatters: []
 
-    sinon.stub @formatter, 'parse', (content) =>
-      deferred = Q.defer()
-      deferred.resolve @fixture
-      return deferred.promise
+//       expect(action).to.throw()
 
-  describe '#getFormatter', ->
-    it 'throws an error when no formatter exists', ->
-      action = =>
-        formatter = prefer.getLoader
-          identifier: @identifier
-          formatters: []
+//     it 'returns the expected formatter', ->
+//       expect(@formatter).to.be.instanceof YAMLFormatter
 
-      expect(action).to.throw()
+//   describe '#getLoader', ->
+//     it 'throws an error when no loader exists', ->
+//       action = =>
+//         loader = prefer.getLoader
+//           identifier: @identifier
+//           loaders: []
 
-    it 'returns the expected formatter', ->
-      expect(@formatter).to.be.instanceof YAMLFormatter
+//       expect(action).to.throw()
 
-  describe '#getLoader', ->
-    it 'throws an error when no loader exists', ->
-      action = =>
-        loader = prefer.getLoader
-          identifier: @identifier
-          loaders: []
+//     it 'returns the expected loader', ->
+//       expect(@loader).to.be.instanceof FileLoader
 
-      expect(action).to.throw()
+//   describe '#format returns a function that', ->
+//     beforeEach ->
+//       @format = prefer.format @formatter
+//       @promise = @format @updates
 
-    it 'returns the expected loader', ->
-      expect(@loader).to.be.instanceof FileLoader
+//     it 'wraps #formatter.parse', ->
+//       expect(@formatter.parse.calledOnce).to.be.true
 
-  describe '#format returns a function that', ->
-    beforeEach ->
-      @format = prefer.format @formatter
-      @promise = @format @updates
+//     it 'returns a promise which provides a formatted context', (done) ->
+//       @promise.then (result) => result.get (err, context) =>
+//         expect(context).to.deep.equal @fixture
+//         done()
 
-    it 'wraps #formatter.parse', ->
-      expect(@formatter.parse.calledOnce).to.be.true
+//   describe '#load', ->
+//     it 'returns a promise that provides the configuration', (done) ->
+//       options = lodash.cloneDeep @options
+//       promise = prefer.load options
 
-    it 'returns a promise which provides a formatted context', (done) ->
-      @promise.then (result) => result.get (err, context) =>
-        expect(context).to.deep.equal @fixture
-        done()
+//       promise.then (result) =>
+//         result.get (err, context) =>
+//           expect(context).to.deep.equal @fixture
+//           done()
 
-  describe '#load', ->
-    it 'returns a promise that provides the configuration', (done) ->
-      options = lodash.cloneDeep @options
-      promise = prefer.load options
+//     it 'supports callback style usage', (done) ->
+//       options = lodash.cloneDeep @options
+//       promise = prefer.load options, (err, result) =>
+//         result.get (err, context) =>
+//           expect(context).to.deep.equal @fixture
+//           done()
 
-      promise.then (result) =>
-        result.get (err, context) =>
-          expect(context).to.deep.equal @fixture
-          done()
+//     it 'allows identifier as a string', ->
+//       action = => prefer.load @identifier
+//       expect(action).not.to.throw()
 
-    it 'supports callback style usage', (done) ->
-      options = lodash.cloneDeep @options
-      promise = prefer.load options, (err, result) =>
-        result.get (err, context) =>
-          expect(context).to.deep.equal @fixture
-          done()
+//     it 'throws an error without an identifier', ->
+//       action = => prefer.load()
+//       expect(action).to.throw()
 
-    it 'allows identifier as a string', ->
-      action = => prefer.load @identifier
-      expect(action).not.to.throw()
-
-    it 'throws an error without an identifier', ->
-      action = => prefer.load()
-      expect(action).to.throw()
-
-    it 'loads configurations without requiring their format', ->
-      action = => prefer.load @identifier
-      expect(action).not.to.throw()
+//     it 'loads configurations without requiring their format', ->
+//       action = => prefer.load @identifier
+//       expect(action).not.to.throw()

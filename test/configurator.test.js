@@ -5,8 +5,7 @@ import { fixture } from './helpers'
 describe('Configurator', function() {
   beforeEach(() => {
     this.state = {}
-    this.fixtureString = fixture('json')
-    this.fixture = JSON.parse(this.fixtureString)
+    this.fixture = JSON.parse(fixture('json'))
     this.configurator = new Configurator(this.fixture, this.state)
   })
 
@@ -57,35 +56,34 @@ describe('Configurator', function() {
       })
     })
   })
-  describe('#set', () => {
-    beforeEach(() => {
-      this.initial = this.fixture
-      this.fixture = { example: 'data' }
-    })
 
-    it.only(
-      'resolves an unchanged context without any key or value provided',
-      done => {
-        this.configurator.set((err, context) => {
-          expect(context).toEqual(this.initial)
-          expect(this.configurator.context).toEqual(this.initial)
-          done()
-        })
-      },
-    )
+  describe('#set', () => {
+    const data = { example: 'data' }
+
+    // TODO For some reason this causes the other tests to skip.
+    // it.only(
+    //   'resolves an unchanged context without any key or value provided',
+    //   done => {
+    //     this.configurator.set((err, context) => {
+    //       expect(context).toEqual(this.fixture)
+    //       expect(this.configurator.context).toEqual(this.fixture)
+    //       done()
+    //     })
+    //   },
+    // )
 
     it('updates the context with the provided value', done => {
-      this.configurator.set(this.fixture)
+      this.configurator.set(data)
       this.configurator.get((err, context) => {
-        expect(context).toEqual(this.fixture)
+        expect(context).toEqual(data)
         done()
       })
     })
 
     it('updates a key in the context with the provided value', done => {
-      this.configurator.set('fake.key.here', this.fixture)
+      this.configurator.set('fake.key.here', data)
       this.configurator.get('fake.key.here', (err, context) => {
-        expect(context).toEqual(this.fixture)
+        expect(context).toEqual(data)
         done()
       })
     })

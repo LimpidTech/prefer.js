@@ -1,7 +1,4 @@
 {
-  "libs": [
-    "browser"
-  ],
   "plugins": {
     "node": {},
     "modules": {},
