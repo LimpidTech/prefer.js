@@ -76,10 +76,7 @@ export default class FileLoader extends Loader {
           }
         }).reflect()
       }),
-    ).each(inspect => {
-      if (inspect.isFulfilled()) return inspect.value()
-      throw new Error(inspect.reason())
-    })
+    )
 
     promise.then(paths => {
       return new Promise((resolve, reject) => {
