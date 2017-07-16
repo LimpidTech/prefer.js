@@ -3,7 +3,7 @@ import path from 'path'
 import lodash from 'lodash'
 import Promise from 'bluebird'
 import pathing from '../pathing'
-import util from '../util'
+import { adaptToCallback, proxyPromise } from '../util'
 import Loader from './loader'
 
 export default class FileLoader extends Loader {
@@ -76,28 +76,30 @@ export default class FileLoader extends Loader {
         }).reflect()
       }),
     ).each(inspect => {
-      if (inspect.isFulfilled()) {
-        console.warn(`value: ${inspect.value()}`)
-      } else {
-        console.warn(`reason: ${inspect.reason()}`)
-      }
+      if (inspect.isFulfilled()) return inspect.value()
     })
 
-    // promise.then (paths) ->
-    //   found = lodash.filter paths, (result) -> result.state is 'fulfilled'
-    //   found = lodash.map found, (result) -> result.value
+    promise.then(paths => {
+      new Promise((resolve, reject) => {
+        let matches
+        let found = lodash.filter(paths, result => result.isFulfilled())
+        found = lodash.map(found, result => result.value)
 
-    //   if asPrefix
-    //     matches = lodash.filter lodash.flatten found
-    //   else
-    //     matches = lodash.first found
+        if (asPrefix) {
+          matches = lodash.filter(lodash.flatten(found))
+        } else {
+          matches = lodash.first(found)
+        }
 
-    //   if matches.length
-    //     resolve matches
-    //   else
-    //     reject new Error 'No files found matching: ' + filename
+        if (matches.length) {
+          resolve(matches)
+        } else {
+          reject(new Error(`No files found matching: ${fileName}`))
+        }
+      })
+    })
 
-    return util.adaptToCallback(promise, callback)
+    return adaptToCallback(promise, callback)
   }
 
   get(fileName, callback) {
@@ -111,7 +113,7 @@ export default class FileLoader extends Loader {
       })
     })
 
-    return util.adaptToCallback(promise, callback)
+    return adaptToCallback(promise, callback)
   }
 
   // // watch does not reliably provide the fileName back to us, so this
@@ -137,13 +139,13 @@ export default class FileLoader extends Loader {
         findPromise = findPromise.then(files => lodash.first(files))
 
       findPromise.then(fileName => {
-        util.proxyPromise(promise, this.get(fileName))
+        proxyPromise(promise, this.get(fileName))
         if (this.options.files.watch) this.watch(fileName)
       })
 
-      findPromise.fail(reject)
+      findPromise.catch(reject).then(resolve)
     })
 
-    return util.adaptToCallback(promise, callback)
+    return adaptToCallback(promise, callback)
   }
 }

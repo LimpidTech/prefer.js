@@ -19,7 +19,7 @@ export function adaptToCallback(promise, callback) {
     return result
   }
 
-  return promise.done(onSuccess, callback)
+  return promise.then(onSuccess, callback)
 }
 
 export function proxyPromise(promise) {

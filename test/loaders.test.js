@@ -57,7 +57,7 @@ describe('FileLoader', function() {
       expect(() => this.loader.load('fakeFile')).toThrow()
     })
 
-    it('throws an error if reading the requested file fails', done => {
+    it.only('throws an error if reading the requested file fails', done => {
       const box = sandbox.create()
 
       box.stub(fs, 'readFile').callsFake((filename, encoding, callback) => {
@@ -65,7 +65,7 @@ describe('FileLoader', function() {
       })
 
       this.loader.load(
-        'fixture.json',
+        'fixture',
         spy(err => {
           expect(err).toBeInstanceOf(FakeError)
           box.restore()
