@@ -3,7 +3,7 @@ import path from 'path'
 import lodash from 'lodash'
 import Promise from 'bluebird'
 import pathing from '../pathing'
-import { adaptToCallback, proxyPromise } from '../util'
+import { adaptToCallback } from '../util'
 import Loader from './loader'
 
 export default class FileLoader extends Loader {
@@ -82,7 +82,7 @@ export default class FileLoader extends Loader {
       return new Promise((resolve, reject) => {
         const found = lodash.map(
           lodash.filter(paths, result => result.isFulfilled()),
-          result => result.value()
+          result => result.value(),
         )
 
         let matches
@@ -143,7 +143,8 @@ export default class FileLoader extends Loader {
 
       findPromise
         .then(fileNameInspection => {
-          if (!fileNameInspection) throw new Error('No matching configuration was discovered.')
+          if (!fileNameInspection)
+            throw new Error('No matching configuration was discovered.')
           const fileName = fileNameInspection[0].value()
           if (this.options.files.watch) this.watch(fileName)
           return this.get(fileName)

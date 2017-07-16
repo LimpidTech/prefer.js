@@ -1,0 +1,7 @@
+--require babel-polyfill
+--compilers js:babel-register
+--ui bdd
+--watch-extensions .test.js
+--require ./test/initial.test.js
+--reporter dot
+-g expect
