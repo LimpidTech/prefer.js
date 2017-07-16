@@ -9,6 +9,7 @@ import Loader from './loader'
 export default class FileLoader extends Loader {
   constructor(options) {
     super()
+
     this.updateOptions({
       files: {
         watch: true,
@@ -77,14 +78,17 @@ export default class FileLoader extends Loader {
       }),
     ).each(inspect => {
       if (inspect.isFulfilled()) return inspect.value()
+      throw new Error(inspect.reason())
     })
 
     promise.then(paths => {
-      new Promise((resolve, reject) => {
-        let matches
-        let found = lodash.filter(paths, result => result.isFulfilled())
-        found = lodash.map(found, result => result.value)
+      return new Promise((resolve, reject) => {
+        const found = lodash.map(
+          lodash.filter(paths, result => result.isFulfilled()),
+          result => result.value()
+        )
 
+        let matches
         if (asPrefix) {
           matches = lodash.filter(lodash.flatten(found))
         } else {
@@ -106,6 +110,7 @@ export default class FileLoader extends Loader {
     const promise = new Promise((resolve, reject) => {
       fs.readFile(fileName, { encoding: 'UTF-8' }, (err, data) => {
         if (err) return reject(err)
+
         resolve({
           source: fileName,
           content: data,
@@ -132,18 +137,22 @@ export default class FileLoader extends Loader {
   load(requestedFileName, callback) {
     const dotIndex = path.basename(requestedFileName).lastIndexOf('.')
     const shouldDetermineFormat = dotIndex === -1
+
     const promise = new Promise((resolve, reject) => {
       let findPromise = this.find(requestedFileName, shouldDetermineFormat)
 
       if (shouldDetermineFormat)
         findPromise = findPromise.then(files => lodash.first(files))
 
-      findPromise.then(fileName => {
-        proxyPromise(promise, this.get(fileName))
-        if (this.options.files.watch) this.watch(fileName)
-      })
-
-      findPromise.catch(reject).then(resolve)
+      findPromise
+        .then(fileNameInspection => {
+          if (!fileNameInspection) throw new Error('No matching configuration was discovered.')
+          const fileName = fileNameInspection[0].value()
+          if (this.options.files.watch) this.watch(fileName)
+          return this.get(fileName)
+        })
+        .then(resolve)
+        .catch(reject)
     })
 
     return adaptToCallback(promise, callback)
