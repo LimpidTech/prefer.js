@@ -65,7 +65,7 @@ describe('FileLoader', function() {
       })
 
       this.loader.load(
-        'fixture',
+        'fixture.json',
         spy(err => {
           expect(err).toBeInstanceOf(FakeError)
           box.restore()
