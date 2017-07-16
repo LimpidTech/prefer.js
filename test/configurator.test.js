@@ -60,17 +60,13 @@ describe('Configurator', function() {
   describe('#set', () => {
     const data = { example: 'data' }
 
-    // TODO For some reason this causes the other tests to skip.
-    // it.only(
-    //   'resolves an unchanged context without any key or value provided',
-    //   done => {
-    //     this.configurator.set((err, context) => {
-    //       expect(context).toEqual(this.fixture)
-    //       expect(this.configurator.context).toEqual(this.fixture)
-    //       done()
-    //     })
-    //   },
-    // )
+    it('resolves an unchanged context without any key or value provided', done => {
+      this.configurator.set((err, context) => {
+        expect(context).toEqual(this.fixture)
+        expect(this.configurator.context).toEqual(this.fixture)
+        done()
+      })
+    })
 
     it('updates the context with the provided value', done => {
       this.configurator.set(data)
