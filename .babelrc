@@ -1,5 +1,4 @@
 {
-  "retainLines": true,
   "presets": [
     ["env", {
       "targets": {
