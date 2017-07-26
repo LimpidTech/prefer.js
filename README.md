@@ -15,7 +15,7 @@
   git clone https://github.com/kroogs/proto-es2015 project_name && cd project_name
   ```
 
-  Setup `origin` remote:
+  (Optional) Setup remotes:
   ```
   git remote rename origin starter
   git remote add origin <your repo url>
