@@ -2,8 +2,8 @@
 
 [![TravisCI](https://img.shields.io/travis/kroogs/proto-es2015.svg)](https://travis-ci.org/kroogs/proto-es2015)
 [![Coverage](https://img.shields.io/coveralls/kroogs/proto-es2015.svg)](https://coveralls.io/github/kroogs/proto-es2015)
-[![Dependencies](https://img.shields.io/david/kroogs/proto-es2015.svg)]()
-[![Dev Dependencies](https://img.shields.io/david/dev/kroogs/proto-es2015.svg)]()
+[![Dependencies](https://img.shields.io/david/kroogs/proto-es2015.svg)](https://david-dm.org/kroogs/proto-es2015)
+[![Dev Dependencies](https://img.shields.io/david/dev/kroogs/proto-es2015.svg)](https://david-dm.org/kroogs/proto-es2015?type=dev)
 [![MIT License](https://img.shields.io/github/license/kroogs/proto-es2015.svg)](https://spdx.org/licenses/MIT)
 
 > Spiffy boilerplate for building and testing with ES2015+.
