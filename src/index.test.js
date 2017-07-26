@@ -1,5 +1,7 @@
 import { sum } from './index'
 
-test('adds 1 and 2 to equal 3', () => {
-  expect(sum(1, 2, 4, 3)).toBe(10)
+describe('Proto ES2015', function() {
+  test('#sum should add 1, 2, 3, and 4 to equal 10', () => {
+    expect(sum(1, 2, 3, 4)).toBe(10)
+  })
 })
