@@ -1,15 +1,31 @@
 {
-  "name": "es2015-starter",
+  "name": "proto-es2015",
   "version": "0.0.0",
   "description": "Spiffy boilerplate for building and testing with ES2015+.",
-  "private": "true",
-  "main": "./src/index.js",
+  "keywords": [],
+  "homepage": "https://github.com/kroogs/proto-es2015",
   "author": "Justin Krueger <justin@kroo.gs>",
+  "contributors": [],
+  "private": "true",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kroogs/proto-es2015.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kroogs/proto-es2015/issues"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "test",
+    "src"
+  ],
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack -p",
-    "test": "jest",
+    "test": "jest --coverage",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "lint": "flow && prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src",
     "prepublishOnly": "npm run lint"
   },
@@ -21,6 +37,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-stage-0": "^6.24.1",
+    "coveralls": "^2.13.1",
     "eslint": "^4.2.0",
     "eslint-plugin-flowtype": "^2.35.0",
     "eslint-plugin-import": "^2.7.0",
