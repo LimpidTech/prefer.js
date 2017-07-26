@@ -12,3 +12,4 @@ coverage
 !.eslintrc
 !.flowconfig
 !.tern-project
+!.travis.yml
