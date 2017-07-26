@@ -1,7 +1,7 @@
 # Proto ES2015+
 
-[![TravisCI](https://img.shields.io/travis/kroogs/proto-es2015.svg)](https://travis-ci.org/kroogs/yaemit)
-[![Coverage](https://img.shields.io/coveralls/kroogs/proto-es2015.svg)](https://coveralls.io/github/kroogs/es2015)
+[![TravisCI](https://img.shields.io/travis/kroogs/proto-es2015.svg)](https://travis-ci.org/kroogs/proto-es2015)
+[![Coverage](https://img.shields.io/coveralls/kroogs/proto-es2015.svg)](https://coveralls.io/github/kroogs/proto-es2015)
 [![Dependencies](https://img.shields.io/david/kroogs/proto-es2015.svg)]()
 [![Dev Dependencies](https://img.shields.io/david/dev/kroogs/proto-es2015.svg)]()
 [![MIT License](https://img.shields.io/github/license/kroogs/proto-es2015.svg)](https://spdx.org/licenses/MIT)
