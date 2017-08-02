@@ -15,11 +15,12 @@
   "bugs": {
     "url": "https://github.com/kroogs/proto-es2015/issues"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/proto-es2015.js",
   "files": [
     "dist",
-    "test",
-    "src"
+    "doc",
+    "src",
+    "test"
   ],
   "scripts": {
     "start": "webpack-dev-server",
@@ -38,6 +39,9 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-stage-0": "^6.24.1",
     "coveralls": "^2.13.1",
+    "esdoc": "^1.0.1",
+    "esdoc-flow-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^4.3.0",
     "eslint-plugin-flowtype": "^2.35.0",
     "eslint-plugin-import": "^2.7.0",
