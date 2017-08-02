@@ -6,10 +6,10 @@ module.exports = {
   devtool: 'source-map',
 
   output: {
-    library: 'es2015-starter',
+    library: 'es2017-starter',
     libraryTarget: 'umd',
     path: path.resolve('dist'),
-    filename: 'es2015-starter.js',
+    filename: 'es2017-starter.js',
   },
 
   resolve: {

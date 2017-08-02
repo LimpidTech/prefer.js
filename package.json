@@ -1,21 +1,21 @@
 {
-  "name": "proto-es2015",
+  "name": "proto-es2017",
   "version": "0.0.0",
-  "description": "Spiffy boilerplate for building and testing with ES2015+.",
+  "description": "Spiffy boilerplate for building and testing with ES2017+.",
   "keywords": [],
-  "homepage": "https://github.com/kroogs/proto-es2015",
+  "homepage": "https://github.com/kroogs/proto-es2017",
   "author": "Justin Krueger <justin@kroo.gs>",
   "contributors": [],
   "private": "true",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kroogs/proto-es2015.git"
+    "url": "https://github.com/kroogs/proto-es2017.git"
   },
   "bugs": {
-    "url": "https://github.com/kroogs/proto-es2015/issues"
+    "url": "https://github.com/kroogs/proto-es2017/issues"
   },
-  "main": "./dist/proto-es2015.js",
+  "main": "./dist/proto-es2017.js",
   "files": [
     "dist",
     "doc",
