@@ -4,7 +4,7 @@
 [![Coverage](https://img.shields.io/coveralls/kroogs/proto-es2017.svg)](https://coveralls.io/github/kroogs/proto-es2017)
 [![Dependencies](https://img.shields.io/david/kroogs/proto-es2017.svg)](https://david-dm.org/kroogs/proto-es2017)
 [![Dev Dependencies](https://img.shields.io/david/dev/kroogs/proto-es2017.svg)](https://david-dm.org/kroogs/proto-es2017?type=dev)
-[![MIT License](https://img.shields.io/github/license/kroogs/proto-es2017.svg)](https://spdx.org/licenses/MIT)
+[![MIT License](https://img.shields.io/github/license/kroogs/proto-es2017.svg)](https://github.com/kroogs/proto-es2017/blob/master/LICENSE)
 
 > Spiffy boilerplate for building and testing with ES2017+.
 
