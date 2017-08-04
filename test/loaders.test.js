@@ -53,8 +53,10 @@ describe('FileLoader', function() {
   })
 
   describe('#load', () => {
-    it('results in a not found error if no file was found', () => {
-      expect(() => this.loader.load('fakeFile')).toThrow()
+    it.only('results in a not found error if no file was found', () => {
+      expect(() => this.loader.load('fakeFile')).toThrowError(
+        'No files found matching: fakeFile',
+      )
     })
 
     it('throws an error if reading the requested file fails', done => {
