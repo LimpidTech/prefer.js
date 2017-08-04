@@ -6,17 +6,10 @@ module.exports = {
   devtool: 'source-map',
 
   output: {
-<<<<<<< HEAD
     library: 'prefer',
     libraryTarget: 'umd',
     path: path.resolve('dist'),
     filename: 'prefer.js',
-=======
-    library: 'es2017-starter',
-    libraryTarget: 'umd',
-    path: path.resolve('dist'),
-    filename: 'es2017-starter.js',
->>>>>>> starter/master
   },
 
   resolve: {
