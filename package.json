@@ -2,7 +2,8 @@
   "name": "prefer",
   "version": "0.6.0",
   "description": "Configuration management for NodeJS",
-  "main": "dist/prefer",
+  "homepage": "https://github.com/kroogs/proto-es2017",
+  "keywords": [],
   "contributors": [
     "Bailey Stoner <monokrome@monokro.me>",
     "Justin Krueger <justin@kroo.gs>"
@@ -12,11 +13,20 @@
     "type": "git",
     "url": "git://github.com/LimpidTech/preferjs.git"
   },
+  "bugs": {
+    "url": "https://github.com/kroogs/proto-es2017/issues"
+  },
+  "main": "dist/prefer",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "webpack -p",
-    "test": "mocha",
-    "lint": "prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src test",
-    "prepublishOnly": "npm run lint"
+    "test": "jest --coverage",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "lint": "prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src",
+    "prepublishOnly": "npm run lint && npm test && npm run build"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
@@ -33,20 +43,28 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
-    "babel-core": "^6.24.1",
+    "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-0": "^6.24.1",
-    "eslint": "^4.2.0",
+    "coveralls": "^2.13.1",
+    "esdoc": "^1.0.1",
+    "esdoc-flow-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "eslint": "^4.3.0",
+    "eslint-plugin-flowtype": "^2.35.0",
     "eslint-plugin-import": "^2.7.0",
-    "file-loader": "^0.11.1",
+    "file-loader": "^0.11.2",
+    "flow": "^0.2.3",
+    "flow-bin": "^0.52.0",
+    "flow-typed": "^2.1.5",
     "jest": "^20.0.4",
     "jest-cli": "^20.0.4",
-    "prettier": "^1.5.2",
-    "sinon": "^2.3.8",
-    "webpack": "^3.2.0"
+    "prettier": "^1.5.3",
+    "webpack": "^3.4.1",
+    "webpack-dev-server": "^2.6.1"
   },
   "jest": {
     "moduleDirectories": [
