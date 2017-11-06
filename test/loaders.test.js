@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import { sandbox, stub, spy } from 'sinon'
 import { Loader, FileLoader } from '../src/loaders'
+import { stub, spy, sandbox } from 'sinon'
 
 class FakeError {}
 
@@ -53,10 +53,11 @@ describe('FileLoader', function() {
   })
 
   describe('#load', () => {
-    it.only('results in a not found error if no file was found', () => {
-      expect(() => this.loader.load('fakeFile')).toThrowError(
-        'No files found matching: fakeFile',
-      )
+    it('results in a not found error if no file was found', done => {
+      this.loader.load('fakeFile').catch(err => {
+        expect(err.message).toEqual('No files found matching: fakeFile')
+        done()
+      })
     })
 
     it('throws an error if reading the requested file fails', done => {
@@ -112,15 +113,17 @@ describe('FileLoader', function() {
           identifier: this.identifierBase,
         })
         .then(result => {
-          expect(absoluteFileNames).toEqual(result)
-          done()
+          expect(absoluteFileNames.sort()).toEqual(result.sort())
         })
+        .then(done)
     })
   })
 
   describe('#changed', () => {
     it('emits the provided event', done => {
       this.loader.load('fixture.json', (err, results) => {
+        if (err) throw err
+
         this.loader.on('changed', filename => {
           expect(filename).toBe(results.source)
           done()
@@ -132,10 +135,9 @@ describe('FileLoader', function() {
   })
 
   describe('#watch', function() {
-    stub(fs, 'watch')
-
-    afterEach(() => fs.watch.restore())
     beforeEach(() => {
+      stub(fs, 'watch')
+
       this.loader = new FileLoader({
         files: {
           watch: true,
@@ -143,6 +145,8 @@ describe('FileLoader', function() {
         },
       })
     })
+
+    afterEach(() => fs.watch.restore())
 
     it('calls the handler returned from #changed when files change', done => {
       const changedHandler = stub()

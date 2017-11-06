@@ -33,8 +33,9 @@ export default class FileLoader extends Loader {
   }
 
   findByPrefix(directory, fileName) {
+    const readdir = Promise.promisify(fs.readdir)
     return new Promise((resolve, reject) => {
-      Promise.promisify(fs.readdir, directory)
+      readdir(directory)
         .then(fileNames => {
           resolve(
             fileNames.filter(name => {
@@ -76,27 +77,15 @@ export default class FileLoader extends Loader {
           }
         }).reflect()
       }),
-    )
-
-    promise.then(paths => {
+    ).then(paths => {
       return new Promise((resolve, reject) => {
-        const found = lodash.map(
-          lodash.filter(paths, result => result.isFulfilled()),
-          result => result.value(),
-        )
+        let matches = []
 
-        let matches
-        if (asPrefix) {
-          matches = lodash.filter(lodash.flatten(found))
-        } else {
-          matches = lodash.first(found)
-        }
+        for (const path of paths)
+          if (path.isFulfilled()) matches = matches.concat(path.value())
 
-        if (matches.length) {
-          resolve(matches)
-        } else {
-          reject(new Error(`No files found matching: ${fileName}`))
-        }
+        if (matches.length) resolve(matches)
+        else reject(new Error(`No files found matching: ${fileName}`))
       })
     })
 
@@ -107,7 +96,6 @@ export default class FileLoader extends Loader {
     const promise = new Promise((resolve, reject) => {
       fs.readFile(fileName, { encoding: 'UTF-8' }, (err, data) => {
         if (err) return reject(err)
-
         resolve({
           source: fileName,
           content: data,
@@ -138,14 +126,9 @@ export default class FileLoader extends Loader {
     const promise = new Promise((resolve, reject) => {
       let findPromise = this.find(requestedFileName, shouldDetermineFormat)
 
-      if (shouldDetermineFormat)
-        findPromise = findPromise.then(files => lodash.first(files))
-
-      findPromise
-        .then(fileNameInspection => {
-          if (!fileNameInspection)
-            throw new Error('No matching configuration was discovered.')
-          const fileName = fileNameInspection[0].value()
+      return findPromise
+        .then(files => lodash.first(files))
+        .then(fileName => {
           if (this.options.files.watch) this.watch(fileName)
           return this.get(fileName)
         })
