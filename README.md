@@ -1,4 +1,4 @@
-What is it? [![Build Status](https://travis-ci.org/LimpidTech/prefer.svg?branch=master)](https://travis-ci.org/LimpidTech/prefer)
+What is it? [![Build Status](https://circleci.com/gh/LimpidTech/prefer.py.svg?branch=master)](https://circleci.com/gh/LimpidTech/prefer.py)
 -----------
 
 Prefer is a node library for helping you manage application configurations.
