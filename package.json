@@ -1,45 +1,71 @@
 {
-  "author": "Bailey Stoner <monokrome@limpidtech.com> (http://monokro.me/)",
-  "engines": {
-    "node": "*"
-  },
-  "homepage": "http://preferjs.limpidtech.com/",
-  "main": "lib/prefer",
   "name": "prefer",
-  "scripts": {
-    "test": "mocha -C -R min",
-    "tests": "mocha -C -w -R min"
-  },
-  "version": "0.5.8",
-  "dependencies": {
-    "chai": "^1.7.2",
-    "chalk": "^0.4.0",
-    "coffee-coverage": "^0.1.4",
-    "cson": "^3.0.2",
-    "expect": "0.0.2",
-    "ini": "^1.1.0",
-    "js-yaml": "^2.1.3",
-    "json5": "^0.2.0",
-    "lodash": "^4.13.1",
-    "mocha": "^1.12.1",
-    "optimist": "~0.6.0",
-    "q": "^1.0.1",
-    "sinon": "^1.7.3",
-    "step": ">=0.0.4",
-    "winston": "^0.7.3",
-    "xml2js": "^0.2.8",
-    "yargs": "^1.3.3"
-  },
+  "version": "0.6.0",
   "description": "Configuration management for NodeJS",
-  "devDependencies": {
-    "chai": "^3.4.1",
-    "coffee-script": "^1.10.0",
-    "expect": "^1.13.4",
-    "mocha": "^2.3.4",
-    "sinon": "^1.17.2"
-  },
+  "homepage": "https://github.com/kroogs/proto-es2017",
+  "keywords": [],
+  "contributors": [
+    "Bailey Stoner <monokrome@monokro.me>",
+    "Justin Krueger <justin@kroo.gs>"
+  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/LimpidTech/preferjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kroogs/proto-es2017/issues"
+  },
+  "main": "dist/prefer",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "webpack -p",
+    "test": "jest --coverage",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "lint": "prettier --no-color --trailing-comma all --no-semi --single-quote --write \"src/**/*.js\" && eslint --fix src",
+    "prepublishOnly": "npm run lint && npm test && npm run build"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "cson": "^4.1.0",
+    "ini": "^1.1.0",
+    "js-yaml": "^3.9.0",
+    "lodash": "^4.13.1",
+    "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "chai": "^4.1.0",
+    "coveralls": "^2.13.1",
+    "esdoc": "^1.0.1",
+    "esdoc-flow-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "eslint": "^4.3.0",
+    "eslint-plugin-flowtype": "^2.35.0",
+    "eslint-plugin-import": "^2.7.0",
+    "file-loader": "^0.11.2",
+    "flow": "^0.2.3",
+    "flow-bin": "^0.52.0",
+    "flow-typed": "^2.1.5",
+    "jest": "^20.0.4",
+    "jest-cli": "^20.0.4",
+    "prettier": "^1.5.3",
+    "webpack": "^3.4.1",
+    "webpack-dev-server": "^2.6.1"
+  },
+  "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
   }
 }

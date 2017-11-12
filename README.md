@@ -96,7 +96,7 @@ upon installation of prefer:
 - YAML
 
 
-Why asyncronous?
+Why asynchronous?
 ----------------
 
 A lot of configuration tools prefer to provide a blocking method of retrieving
@@ -104,7 +104,7 @@ a project's configuration, in order to supply a more-simple method of getting
 the configuration. One goal of prefer is to make sure that we aren't
 limited to specific use-cases - and some projects require real-time, dynamic
 updating of their configuration. Prefer provides all of it's interfaces in an
-asyncronous manner in order to provide that possibility without the requirement
+asynchronous manner in order to provide that possibility without the requirement
 that those actions are blocking.
 
 
