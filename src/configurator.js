@@ -1,4 +1,4 @@
-import P from 'bluebird'
+import Promise from 'bluebird'
 import { isFunction, cloneDeep } from 'lodash'
 import { adaptToCallback, queryNestedKey } from './util'
 
@@ -23,7 +23,7 @@ export default class Configurator {
       }
     }
 
-    const promise = new P((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       try {
         resolve(cloneDeep(node))
       } catch (err) {
@@ -42,7 +42,7 @@ export default class Configurator {
       key = undefined
     }
 
-    const promise = new P(resolve => {
+    const promise = new Promise(resolve => {
       if (!key) {
         resolve(this.context)
       } else if (!value) {

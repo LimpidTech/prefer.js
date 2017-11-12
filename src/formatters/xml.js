@@ -11,6 +11,9 @@ const parser = new xml2js.Parser(options)
 
 export default class XMLFormatter extends Formatter {
   fromString(asString) {
-    return parser.parseString(asString)
+    let result = null
+    // TODO: error check
+    parser.parseString(asString, (err, parsed) => (result = parsed))
+    return result
   }
 }

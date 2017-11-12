@@ -30,16 +30,11 @@
   },
   "dependencies": {
     "bluebird": "^3.5.0",
-    "chai": "^4.1.0",
     "cson": "^4.1.0",
     "ini": "^1.1.0",
     "js-yaml": "^3.9.0",
     "lodash": "^4.13.1",
-    "mocha": "^3.4.2",
-    "step": ">=0.0.4",
-    "winston": "^2.3.1",
-    "xml2js": "^0.4.17",
-    "yargs": "^8.0.2"
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -49,6 +44,7 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-0": "^6.24.1",
+    "chai": "^4.1.0",
     "coveralls": "^2.13.1",
     "esdoc": "^1.0.1",
     "esdoc-flow-plugin": "^1.0.0",

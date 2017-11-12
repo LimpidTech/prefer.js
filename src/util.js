@@ -1,14 +1,11 @@
-export function resolveModule(identifier, separator = ':') {
-  const attributeIndex = identifier.lastIndexOf(separator)
-  let attributeName
-
-  if (attributeIndex > -1) {
-    attributeName = identifier.slice(attributeIndex + 1)
-    identifier = identifier.slice(0, attributeIndex)
+export function resolveModule(identifier) {
+  try {
+    const module = require(identifier)
+  } catch (e) {
+    console.error('ERROR', e)
   }
-
-  const module = require(identifier)
-  return module[attributeName] || module
+  console.log(module)
+  return module.default || module
 }
 
 export function adaptToCallback(promise, callback) {

@@ -5,7 +5,7 @@ const fileNamePattern = /^((file):\/\/)?((\/)?[^/?*:;{}\\])+$/
 const provides = pattern => potentials =>
   lodash.map(potentials, potential => pattern.test(potential))
 
-const module = './loaders/file_loader:FileLoader'
+const module = './loaders/file_loader'
 
 export default [
   {

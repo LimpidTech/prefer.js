@@ -7,37 +7,36 @@ function ensureDot(val) {
 
 function provides(type) {
   type = ensureDot(type)
-  return potentials => {
+  return potentials =>
     lodash.map(potentials, potential => {
       if (type === ensureDot(potential)) return true
       else return type === path.extname(potential)
     })
-  }
 }
 
 module.exports = [
   {
     provides: provides('json'),
-    module: './formatters/json:JSONFormatter',
+    module: './formatters/json',
   },
 
   {
     provides: provides('yml'),
-    module: './formatters/yaml:YAMLFormatter',
+    module: './formatters/yaml',
   },
 
   {
     provides: provides('xml'),
-    module: './formatters/xml:XMLFormatter',
+    module: './formatters/xml',
   },
 
   {
     provides: provides('coffee'),
-    module: './formatters/coffee:CoffeeFormatter',
+    module: './formatters/coffee',
   },
 
   {
     provides: provides('ini'),
-    module: './formatters/ini:INIFormatter',
+    module: './formatters/ini',
   },
 ]

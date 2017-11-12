@@ -5,7 +5,7 @@ import {
   YAMLFormatter,
   INIFormatter,
   CoffeeFormatter,
-  // XMLFormatter,
+  XMLFormatter,
 } from '../src/formatters'
 import { fixture, normalize } from './helpers'
 
@@ -161,28 +161,25 @@ describe('CSONFormatter', () => {
   })
 })
 
-// describe('XMLFormatter', () => {
-//   const asString = fixture('xml')
-//   console.log('the fuck')
+describe('XMLFormatter', () => {
+  const asString = fixture('xml')
 
-//   describe('#parse', () => {
-//     it('converts the provided string to an object', done => {
-//       console.log('honk honk', record)
-//       debugger
-//       new XMLFormatter().parse(asString, (err, data) => {
-//         expect(err).toBe(null)
-//         expect(data).toEqual(record)
-//         done()
-//       })
-//     })
-//   })
+  describe('#parse', () => {
+    it('converts the provided string to an object', done => {
+      new XMLFormatter().parse(asString, (err, data) => {
+        expect(err).toBe(null)
+        expect(data).toEqual(record)
+        done()
+      })
+    })
+  })
 
-//   describe('#stringify', () => {
-//     it('throws an error since XML can not be serialized', done => {
-//       new XMLFormatter().stringify(record, err => {
-//         expect(err).toBeInstanceOf(Error)
-//         done()
-//       })
-//     })
-//   })
-// })
+  describe('#stringify', () => {
+    it('throws an error since XML can not be serialized', done => {
+      new XMLFormatter().stringify(record, err => {
+        expect(err).toBeInstanceOf(Error)
+        done()
+      })
+    })
+  })
+})
