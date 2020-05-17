@@ -3,6 +3,10 @@ language: node_js
 node_js:
   - "10"
 
+script:
+  - npm install
+  - make
+
 after_script:
   - npm install coveralls
   - coveralls
