@@ -42,12 +42,12 @@ describe 'prefer', ->
   describe '#getFormatter', ->
     it 'throws an error when no formatter exists', ->
       action = =>
-        prefer.getLoader
+        prefer.getFormatter
           identifier: @identifier
           formatters: []
 
       expect action
-        .to.throw 'No configuration loader found'
+        .to.throw 'No configuration formatter found'
 
     it 'returns the expected formatter', ->
       expect(@formatter).to.be.instanceof YAMLFormatter
