@@ -16,7 +16,7 @@ class Configurator
 
     promise = util.adaptToCallback deferred.promise, callback
 
-    if key? and not lodash.isFunction key
+    if key?
       node = util.queryNestedKey node, key
 
       unless node
