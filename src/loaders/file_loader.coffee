@@ -31,10 +31,6 @@ class FileLoader extends Loader
 
     return deferred.promise
 
-  constructor: (options) ->
-    @options = lodash.cloneDeep @options
-    lodash.extend @options, options
-
   findByPrefix: (directory, fileName) ->
     deferred = Q.defer()
 
@@ -48,7 +44,7 @@ class FileLoader extends Loader
     read.catch (err) -> deferred.reject err
 
     return deferred.promise
-            
+
   find: (filename, asPrefix=false, callback) ->
     deferred = Q.defer()
     searchPaths = @options.files.searchPaths
@@ -114,7 +110,7 @@ class FileLoader extends Loader
   getChangeHandler: (filename) -> (event) =>
     @emit event, filename
     @get filename, (args...) => @updated args...
-  
+
   watch: (filename) ->
     options =
       persistent: false

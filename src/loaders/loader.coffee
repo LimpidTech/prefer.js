@@ -5,10 +5,12 @@ lodash = require 'lodash'
 
 
 class Loader extends events.EventEmitter
-  constructor: (options) ->
+  constructor: (options, emitterOptions) ->
+    super emitterOptions
     @updateOptions options
 
   updateOptions: (options) ->
+    @options = lodash.cloneDeep options
     lodash.extend @options, {}, options
 
   updated: (err, results) ->
