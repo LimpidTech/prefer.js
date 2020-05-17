@@ -23,7 +23,7 @@ describe 'Configurator', ->
   describe '#get', ->
     it 'provides an error when the provided key does not exist', ->
       expect @configurator.get 'imaginaryKey'
-        .to.eventually.be.rejectedWith 'imaginaryKey does not exist'
+        .to.eventually.be.rejectedWith 'imaginaryKey does not exist in this configuration.'
 
     it 'provides the entire context if no key is provided', ->
       expect @configurator.get()
