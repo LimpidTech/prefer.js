@@ -11,7 +11,7 @@
     "test": "mocha -C test/*_test.coffee",
     "tests": "npm test -- --watch"
   },
-  "version": "0.5.9",
+  "version": "0.5.10",
   "dependencies": {
     "chalk": "^4.0.0",
     "coffee-coverage": "^3.0.1",
