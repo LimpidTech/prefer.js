@@ -14,18 +14,19 @@ class Configurator
       callback = key
       key = undefined
 
-    else if key?
+    promise = util.adaptToCallback deferred.promise, callback
+
+    if key? and not lodash.isFunction key
       node = util.queryNestedKey node, key
 
       unless node
-        return callback new Error """
+        deferred.reject new Error """
           #{ key } does not exist in this configuration.
         """
+        return promise
 
     deferred.resolve lodash.cloneDeep node
-    util.adaptToCallback deferred.promise, callback
-
-    return deferred.promise
+    return promise
 
   set: (key, value, callback) ->
     deferred = Q.defer()
