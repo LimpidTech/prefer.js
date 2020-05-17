@@ -8,7 +8,7 @@
   "name": "prefer",
   "scripts": {
     "prepublish": "coffee -o \"${npm_package_main}\" src",
-    "test": "mocha -C -R min test/*_test.coffee",
+    "test": "mocha -C test/*_test.coffee",
     "tests": "npm test -- --watch"
   },
   "version": "0.5.9",
