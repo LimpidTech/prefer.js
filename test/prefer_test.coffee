@@ -33,19 +33,21 @@ describe 'prefer', ->
     @formatter = prefer.getFormatter @options
     @loader = prefer.getLoader @options
 
-    sinon.stub @formatter, 'parse', (content) =>
-      deferred = Q.defer()
-      deferred.resolve @fixture
-      return deferred.promise
+    sinon.stub @formatter, 'parse'
+      .callsFake (content) =>
+        deferred = Q.defer()
+        deferred.resolve @fixture
+        return deferred.promise
 
   describe '#getFormatter', ->
     it 'throws an error when no formatter exists', ->
       action = =>
-        formatter = prefer.getLoader
+        prefer.getLoader
           identifier: @identifier
           formatters: []
 
-      expect(action).to.throw()
+      expect action
+        .to.throw 'No configuration loader found'
 
     it 'returns the expected formatter', ->
       expect(@formatter).to.be.instanceof YAMLFormatter
@@ -70,27 +72,23 @@ describe 'prefer', ->
     it 'wraps #formatter.parse', ->
       expect(@formatter.parse.calledOnce).to.be.true
 
-    it 'returns a promise which provides a formatted context', (done) ->
-      @promise.then (result) => result.get (err, context) =>
-        expect(context).to.deep.equal @fixture
-        done()
+    it 'returns a promise which provides a formatted context', ->
+      @promise.then (result) =>
+        result.get (err, context) =>
+          expect(context).to.deep.equal @fixture
 
   describe '#load', ->
-    it 'returns a promise that provides the configuration', (done) ->
-      options = lodash.cloneDeep @options
-      promise = prefer.load options
+    it 'returns a promise that provides the configuration', ->
+      prefer.load lodash.cloneDeep @options
+        .then (result) =>
+          result.get (err, context) =>
+            expect(context).to.deep.equal @fixture
 
-      promise.then (result) =>
-        result.get (err, context) =>
-          expect(context).to.deep.equal @fixture
-          done()
-
-    it 'supports callback style usage', (done) ->
-      options = lodash.cloneDeep @options
-      promise = prefer.load options, (err, result) =>
-        result.get (err, context) =>
-          expect(context).to.deep.equal @fixture
-          done()
+    it 'supports callback style usage', ->
+      prefer.load lodash.cloneDeep @options
+        .then (configurator) =>
+          expect configurator.get()
+            .to.eventually.deep.equal @fixture
 
     it 'allows identifier as a string', ->
       action = => prefer.load @identifier

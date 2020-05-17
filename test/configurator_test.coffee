@@ -21,31 +21,21 @@ describe 'Configurator', ->
       expect(@configurator.state).to.equal @state
 
   describe '#get', ->
-    it 'provides an error when the provided key does not exist', (done) ->
-      callback = sinon.spy (err, data) ->
-        expect(err).to.be.instanceof Error
-        done()
+    it 'provides an error when the provided key does not exist', ->
+      expect @configurator.get 'imaginaryKey'
+        .to.eventually.be.rejectedWith 'imaginaryKey does not exist'
 
-      @configurator.get 'imaginaryKey', callback
+    it 'provides the entire context if no key is provided', ->
+      expect @configurator.get()
+        .to.eventually.deep.equal @fixture
 
-    it 'provides the entire context if no key is provided', (done) ->
-      callback = sinon.spy (err, data) =>
-        expect(data).to.deep.equal @fixture
-        done()
+    it 'provides data associated with the provided key', ->
+      expect @configurator.get 'user'
+        .to.eventually.equal 'monokrome'
 
-      @configurator.get callback
-
-    it 'provides data associated with the provided key', (done) ->
-      callback = sinon.spy (err, data) ->
-        expect(data).to.equal 'monokrome'
-        done()
-
-      @configurator.get 'user', callback
-
-    it 'provides all data when no key is provided', (done) ->
-      @configurator.get().then (data) =>
-        expect(data).to.deep.equal @fixture
-        done()
+    it 'provides all data when no key is provided', ->
+      expect @configurator.get()
+        .to.eventually.deep.equal @fixture
 
   describe '#set', ->
     beforeEach ->
@@ -54,7 +44,7 @@ describe 'Configurator', ->
       @fixture =
         example: 'data'
 
-    it.only 'resolves an unchanged context without any key or value provided', (done) ->
+    it 'resolves an unchanged context without any key or value provided', (done) ->
       @configurator.set (err, context) =>
         expect(context).to.deep.equal @initial
         expect(@configurator.context).to.deep.equal @initial

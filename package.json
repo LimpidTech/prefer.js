@@ -7,8 +7,9 @@
   "main": "lib/prefer",
   "name": "prefer",
   "scripts": {
-    "test": "mocha -C -R min",
-    "tests": "mocha -C -w -R min"
+    "prepublish": "coffee -o \"${npm_package_main}\" src",
+    "test": "mocha -C -R min test/*_test.coffee",
+    "tests": "npm test -- --watch"
   },
   "version": "0.5.9",
   "dependencies": {
@@ -29,13 +30,24 @@
   "description": "Configuration management for NodeJS",
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "coffee-script": "^1.12.7",
     "expect": "^26.0.1",
     "mocha": "^7.1.2",
-    "sinon": "^9.0.2"
+    "sinon": "^9.0.2",
+    "sinon-test": "^3.0.0"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/LimpidTech/preferjs.git"
+  },
+  "mocha": {
+    "ui": "bdd",
+    "require": [
+      "coffee-script/register",
+      "test/helpers.coffee"
+    ],
+    "recursive": true,
+    "extension": "coffee"
   }
 }
