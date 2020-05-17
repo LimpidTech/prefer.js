@@ -1,2 +1,2 @@
-omg man
+OMG.
 I am broken.

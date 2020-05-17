@@ -10,7 +10,7 @@
     "test": "mocha -C -R min",
     "tests": "mocha -C -w -R min"
   },
-  "version": "0.5.8",
+  "version": "0.5.9",
   "dependencies": {
     "chalk": "^4.0.0",
     "coffee-coverage": "^3.0.1",
