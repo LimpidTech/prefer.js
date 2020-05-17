@@ -15,7 +15,7 @@ ${dist_dir}/prefer: ${dist_dir}
 coverage: ${build_dir}/coverage.js
 	npx mocha \
 		--require ${build_dir}/coverage.js \
-		-R mocha-lcov-reporter | coveralls
+		-R mocha-lcov-reporter | node_modules/.bin/coveralls
 	make clean_coverage_sources
 
 ${build_dir}/coverage.js: ${build_dir}
