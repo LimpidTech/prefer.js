@@ -15,10 +15,10 @@ ${dist_dir}/prefer: ${dist_dir}
 coverage: ${build_dir}/coverage.html
 
 ${build_dir}/coverage.html: ${build_dir}/coverage.js
-	node_modules/.bin/mocha --require ${build_dir}/coverage.js -R html-cov > $@
+	node_modules/.bin/mocha --require ${build_dir}/coverage.js -R doc > $@
 	make clean_coverage_sources
 
-${build_dir}/coverage.js: ${build_dir} 
+${build_dir}/coverage.js: ${build_dir}
 	node_modules/.bin/coffeeCoverage \
 		--initfile "$@" \
 		--path relative \
