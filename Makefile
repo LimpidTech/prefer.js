@@ -15,7 +15,10 @@ ${dist_dir}/prefer: ${dist_dir}
 coverage: ${build_dir}/coverage.html
 
 ${build_dir}/coverage.html: ${build_dir}/coverage.js
-	node_modules/.bin/mocha --require ${build_dir}/coverage.js -R doc > $@
+	node_modules/.bin/mocha \
+		--require ${build_dir}/coverage.js \
+		-R mocha-lcov-reporter > $@
+
 	make clean_coverage_sources
 
 ${build_dir}/coverage.js: ${build_dir}
