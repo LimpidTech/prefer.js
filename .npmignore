@@ -1,26 +1,34 @@
-Makefile
+# Source files
+src/
+test/
+examples/
 
-*.seed
+# Build artifacts
+dist-test/
+*.tsbuildinfo
+
+# Config files
+tsconfig.json
+tsconfig.test.json
+.eslintrc.json
+.prettierrc.json
+.prettierignore
+
+# GitHub
+.github/
+
+# Documentation (keep README, LICENSE, CHANGELOG)
+MIGRATION.md
+MODERNIZATION_SUMMARY.md
+MODERNIZATION_PHASE2_SUMMARY.md
+GITHUB_ACTIONS_SETUP.md
+
+# Development files
+.projections.json
+.travis.yml
+
+# Dependencies
+node_modules/
+
+# Logs
 *.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-
-coverage.*
-
-pids
-logs
-results
-
-npm-debug.log
-
-node_modules/*
-src/*
-build/*
-test/*
-
-.*
-!.npmignore
-

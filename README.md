@@ -1,7 +1,13 @@
-What is it? [![Build Status](https://circleci.com/gh/LimpidTech/prefer.py.svg?branch=master)](https://circleci.com/gh/LimpidTech/prefer.py)
------------
+Prefer
+======
 
-Prefer is a node library for helping you manage application configurations.
+[![CI](https://github.com/LimpidTech/prefer.js/workflows/CI/badge.svg)](https://github.com/LimpidTech/prefer.js/actions)
+[![npm version](https://badge.fury.io/js/prefer.svg)](https://www.npmjs.com/package/prefer)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-14%2B-green.svg)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+
+A modern TypeScript/Node.js library for managing application configurations with support for multiple formats.
 
 It provides a set of interfaces which provide standard methods for
 reading arbitrary project configuration data. This can vary from simple cases
@@ -26,30 +32,39 @@ following JSON configuration in *settings.json*:
       }
     }
 
-You can load these settings with the following code using promises:
+You can load these settings with modern async/await:
 
-```javascript
-function configure (value) {
-    // value will be set to "user" at this point.
+```typescript
+import prefer from 'prefer';
+
+async function loadConfig() {
+    const configurator = await prefer.load('settings');
+    const username = await configurator.get('auth.username');
+    console.log(username); // "user"
 }
-
-require('prefer').load('settings')
-    .then(function (configurator) {
-        configurator.get('auth.username').then(configure);
-    });
 ```
 
-
-If you prefer to use callbacks, you can also use them as you wish throughout
-the prefer APIs:
+Or using promises:
 
 ```javascript
-// Get a Configurator object which we can use to retrieve settings.
-require('prefer').load('settings', function (err, configurator) {
-    if (err !== null) { throw err; }
+const prefer = require('prefer');
 
-    configurator.get('auth.username', function (err, value) {
-        // value will be set to "user" at this point.
+prefer.load('settings')
+    .then(configurator => configurator.get('auth.username'))
+    .then(username => console.log(username)); // "user"
+```
+
+Callbacks are also supported:
+
+```javascript
+const prefer = require('prefer');
+
+prefer.load('settings', (err, configurator) => {
+    if (err) throw err;
+    
+    configurator.get('auth.username', (err, value) => {
+        if (err) throw err;
+        console.log(value); // "user"
     });
 });
 ```
@@ -66,49 +81,115 @@ will be used first. Prefer doesn't care what format your user writes your
 settings in, so they can also use `settings.yaml`, `settings.xml`,
 `settings.cson`, or any other supported format.
 
-If you prefer to look in specific places, you can always pass an options object
-as the second argument to prefer.load, and provide it the `files.searchPaths`
-setting as an array of locations for prefer to look in. Here's an example:
+If you prefer to look in specific places, you can pass an options object
+as the second argument to prefer.load with the `files.searchPaths` setting:
 
-    var prefer = require('prefer'),
-        options = {
-            files: {
-                searchPaths: ['./etc', '.']
-            }
-        };
+```typescript
+import prefer from 'prefer';
 
-    // Get a Configurator object which we can use to retrieve settings.
-    prefer.load('settings', options, someFunction);
+const options = {
+    files: {
+        searchPaths: ['./etc', '.']
+    }
+};
+
+const configurator = await prefer.load('settings', options);
+```
 
 
 Supported configuration formats
 -------------------------------
 
-Along with being fully configurable to support any arbitrary data source you'd
-like, the following types of data can immediately be used as configuration formats
-upon installation of prefer:
+The following configuration formats are supported out of the box:
 
-- CoffeeScript
-- INI
-- JSON (using [json5][j5])
-- CSON
-- XML
-- YAML
+- **JSON** - Standard JSON format
+- **JSON5** (.json5, .jsonc) - JSON with comments, trailing commas, and more
+- **YAML** (.yml, .yaml) - YAML format
+- **XML** - XML format
+- **INI** - INI format
 
-
-Why asyncronous?
-----------------
-
-A lot of configuration tools prefer to provide a blocking method of retrieving
-a project's configuration, in order to supply a more-simple method of getting
-the configuration. One goal of prefer is to make sure that we aren't
-limited to specific use-cases - and some projects require real-time, dynamic
-updating of their configuration. Prefer provides all of it's interfaces in an
-asyncronous manner in order to provide that possibility without the requirement
-that those actions are blocking.
+The library is fully extensible to support custom data sources and formats.
 
 
+Why asynchronous?
+-----------------
 
-[cov]: http://monokro.me/projects/prefer/coverage.html
-[bs]: https://travis-ci.org/LimpidTech/prefer.png?branch=master "Build Status"
-[j5]: http://json5.org/ "json5 - JSON for the ES5 era"
+Prefer uses asynchronous APIs to support real-time, dynamic configuration updates
+without blocking your application. This allows for:
+
+- File watching and automatic configuration reloading
+- Remote configuration sources
+- Database-backed configurations
+- Non-blocking application startup
+
+## TypeScript Support
+
+Prefer is written in TypeScript and includes full type definitions:
+
+```typescript
+import prefer, { Configurator, PreferOptions } from 'prefer';
+
+const options: PreferOptions = {
+    identifier: 'config',
+    files: {
+        searchPaths: ['./config', '/etc']
+    }
+};
+
+const configurator: Configurator = await prefer.load(options);
+const value: string = await configurator.get<string>('some.key');
+```
+
+## Requirements
+
+- Node.js 16.0.0 or higher
+
+## API Documentation
+
+📚 **[View Full API Documentation](https://YOUR_USERNAME.github.io/prefer/)**
+
+Generate locally:
+```bash
+npm run docs
+```
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Run tests
+npm test
+
+# Type checking
+npm run typecheck
+
+# Linting
+npm run lint
+
+# Generate documentation
+npm run docs
+```
+
+## CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+- **Automated Testing**: Tests run on Node.js 14, 16, 18, and 20
+- **Code Quality**: ESLint and TypeScript checks on every commit
+- **Security**: CodeQL analysis for vulnerability detection
+- **Automated Releases**: Publish to NPM on GitHub releases
+
+See [GITHUB_ACTIONS_SETUP.md](./GITHUB_ACTIONS_SETUP.md) for detailed CI/CD documentation.
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](./.github/CONTRIBUTING.md) for guidelines.
+
+## Migration from v0.5.x
+
+See [MIGRATION.md](./MIGRATION.md) for details on migrating from the CoffeeScript version.

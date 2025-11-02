@@ -1,27 +1,40 @@
-*.js
-!/bin/prefer.js
-
-*.seed
+# Logs
 *.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-
 pids
 logs
 results
 
-npm-debug.log
+# Runtime data
+*.seed
+*.pid
+*.out
+*.gz
 
-/node_modules/*
+# Dependency directories
+node_modules/
 
-build/*
+# Build output
+dist/
+dist-test/
+build/
+*.tsbuildinfo
 
-/.*
-!/.git*
-!/.travis.yml
-!/.npm*
-!/.projections.json
+# Compiled test files (TypeScript source is in test/*.ts)
+test/*.js
+test/*.js.map
+test/*.d.ts
+test/*.d.ts.map
+
+# Compiled source files (TypeScript source is in src/*.ts)
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+src/**/*.d.ts.map
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Documentation
+docs/
 

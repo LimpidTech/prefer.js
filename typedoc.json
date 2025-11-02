@@ -1,0 +1,35 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "plugin": [],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "readme": "README.md",
+  "name": "Prefer - Configuration Management Library",
+  "includeVersion": true,
+  "sort": ["source-order"],
+  "kindSortOrder": [
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Function",
+    "Variable"
+  ],
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Main",
+    "Formatters",
+    "Loaders",
+    "Utilities",
+    "*"
+  ],
+  "gitRevision": "master",
+  "gitRemote": "origin",
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true
+  }
+}

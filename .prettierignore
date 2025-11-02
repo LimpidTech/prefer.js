@@ -1,0 +1,7 @@
+node_modules
+dist
+dist-test
+coverage
+*.log
+*.md
+package-lock.json
