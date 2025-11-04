@@ -3,7 +3,10 @@
   "exclude": [
     "dist-test/**",
     "node_modules/**",
-    "test/**"
-  ],
-  "all": true
+    "test/**",
+    "coverage/**",
+    "docs/**",
+    "**/*.test.js",
+    "**/*.spec.js"
+  ]
 }
