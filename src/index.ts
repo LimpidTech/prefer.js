@@ -6,8 +6,6 @@ import { defaultFormatters, FormatterProvider } from './formatters/defaults';
 import { Loader, LoaderOptions } from './loaders/loader';
 import { Formatter } from './formatters/formatter';
 import isString from 'lodash/isString';
-import isArray from 'lodash/isArray';
-import toArray from 'lodash/toArray';
 import filter from 'lodash/filter';
 import first from 'lodash/first';
 import isFunction from 'lodash/isFunction';
@@ -53,12 +51,6 @@ export class Prefer extends EventEmitter {
       filterBy = [options.identifier];
     } else {
       throw new Error(`No identifier provided for ${type}`);
-    }
-
-    if (isString(filterBy)) {
-      filterBy = [filterBy];
-    } else if (!isArray(filterBy)) {
-      filterBy = toArray(filterBy);
     }
 
     const matches = filter(potentials, (potential) => {
@@ -197,11 +189,7 @@ export class Prefer extends EventEmitter {
         });
       });
 
-      // Load initial configuration
-      if (!options.identifier) {
-        throw new Error('No identifier provided for configuration.');
-      }
-      const result = await loader.load(options.identifier);
+      const result = await loader.load(options.identifier!);
       return format(result, false);
     })();
 

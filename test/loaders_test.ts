@@ -187,4 +187,88 @@ describe('FileLoader', () => {
       }).catch(done);
     });
   });
+
+  describe('#watch', () => {
+    it('sets up file watcher', async () => {
+      const file = await loader.find('fixture.json', false);
+      expect(() => loader.watch(file)).to.not.throw();
+    });
+
+    it('emits updated event on file change', (done) => {
+      loader.find('fixture.json', false).then((file) => {
+        loader.once('updated', (result) => {
+          expect(result).to.have.property('source');
+          expect(result).to.have.property('content');
+          done();
+        });
+
+        loader.watch(file);
+        const changeHandler = (loader as any).getChangeHandler(file);
+        changeHandler('change');
+      }).catch(done);
+    });
+
+    it('emits updateFailed on error during file read', (done) => {
+      const nonExistentFile = '/tmp/nonexistent-test-file.json';
+      
+      loader.once('updateFailed', (err) => {
+        expect(err).to.be.instanceOf(Error);
+        done();
+      });
+
+      const changeHandler = (loader as any).getChangeHandler(nonExistentFile);
+      changeHandler('change');
+    });
+  });
+
+  describe('error handling', () => {
+    it('handles directory read errors in findByPrefix', async () => {
+      const badLoader = new FileLoader({
+        files: {
+          watch: false,
+          searchPaths: ['/non/existent/directory/'],
+        },
+      });
+
+      await expect(badLoader.find('test', true)).to.eventually.be.rejectedWith(
+        'No files found matching'
+      );
+    });
+
+    it('supports callback style for find', (done) => {
+      loader.find('fixture.json', false, (err, result) => {
+        expect(err).to.be.null;
+        expect(result).to.be.a('string');
+        done();
+      });
+    });
+
+    it('supports callback style for load', (done) => {
+      loader.load('fixture.json', (err, result) => {
+        expect(err).to.be.null;
+        expect(result).to.have.property('source');
+        expect(result).to.have.property('content');
+        done();
+      });
+    });
+
+    it('loads file with watch enabled', async () => {
+      const watchLoader = new FileLoader({
+        files: {
+          watch: true,
+          searchPaths: ['test/fixtures/'],
+        },
+      });
+
+      const result = await watchLoader.load('fixture.json');
+      expect(result).to.have.property('source');
+      expect(result).to.have.property('content');
+    });
+
+    it('loads file without extension and determines format', async () => {
+      const result = await loader.load('fixture');
+      expect(result).to.have.property('source');
+      expect(result).to.have.property('content');
+    });
+  });
 });
