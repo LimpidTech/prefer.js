@@ -268,6 +268,17 @@ describe('Configurator', () => {
         // The retrieved object should still work normally
         expect(retrieved).to.deep.equal(existingObj);
       });
+
+      it('checkPrototypePollution is essential - Object.defineProperty alone is not enough', async () => {
+        // This test verifies that checkPrototypePollution is NOT redundant
+        // Object.defineProperty can still be used for prototype pollution without the check
+        await expect(
+          configurator.set('__proto__', { polluted: true })
+        ).to.eventually.be.rejectedWith('Prototype pollution attempt detected');
+        
+        // Verify the pollution didn't happen
+        expect((configurator.context as any).polluted).to.be.undefined;
+      });
     });
   });
 });

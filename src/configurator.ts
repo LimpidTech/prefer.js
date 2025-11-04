@@ -86,7 +86,6 @@ export class Configurator {
     let key: string | undefined;
     let cb: Callback<T> | undefined;
 
-    // Handle overloaded parameters
     if (typeof keyOrCallback === 'function') {
       cb = keyOrCallback;
       key = undefined;
@@ -96,7 +95,6 @@ export class Configurator {
     }
 
     const promise = (async () => {
-      // Validate key for prototype pollution before querying
       if (key) {
         const keyParts = key.split('.');
         for (const part of keyParts) {
@@ -144,14 +142,11 @@ export class Configurator {
     let value: unknown | ConfigContext | undefined;
     let cb: Callback<unknown | ConfigContext> | undefined;
 
-    // Handle overloaded parameters
     if (typeof keyOrValueOrCallback === 'function') {
-      // set(callback)
       cb = keyOrValueOrCallback as Callback<unknown | ConfigContext>;
       key = undefined;
       value = undefined;
     } else if (typeof keyOrValueOrCallback === 'string') {
-      // set(key, value, callback?)
       key = keyOrValueOrCallback;
       if (typeof valueOrCallback === 'function') {
         throw new Error('Value is required when key is provided');
@@ -159,12 +154,10 @@ export class Configurator {
       value = valueOrCallback;
       cb = callback as Callback<unknown | ConfigContext> | undefined;
     } else if (keyOrValueOrCallback && typeof keyOrValueOrCallback === 'object') {
-      // set(value, callback?)
       value = keyOrValueOrCallback;
       key = undefined;
       cb = valueOrCallback as Callback<unknown | ConfigContext> | undefined;
     } else {
-      // set() - no arguments
       key = undefined;
       value = undefined;
       cb = undefined;
@@ -173,34 +166,36 @@ export class Configurator {
     const promise = (async () => {
       if (!key) {
         if (value !== undefined) {
-          // Replace entire context
           this.context = value as ConfigContext;
           return this.context;
         }
-        // No changes
         return this.context;
       }
 
-      // Set nested key
       const stack = key.split('.');
       let node: Record<string, unknown> = this.context;
 
       while (stack.length) {
         const item = stack.shift()!;
-
-        // Prevent prototype pollution
         checkPrototypePollution(item);
 
         if (stack.length) {
-          // Not the last item, ensure intermediate object exists
           if (!node[item] || typeof node[item] !== 'object') {
-            // Use Object.create(null) to prevent prototype pollution
-            node[item] = Object.create(null);
+            Object.defineProperty(node, item, {
+              value: Object.create(null),
+              writable: true,
+              enumerable: true,
+              configurable: true,
+            });
           }
           node = node[item] as Record<string, unknown>;
         } else {
-          // Last item, set the value
-          node[item] = value;
+          Object.defineProperty(node, item, {
+            value: value,
+            writable: true,
+            enumerable: true,
+            configurable: true,
+          });
         }
       }
 
