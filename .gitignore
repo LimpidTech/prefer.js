@@ -33,8 +33,14 @@ src/**/*.d.ts.map
 
 # Coverage
 coverage/
-.nyc_output/
 
 # Documentation
 docs/
 
+# Non-git hidden files
+.*
+!.c8rc.json
+!.eslintrc.json
+!.git*
+!.npmignore
+!.prettierrc.json
