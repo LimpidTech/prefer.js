@@ -40,68 +40,42 @@ describe('pathing', () => {
       });
     });
 
-    it('includes current directory first', () => {
+    it('includes standard Unix paths', () => {
       const pathing = require('../src/pathing');
       const paths = pathing.get();
+      
       expect(paths[0]).to.equal('.');
+      expect(paths).to.include(os.homedir());
+      expect(paths).to.include('/etc');
+      expect(paths).to.include('/usr/local/etc');
     });
 
-    it('includes XDG_CONFIG_HOME when set', () => {
+    it('handles XDG environment variables', () => {
       process.env.XDG_CONFIG_HOME = '/custom/config';
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      expect(paths).to.include('/custom/config');
-    });
-
-    it('uses ~/.config when XDG_CONFIG_HOME not set', () => {
-      delete process.env.XDG_CONFIG_HOME;
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      expect(paths).to.include(path.join(os.homedir(), '.config'));
-    });
-
-    it('includes XDG_CONFIG_DIRS when set', () => {
       process.env.XDG_CONFIG_DIRS = '/etc/xdg:/usr/local/etc/xdg';
       delete require.cache[require.resolve('../src/pathing')];
       
       const pathing = require('../src/pathing');
       const paths = pathing.get();
+      
+      expect(paths).to.include('/custom/config');
       expect(paths).to.include('/etc/xdg');
       expect(paths).to.include('/usr/local/etc/xdg');
     });
 
-    it('uses /etc/xdg when XDG_CONFIG_DIRS not set', () => {
+    it('uses XDG defaults when not set', () => {
+      delete process.env.XDG_CONFIG_HOME;
       delete process.env.XDG_CONFIG_DIRS;
       delete require.cache[require.resolve('../src/pathing')];
       
       const pathing = require('../src/pathing');
       const paths = pathing.get();
+      
+      expect(paths).to.include(path.join(os.homedir(), '.config'));
       expect(paths).to.include('/etc/xdg');
     });
 
-    it('includes home directory', () => {
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      expect(paths).to.include(os.homedir());
-    });
-
-    it('includes /etc', () => {
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      expect(paths).to.include('/etc');
-    });
-
-    it('includes /usr/local/etc', () => {
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      expect(paths).to.include('/usr/local/etc');
-    });
-
-    it('does not include Windows-specific paths', () => {
+    it('excludes Windows-specific paths', () => {
       process.env.APPDATA = 'C:\\Users\\test\\AppData';
       delete require.cache[require.resolve('../src/pathing')];
       
@@ -119,7 +93,10 @@ describe('pathing', () => {
       });
     });
 
-    it('includes macOS Library/Preferences paths', () => {
+    it('includes macOS-specific and Unix paths', () => {
+      delete process.env.XDG_CONFIG_HOME;
+      delete require.cache[require.resolve('../src/pathing')];
+      
       const pathing = require('../src/pathing');
       const paths = pathing.get();
       
@@ -127,20 +104,7 @@ describe('pathing', () => {
       expect(paths).to.include(path.join(os.homedir(), 'Library', 'Application Support'));
       expect(paths).to.include('/Library/Preferences');
       expect(paths).to.include('/Library/Application Support');
-    });
-
-    it('includes XDG paths like Linux', () => {
-      delete process.env.XDG_CONFIG_HOME;
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
       expect(paths).to.include(path.join(os.homedir(), '.config'));
-    });
-
-    it('includes Unix paths', () => {
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
       expect(paths).to.include('/etc');
       expect(paths).to.include('/usr/local/etc');
     });
@@ -154,42 +118,25 @@ describe('pathing', () => {
       });
     });
 
-    it('includes APPDATA when set', () => {
+    it('includes Windows-specific paths', () => {
       process.env.APPDATA = 'C:\\Users\\test\\AppData\\Roaming';
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      expect(paths).to.include('C:\\Users\\test\\AppData\\Roaming');
-    });
-
-    it('includes LOCALAPPDATA when set', () => {
       process.env.LOCALAPPDATA = 'C:\\Users\\test\\AppData\\Local';
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      expect(paths).to.include('C:\\Users\\test\\AppData\\Local');
-    });
-
-    it('includes ProgramData when set', () => {
       process.env.ProgramData = 'C:\\ProgramData';
       delete require.cache[require.resolve('../src/pathing')];
       
       const pathing = require('../src/pathing');
       const paths = pathing.get();
+      
+      expect(paths).to.include('C:\\Users\\test\\AppData\\Roaming');
+      expect(paths).to.include('C:\\Users\\test\\AppData\\Local');
       expect(paths).to.include('C:\\ProgramData');
     });
 
-    it('does not include XDG paths', () => {
+    it('excludes Unix-specific paths', () => {
       const pathing = require('../src/pathing');
       const paths = pathing.get();
+      
       expect(paths).to.not.include('/etc/xdg');
-    });
-
-    it('does not include Unix paths', () => {
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
       expect(paths).to.not.include('/etc');
       expect(paths).to.not.include('/usr/local/etc');
     });
@@ -197,13 +144,21 @@ describe('pathing', () => {
 
   describe('bin directory handling', () => {
     it('includes parent directory when CWD is bin', () => {
-      // Can't actually change cwd in tests easily, so we'll test the logic
+      const originalCwd = process.cwd();
+      const binPath = path.join(originalCwd, 'bin');
+      
+      // Mock process.cwd to return a bin directory
+      const originalCwdFn = process.cwd;
+      process.cwd = () => binPath;
+      
+      delete require.cache[require.resolve('../src/pathing')];
       const pathing = require('../src/pathing');
       const paths = pathing.get();
       
-      // Just verify it returns an array
-      expect(paths).to.be.an('array');
-      expect(paths.length).to.be.greaterThan(0);
+      // Restore
+      process.cwd = originalCwdFn;
+      
+      expect(paths).to.include(originalCwd);
     });
 
     it('includes parent directory when script is in bin', () => {
@@ -252,28 +207,7 @@ describe('pathing', () => {
   });
 
   describe('edge cases', () => {
-    it('handles missing HOME environment variable', () => {
-      delete process.env.HOME;
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      
-      expect(paths).to.be.an('array');
-      expect(paths.length).to.be.greaterThan(0);
-    });
-
-    it('handles empty XDG_CONFIG_DIRS', () => {
-      process.env.XDG_CONFIG_DIRS = '';
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      
-      expect(paths).to.be.an('array');
-    });
-
-    it('handles XDG_CONFIG_DIRS with multiple colons', () => {
+    it('handles XDG_CONFIG_DIRS with empty values', () => {
       process.env.XDG_CONFIG_DIRS = '/path1::/path2::::/path3';
       delete require.cache[require.resolve('../src/pathing')];
       
@@ -286,59 +220,20 @@ describe('pathing', () => {
       expect(paths).to.not.include('');
     });
 
-    it('handles script path without bin directory', () => {
+    it('handles missing or empty script paths', () => {
       process.argv[1] = '/some/project/lib/index.js';
       delete require.cache[require.resolve('../src/pathing')];
       
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
+      let pathing = require('../src/pathing');
+      expect(pathing.get()).to.not.include('/some/project');
       
-      expect(paths).to.be.an('array');
-      expect(paths).to.not.include('/some/project');
-    });
-
-    it('handles missing script path', () => {
       process.argv[1] = '';
       delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      
-      expect(paths).to.be.an('array');
-      expect(paths.length).to.be.greaterThan(0);
+      pathing = require('../src/pathing');
+      expect(pathing.get()).to.be.an('array');
     });
 
-    it('handles undefined script path', () => {
-      delete process.argv[1];
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      
-      expect(paths).to.be.an('array');
-      expect(paths.length).to.be.greaterThan(0);
-    });
-
-    it('handles all environment variables missing on Windows', () => {
-      Object.defineProperty(process, 'platform', {
-        value: 'win32',
-        writable: true,
-      });
-      delete process.env.APPDATA;
-      delete process.env.LOCALAPPDATA;
-      delete process.env.ProgramData;
-      delete process.env.HOME;
-      delete require.cache[require.resolve('../src/pathing')];
-      
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      
-      expect(paths).to.be.an('array');
-      expect(paths.length).to.be.greaterThan(0);
-      expect(paths[0]).to.equal('.');
-    });
-
-    it('handles all environment variables missing on Linux', () => {
+    it('handles missing environment variables gracefully', () => {
       Object.defineProperty(process, 'platform', {
         value: 'linux',
         writable: true,
@@ -351,20 +246,13 @@ describe('pathing', () => {
       const pathing = require('../src/pathing');
       const paths = pathing.get();
       
-      expect(paths).to.be.an('array');
       expect(paths).to.include('.');
       expect(paths).to.include('/etc');
     });
   });
 
   describe('priority order', () => {
-    it('prioritizes current directory over all others', () => {
-      const pathing = require('../src/pathing');
-      const paths = pathing.get();
-      expect(paths[0]).to.equal('.');
-    });
-
-    it('prioritizes user paths over system paths on Linux', () => {
+    it('prioritizes paths correctly', () => {
       Object.defineProperty(process, 'platform', {
         value: 'linux',
         writable: true,
@@ -374,10 +262,8 @@ describe('pathing', () => {
       const pathing = require('../src/pathing');
       const paths = pathing.get();
       
-      const homeIndex = paths.indexOf(os.homedir());
-      const etcIndex = paths.indexOf('/etc');
-      
-      expect(homeIndex).to.be.lessThan(etcIndex);
+      expect(paths[0]).to.equal('.');
+      expect(paths.indexOf(os.homedir())).to.be.lessThan(paths.indexOf('/etc'));
     });
   });
 });

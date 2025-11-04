@@ -149,7 +149,7 @@ export class Configurator {
     } else if (typeof keyOrValueOrCallback === 'string') {
       key = keyOrValueOrCallback;
       if (typeof valueOrCallback === 'function') {
-        throw new Error('Value is required when key is provided');
+        throw new Error('When a key is provided, value can not be a callback');
       }
       value = valueOrCallback;
       cb = callback as Callback<unknown | ConfigContext> | undefined;

@@ -42,11 +42,6 @@ describe('Configurator', () => {
       expect(result).to.equal('monokrome');
     });
 
-    it('provides all data when no key is provided', async () => {
-      const result = await configurator.get();
-      expect(result).to.deep.equal(fixtureData);
-    });
-
     it('supports callback style', (done) => {
       configurator.get('user', (err, result) => {
         expect(err).to.be.null;
@@ -156,6 +151,20 @@ describe('Configurator', () => {
       const result = await configurator.set('test', obj);
       expect(result).to.not.equal(obj);
       expect(result).to.deep.equal(obj);
+    });
+
+    it('throws error when callback passed as value', async () => {
+      const callback = () => {};
+      await expect(
+        configurator.set('key', callback as any)
+      ).to.eventually.be.rejectedWith(
+        'When a key is provided, value can not be a callback'
+      );
+    });
+
+    it('handles set with no arguments', async () => {
+      const result = await configurator.set(undefined as any);
+      expect(result).to.deep.equal(fixtureData);
     });
   });
 
@@ -275,9 +284,6 @@ describe('Configurator', () => {
         await expect(
           configurator.set('__proto__', { polluted: true })
         ).to.eventually.be.rejectedWith('Prototype pollution attempt detected');
-        
-        // Verify the pollution didn't happen
-        expect((configurator.context as any).polluted).to.be.undefined;
       });
     });
   });

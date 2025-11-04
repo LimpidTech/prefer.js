@@ -45,6 +45,14 @@ describe('Loader', () => {
       expect(result).to.equal(false);
     });
   });
+
+  describe('#load', () => {
+    it('throws error when called on base class', async () => {
+      await expect(loader.load('test')).to.eventually.be.rejectedWith(
+        'load() must be implemented by subclass'
+      );
+    });
+  });
 });
 
 describe('FileLoader', () => {
