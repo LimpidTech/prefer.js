@@ -4,6 +4,7 @@ import { JSON5Formatter } from '../src/formatters/json5';
 import { YAMLFormatter } from '../src/formatters/yaml';
 import { INIFormatter } from '../src/formatters/ini';
 import { XMLFormatter } from '../src/formatters/xml';
+import { TOMLFormatter } from '../src/formatters/toml';
 import * as shortcuts from './shortcuts';
 
 const fixture = {
@@ -263,6 +264,56 @@ describe('JSON5Formatter', () => {
 
     it('supports callback style', (done) => {
       const formatter = new JSON5Formatter();
+      formatter.stringify(fixture, (err, result) => {
+        expect(err).to.be.null;
+        expect(result).to.be.a('string');
+        done();
+      });
+    });
+  });
+});
+
+describe('TOMLFormatter', () => {
+  let asString: string;
+
+  beforeEach(() => {
+    asString = shortcuts.fixture('toml');
+  });
+
+  describe('#parse', () => {
+    it('converts the provided string to an object', async () => {
+      const formatter = new TOMLFormatter();
+      const result = await formatter.parse(asString);
+      expect(result).to.deep.equal(fixture);
+    });
+
+    it('provides an error when parsing invalid TOML', async () => {
+      const formatter = new TOMLFormatter();
+      const invalidToml = 'key = [unclosed array';
+      await expect(formatter.parse(invalidToml)).to.eventually.be.rejected;
+    });
+
+    it('supports callback style', (done) => {
+      const formatter = new TOMLFormatter();
+      formatter.parse(asString, (err, result) => {
+        expect(err).to.be.null;
+        expect(result).to.deep.equal(fixture);
+        done();
+      });
+    });
+  });
+
+  describe('#stringify', () => {
+    it('converts the provided object into a TOML string', async () => {
+      const formatter = new TOMLFormatter();
+      const result = await formatter.stringify(fixture);
+      expect(result).to.be.a('string');
+      expect(result).to.include('user = "monokrome"');
+      expect(result).to.include('domains = [');
+    });
+
+    it('supports callback style', (done) => {
+      const formatter = new TOMLFormatter();
       formatter.stringify(fixture, (err, result) => {
         expect(err).to.be.null;
         expect(result).to.be.a('string');

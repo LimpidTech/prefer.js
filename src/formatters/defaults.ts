@@ -64,4 +64,8 @@ export const defaultFormatters: FormatterProvider[] = [
     provides: provides('jsonc'),
     module: './formatters/json5:JSON5Formatter',
   },
+  {
+    provides: provides('toml'),
+    module: './formatters/toml:TOMLFormatter',
+  },
 ];
