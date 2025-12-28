@@ -206,3 +206,15 @@ export { Configurator } from './configurator';
 export { Formatter } from './formatters/formatter';
 export { Loader } from './loaders/loader';
 export * from './util';
+
+// ConfigBuilder API for layered configuration
+export {
+  ConfigBuilder,
+  TypedConfig,
+  Source,
+  MemorySource,
+  FileSource,
+  OptionalFileSource,
+  EnvSource,
+  deepMerge,
+} from './builder';
