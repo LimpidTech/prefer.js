@@ -23,7 +23,7 @@
     "docs": "typedoc",
     "docs:watch": "typedoc --watch"
   },
-  "version": "0.6.0",
+  "version": "0.7.0",
   "dependencies": {
     "chalk": "^4.1.2",
     "ini": "^4.1.1",
