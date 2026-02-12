@@ -142,7 +142,7 @@ export class OptionalFileSource<
  *
  * @example
  * ```typescript
- * // With MYAPP_DATABASE_HOST=localhost and MYAPP_DATABASE_PORT=5432
+ * // With MYAPP__DATABASE__HOST=localhost and MYAPP__DATABASE__PORT=5432
  * const source = new EnvSource('MYAPP');
  * const data = await source.load();
  * // { database: { host: 'localhost', port: '5432' } }
@@ -152,7 +152,7 @@ export class EnvSource<T = Record<string, unknown>> implements Source<T> {
   private prefix: string;
   private separator: string;
 
-  constructor(prefix: string, separator: string = '_') {
+  constructor(prefix: string, separator: string = '__') {
     this.prefix = prefix.toUpperCase() + separator;
     this.separator = separator;
   }
@@ -372,14 +372,14 @@ export class ConfigBuilder<T extends Record<string, unknown> = Record<string, un
    * Add environment variables with the given prefix.
    *
    * Variables are converted to nested structure using the separator.
-   * For example, with prefix 'MYAPP' and separator '_':
-   * - MYAPP_DATABASE_HOST becomes database.host
-   * - MYAPP_PORT becomes port
+   * For example, with prefix 'MYAPP' and separator '__':
+   * - MYAPP__DATABASE__HOST becomes database.host
+   * - MYAPP__PORT becomes port
    *
    * @param prefix - Environment variable prefix
-   * @param separator - Separator for nested keys (default: '_')
+   * @param separator - Separator for nested keys (default: '__')
    */
-  addEnv(prefix: string, separator: string = '_'): this {
+  addEnv(prefix: string, separator: string = '__'): this {
     return this.addSource(new EnvSource<T>(prefix, separator));
   }
 

@@ -295,8 +295,8 @@ describe('EnvSource', () => {
   });
 
   it('loads prefixed environment variables', async () => {
-    process.env.MYAPP_HOST = 'localhost';
-    process.env.MYAPP_PORT = '8080';
+    process.env.MYAPP__HOST = 'localhost';
+    process.env.MYAPP__PORT = '8080';
 
     const source = new EnvSource('MYAPP');
     const data = await source.load();
@@ -305,8 +305,8 @@ describe('EnvSource', () => {
   });
 
   it('converts to nested structure', async () => {
-    process.env.MYAPP_DATABASE_HOST = 'db.example.com';
-    process.env.MYAPP_DATABASE_PORT = '5432';
+    process.env.MYAPP__DATABASE__HOST = 'db.example.com';
+    process.env.MYAPP__DATABASE__PORT = '5432';
 
     const source = new EnvSource('MYAPP');
     const data = await source.load();
@@ -316,17 +316,17 @@ describe('EnvSource', () => {
   });
 
   it('supports custom separator', async () => {
-    process.env.MYAPP__DB__HOST = 'localhost';
+    process.env['MYAPP-DB-HOST'] = 'localhost';
 
-    const source = new EnvSource('MYAPP', '__');
+    const source = new EnvSource('MYAPP', '-');
     const data = await source.load();
     const db = data.db as Record<string, unknown>;
     expect(db.host).to.equal('localhost');
   });
 
   it('ignores non-prefixed variables', async () => {
-    process.env.MYAPP_KEY = 'value';
-    process.env.OTHER_KEY = 'ignored';
+    process.env.MYAPP__KEY = 'value';
+    process.env.OTHER__KEY = 'ignored';
 
     const source = new EnvSource('MYAPP');
     const data = await source.load();
@@ -335,7 +335,7 @@ describe('EnvSource', () => {
   });
 
   it('handles case conversion', async () => {
-    process.env.MYAPP_UPPER_CASE = 'value';
+    process.env.MYAPP__UPPER__CASE = 'value';
 
     const source = new EnvSource('MYAPP');
     const data = await source.load();
@@ -421,7 +421,7 @@ describe('ConfigBuilder', () => {
     });
 
     it('adds environment variables', async () => {
-      process.env.TESTAPP_HOST = 'envhost';
+      process.env.TESTAPP__HOST = 'envhost';
 
       const config = await new ConfigBuilder()
         .addDefaults({ host: 'localhost' })
@@ -432,10 +432,10 @@ describe('ConfigBuilder', () => {
     });
 
     it('supports custom separator', async () => {
-      process.env.TESTAPP__DB__HOST = 'envhost';
+      process.env['TESTAPP-DB-HOST'] = 'envhost';
 
       const config = await new ConfigBuilder()
-        .addEnv('TESTAPP', '__')
+        .addEnv('TESTAPP', '-')
         .build();
 
       expect(config.get('db.host')).to.equal('envhost');
